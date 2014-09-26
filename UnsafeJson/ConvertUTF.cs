@@ -56,7 +56,7 @@ using System.Threading.Tasks;
 
 namespace UnsafeJson
 {
-	public unsafe static class ConvertUTF
+	unsafe static class ConvertUTF
 	{
 		const Int32 UNI_REPLACEMENT_CHAR = 0x0000FFFD;
 
@@ -100,68 +100,6 @@ namespace UnsafeJson
 		const int firstByteMark_4 = 0xF0;
 
 		
-		const int JSON_ESCAPE_MAX_LENGTH = 6;
-		/// <summary>Writes 768 bytes to dst with JSON escapes.  6 bytes for each char 0-127</summary>
-		public unsafe static void WriteJsonEscapes(byte* dst)
-		{
-			// write 6 bytes for every character [0,128)
-			for (byte i = 0; i < 0x80; i++)
-			{
-				char? single = null;
-				switch (i)
-				{
-					case 0x08: single = 'b'; break;
-					case 0x09: single = 't'; break;
-					case 0x0C: single = 'f'; break;
-					case 0x0A: single = 'n'; break;
-					case 0x0D: single = 'r'; break;
-					case 0x22: single = '"'; break;
-					case 0x5C: single = '\\'; break;
-				}
-				
-				if (single.HasValue)
-				{
-					// 2 char escape sequence
-					*dst++ = (byte)'\\';
-					*dst++ = (byte)single.Value;
-					*dst++ = 0;
-					*dst++ = 0;
-					*dst++ = 0;
-					*dst++ = 0;
-				}
-				else if (i < 0x20)
-				{
-					// 6 char escape sequence
-					var s = i.ToString("X2");
-					*dst++ = (byte)'\\';
-					*dst++ = (byte)'u';
-					*dst++ = (byte)'0';
-					*dst++ = (byte)'0';
-					*dst++ = (byte)s[0];
-					*dst++ = (byte)s[1];
-				}
-				else
-				{
-					// single char no escape
-					*dst++ = i;
-					*dst++ = 0;
-					*dst++ = 0;
-					*dst++ = 0;
-					*dst++ = 0;
-					*dst++ = 0;
-				}
-			}
-		}
-		
-		static readonly byte* JsonEscapes;
-		static ConvertUTF()
-		{
-			IntPtr ptr = Marshal.AllocHGlobal(0x80 * JSON_ESCAPE_MAX_LENGTH);
-			byte* start = (byte*)ptr.ToPointer();
-			WriteJsonEscapes(start);
-			JsonEscapes = start;
-		}
-		
 		/// <summary>Returns the number of bytes written</summary>
 		public static int EscapeJson(
 				string s, 
@@ -178,14 +116,15 @@ namespace UnsafeJson
 					ushort* sourceEnd = (ushort*)(cptr + s.Length);
 					byte* targetStart = bptr;
 					byte* targetEnd = bptr + b.Length;
-					var result = ConvertUTF16toJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
+					var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
 					return (int)(targetStart - bptr);
 				}
 			}
 		}
 		
 		/// <summary>JSON = UTF-8 with the following escaped: quotation mark, reverse solidus, and the control characters (U+0000 through U+001F)</summary>
-		public static ConversionResult ConvertUTF16toJson (
+		// based on ConvertUTF16toUTF8 
+		public static ConversionResult EscapeJson(
 				ref UInt16* sourceStart, UInt16* sourceEnd, 
 				ref Byte* targetStart, Byte* targetEnd) {
 				
@@ -224,7 +163,7 @@ namespace UnsafeJson
 				Int32 byteMark_len = 0;
 				byte* escaped = null;
 				if (ch < 0x80) {
-					escaped = JsonEscapes + ch * JSON_ESCAPE_MAX_LENGTH;
+					escaped = Convert.JSON_ESCAPES + ch * Convert.MAX_JSON_ESCAPE_LENGTH;
 					bytesToWrite = 1;
 					if (*escaped == '\\') {
 						bytesToWrite = 2;

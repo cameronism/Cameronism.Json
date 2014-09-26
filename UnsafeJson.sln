@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnsafeJson", "UnsafeJson\UnsafeJson.csproj", "{F5695BCC-D618-4A09-B1DC-23904ED4B3FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{B092D906-ADB8-427D-A347-94539A66BFCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F5695BCC-D618-4A09-B1DC-23904ED4B3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5695BCC-D618-4A09-B1DC-23904ED4B3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5695BCC-D618-4A09-B1DC-23904ED4B3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B092D906-ADB8-427D-A347-94539A66BFCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B092D906-ADB8-427D-A347-94539A66BFCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B092D906-ADB8-427D-A347-94539A66BFCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B092D906-ADB8-427D-A347-94539A66BFCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
