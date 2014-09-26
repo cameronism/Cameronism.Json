@@ -87,6 +87,7 @@ namespace UnsafeJson
 		internal static readonly byte* JSON_ESCAPES;
 		static Convert()
 		{
+			// Hold onto < 1K until the process exits
 			IntPtr ptr = Marshal.AllocHGlobal(SIZEOF_STATIC_LOOKUPS);
 			CreateStaticLookups((byte*)ptr.ToPointer(), out DIGIT_PAIRS, out JSON_ESCAPES);
 		}
