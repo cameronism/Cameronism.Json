@@ -36,3 +36,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: ApprovalTests.Namers.UseApprovalSubdirectory("Approvals")]
+#if DEBUG
+[assembly: ApprovalTests.Reporters.UseReporter(typeof(ApprovalTests.Reporters.WinMergeReporter))]
+#endif

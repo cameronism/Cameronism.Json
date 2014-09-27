@@ -4,3 +4,4 @@
 packages/
 *.swp
 *.csproj.user
+*.txt.bak

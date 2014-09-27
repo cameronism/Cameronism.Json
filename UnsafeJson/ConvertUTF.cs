@@ -99,6 +99,40 @@ namespace UnsafeJson
 		const int firstByteMark_3 = 0xE0;
 		const int firstByteMark_4 = 0xF0;
 
+
+		public unsafe static int WriteStringUtf8(string value, byte* dst, int avail)
+		{
+			if (value == null) return Convert.WriteNull(dst, avail);
+			
+			
+			int required = value.Length + 2; // best case is unescaped ASCII + 2 for the quotes
+			if (required > avail) return -required;
+			
+			byte* ptr = dst;
+			
+			*(ptr++) = (byte)'"'; 
+			
+			fixed (char* ch = value)
+			{
+				ushort* sourceStart = (ushort*)ch;
+				ushort* sourceEnd = sourceStart + value.Length;
+				byte* targetStart = ptr;
+				byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+				var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
+				
+				// optimistic
+				ptr = targetStart;
+				
+				if (result == ConvertUTF.ConversionResult.targetExhausted)
+				{
+					// pessimistic estimate: 4x the number of unconverted chars + what we started with
+					return -(avail + 4 * (int)(sourceEnd - sourceStart));
+				}
+			}
+			
+			*(ptr++) = (byte)'"';
+			return (int)(ptr - dst);
+		}
 		
 		/// <summary>Returns the number of bytes written</summary>
 		public static int EscapeJson(
@@ -162,12 +196,13 @@ namespace UnsafeJson
 				Int32 bytesToWrite;
 				Int32 byteMark_len = 0;
 				byte* escaped = null;
-				if (ch < 0x80) {
+				if (ch < Convert.MAX_JSON_ESCAPE_CODEPOINT) {
 					escaped = Convert.JSON_ESCAPES + ch * Convert.MAX_JSON_ESCAPE_LENGTH;
 					bytesToWrite = 1;
-					if (*escaped == '\\') {
+					int next = *(escaped + 1);
+					if (next != 0) {
 						bytesToWrite = 2;
-						if (*(escaped + 1) == 'u') {
+						if (next == 'u') {
 							bytesToWrite = 6;
 						}
 					}

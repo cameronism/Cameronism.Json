@@ -13,13 +13,32 @@ namespace UnsafeJson
 
 		#region static lookups
 		internal const int SIZEOF_DIGIT_PAIRS = 100 * 2;
-		internal const int MAX_JSON_ESCAPE_CODEPOINT = 0x80;
+		internal const int SIZEOF_HEX_PAIRS = 256 * 2;
+		internal const int MAX_JSON_ESCAPE_CODEPOINT = 0x90;
 		internal const int MAX_JSON_ESCAPE_LENGTH = 6;
 		internal const int SIZEOF_JSON_ESCAPES = MAX_JSON_ESCAPE_CODEPOINT * MAX_JSON_ESCAPE_LENGTH;
-		internal const int SIZEOF_STATIC_LOOKUPS = SIZEOF_JSON_ESCAPES + SIZEOF_DIGIT_PAIRS;
+		internal const int SIZEOF_STATIC_LOOKUPS = SIZEOF_JSON_ESCAPES + SIZEOF_DIGIT_PAIRS + SIZEOF_HEX_PAIRS;
 
-		internal static void CreateStaticLookups(byte* dst, out ushort* digitPairs, out byte* jsonEscapes)
+		static byte LowerHex(byte number)
 		{
+			return (byte)(number < 10 ?
+				'0' + number :
+				'a' + number - 10);
+		}
+
+		internal static void CreateStaticLookups(byte* dst, out ushort* digitPairs, out byte* jsonEscapes, out ushort* hexPairsLower)
+		{
+			hexPairsLower = (ushort*)dst;
+
+			for (byte i = 0; i < 16 ; i++)
+			{
+				for (byte j = 0; j < 16; j++)
+				{
+					*dst++ = LowerHex(i);
+					*dst++ = LowerHex(j);
+				}
+			}
+
 			digitPairs = (ushort*)dst;
 			
 			for (byte i = (byte)'0'; i <= (byte)'9'; i++)
@@ -34,7 +53,7 @@ namespace UnsafeJson
 			jsonEscapes = dst;
 			
 			// write 6 bytes for every character [0,128)
-			for (byte i = 0; i < 0x80; i++)
+			for (byte i = 0; i < MAX_JSON_ESCAPE_CODEPOINT; i++)
 			{
 				char? single = null;
 				switch (i)
@@ -58,16 +77,27 @@ namespace UnsafeJson
 					*dst++ = 0;
 					*dst++ = 0;
 				}
-				else if (i < 0x20)
+				else if (i < 0x20 || i == 0x85)
 				{
+					var s = i.ToString("x2");
+
 					// 6 char escape sequence
 					*dst++ = (byte)'\\';
 					*dst++ = (byte)'u';
 					*dst++ = (byte)'0';
 					*dst++ = (byte)'0';
-					
-					*(ushort*)dst = *(digitPairs + i);
-					dst += 2;
+					*dst++ = (byte)s[0];
+					*dst++ = (byte)s[1];
+				}
+				else if (i >= 0x80)
+				{
+					// 2 bytes in utf8
+					*dst++ = 0xC2;
+					*dst++ = i;
+					*dst++ = 0;
+					*dst++ = 0;
+					*dst++ = 0;
+					*dst++ = 0;
 				}
 				else
 				{
@@ -84,12 +114,13 @@ namespace UnsafeJson
 		#endregion
 
 		internal static readonly ushort* DIGIT_PAIRS;
+		internal static readonly ushort* HEX_PAIRS_LOWER;
 		internal static readonly byte* JSON_ESCAPES;
 		static Convert()
 		{
 			// Hold onto < 1K until the process exits
 			IntPtr ptr = Marshal.AllocHGlobal(SIZEOF_STATIC_LOOKUPS);
-			CreateStaticLookups((byte*)ptr.ToPointer(), out DIGIT_PAIRS, out JSON_ESCAPES);
+			CreateStaticLookups((byte*)ptr.ToPointer(), out DIGIT_PAIRS, out JSON_ESCAPES, out HEX_PAIRS_LOWER);
 		}
 
 		#region writers
@@ -103,6 +134,103 @@ namespace UnsafeJson
 			*(dst + 3) = (byte)'l';
 			
 			return 4;
+		}
+
+		internal const int SIZEOF_GUID_D = 38; // 32 digits, 4 hyphens, 2 quotes
+
+		internal static int WriteGuidFormatD(Guid g, byte* dst, int avail)
+		{
+			if (avail < SIZEOF_GUID_D) return -SIZEOF_GUID_D;
+			//00000000-0000-0000-0000-000000000000
+
+
+			byte* hex;
+			byte* ptr = (byte*)&g;
+
+			*dst++ = (byte)'"';
+			// 3 - 0
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 3));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 2));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 1));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 0));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			*dst++ = (byte)'-';
+			// 5 - 4
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 5));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 4));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			*dst++ = (byte)'-';
+			// 7 - 6
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 7));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 6));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			*dst++ = (byte)'-';
+			// 8 - 9
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 8));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 9));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			*dst++ = (byte)'-';
+			// 10 - 15
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 10));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 11));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 12));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 13));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 14));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			hex = (byte*)(HEX_PAIRS_LOWER + *(ptr + 15));
+			*dst++ = *(hex + 0);
+			*dst++ = *(hex + 1);
+			*dst   = (byte)'"';
+
+			return SIZEOF_GUID_D;
+		}
+
+		internal static int WriteBool(bool b, byte* dst, int avail)
+		{
+			if (avail < 5) return 5;
+
+			if (b)
+			{
+				*dst++ = (byte)'t';
+				*dst++ = (byte)'r';
+				*dst++ = (byte)'u';
+				*dst   = (byte)'e';
+				return 4;
+			}
+			else
+			{
+				*dst++ = (byte)'f';
+				*dst++ = (byte)'a';
+				*dst++ = (byte)'l';
+				*dst++ = (byte)'s';
+				*dst   = (byte)'e';
+				return 5;
+			}
 		}
 
 		// from http://stackoverflow.com/a/4351484
@@ -169,7 +297,7 @@ namespace UnsafeJson
 			{
 				int pos = (int)(val % 100);
 				val /= 100;
-				*(short*)(c-1)=*(short*)(digitPairs+2*pos); 
+				*(ushort*)(c-1) = *(digitPairs + pos);
 				c-=2;
 			}
 
@@ -236,7 +364,7 @@ namespace UnsafeJson
 			{
 				int pos = (int)(val % 100);
 				val /= 100;
-				*(short*)(c-1)=*(short*)(digitPairs+2*pos); 
+				*(ushort*)(c-1) = *(digitPairs + pos);
 				c-=2;
 			}
 

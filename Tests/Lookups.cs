@@ -18,9 +18,9 @@ namespace Tests
 			var bs = new byte[Convert.SIZEOF_STATIC_LOOKUPS];
 			fixed (byte* b = bs)
 			{
-				ushort* digitPairs;
+				ushort* digitPairs, hexPairs;
 				byte* jsonEscapes;
-				Convert.CreateStaticLookups(b, out digitPairs, out jsonEscapes);
+				Convert.CreateStaticLookups(b, out digitPairs, out jsonEscapes, out hexPairs);
 			}
 
 			var sb = Hex.Dump(bs);
