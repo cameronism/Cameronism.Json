@@ -51,21 +51,21 @@ No deserialization (use JIL or Newtonsoft)
 - number
 	- from `System.Int32`  
 	  writer done
-	- from System.UInt32  
+	- from `System.UInt32`  
 	  writer done
-	- from System.Int16  
+	- from `System.Int16`  
 	  cast to `Int32`, probably not worth special case
-	- from System.UInt16  
+	- from `System.UInt16`  
 	  cast to `UInt32`, probably not worth special case
-	- from System.Byte  
+	- from `System.Byte`  
 	  cast to `UInt32`, probably not worth special case
-	- from System.SByte  
+	- from `System.SByte`  
 	  cast to `Int32`, probably not worth special case
-	- from System.Double  
+	- from `System.Double`  
 	  TODO
-	- from System.Float  
+	- from `System.Float`  
 	  TODO
-	- from System.Decimal  
+	- from `System.Decimal`  
 	  TODO
 	- from `System.DateTime`  
 	  TODO
@@ -74,12 +74,12 @@ No deserialization (use JIL or Newtonsoft)
 - object
 	- from type composed of other supported types  
 	  TODO
-	- from IDictionary&lt;TKey, TValue&gt;  
+	- from `IDictionary<TKey, TValue>`  
 	  TODO, requires TKey to be string or enum
 - array
 	- from array  
 	  TODO
-	- from IEnumerable&lt;&gt;  
+	- from `IEnumerable<>`  
 	  TODO
 - true
 	- from `System.Boolean`  
@@ -92,3 +92,11 @@ No deserialization (use JIL or Newtonsoft)
 	  writer done
 	- from `System.Nullable<>`  
 	  TODO
+
+## Optimizations
+
+- Not TextWriter based, `byte*` based
+- Member order  
+  TODO
+- Whitespace for 8 byte alignment  
+  TODO
