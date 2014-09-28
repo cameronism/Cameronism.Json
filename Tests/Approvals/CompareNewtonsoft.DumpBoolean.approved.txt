@@ -1,0 +1,29 @@
+﻿
+
+# True
+
+## Newtonsoft
+
+
+0000   74 72 75 65                                         true
+
+## UnsafeJson
+
+
+0000   74 72 75 65                                         true
+
+### Equal: True
+
+# False
+
+## Newtonsoft
+
+
+0000   66 61 6c 73 65                                      false
+
+## UnsafeJson
+
+
+0000   66 61 6c 73 65                                      false
+
+### Equal: True

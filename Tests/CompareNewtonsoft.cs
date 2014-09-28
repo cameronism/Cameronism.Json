@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Tests.Util;
@@ -12,6 +13,8 @@ namespace Tests
 {
 	public class CompareNewtonsoft
 	{
+		public unsafe delegate int LowWriter<T>(T value, byte* dst, int avail);
+
 		static readonly Encoding _utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 		static readonly Newtonsoft.Json.JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
 
@@ -38,116 +41,59 @@ namespace Tests
 			}
 		}
 
-		[Fact]
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpStrings()
 		{
-			bool shouldPass = true;
-			var sb = new StringBuilder();
-			foreach (var s in InterestingStrings)
-			{
-				sb.AppendLine();
-				sb.AppendLine();
-				if (s == null)
+			Approve(
+				InterestingStrings,
+				UnsafeJson.ConvertUTF.WriteStringUtf8,
+				(sb, s) =>
 				{
-					sb.Append("# null");
-				}
-				else
-				{
-					sb.AppendLine("# utf8");
-					Hex.Dump(sb, Encoding.UTF8.GetBytes(s));
-				}
-
-				IEnumerable<byte> newtonsoft;
-				IEnumerable<byte> mine;
-				GetBoth(s, out newtonsoft, out mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## Newtonsoft");
-				Hex.Dump(sb, newtonsoft);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## UnsafeJson");
-				Hex.Dump(sb, mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				bool equal = Enumerable.SequenceEqual(newtonsoft, mine);
-				sb.AppendFormat("### Equal: {0}", equal);
-				int diff = IndexOfDiff(newtonsoft, mine);
-				if (diff != -1)
-				{
-					sb.AppendFormat("### Difference at: {0:x}", diff);
-				}
-
-				if (!equal) shouldPass = false;
-			}
-
-			ApprovalTests.Approvals.Verify(sb.ToString());
-
-			Assert.True(shouldPass, "Look at the approval, this failed");
+					if (s == null)
+					{
+						sb.Append("# null");
+					}
+					else
+					{
+						sb.AppendLine("# utf8");
+						Hex.Dump(sb, Encoding.UTF8.GetBytes(s));
+					}
+				});
 		}
 
-		[Fact(Skip="Crashes the process.  FIXME")]
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpUInt32()
 		{
 			var rand = new Random(42);
-			var numbers = Enumerable
-				.Range(0, 128)
-				.Select(i => rand.Next(int.MinValue, int.MaxValue))
-				.Concat(new int[] {
+			var numbers = new int[] {
 					0,
-					-1,
 					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					-1,
 					int.MinValue,
 					int.MaxValue,
 					int.MinValue + 1,
 					int.MaxValue - 1,
-				});
+				}.Concat(Enumerable
+					.Range(0, 128)
+					.Select(i => rand.Next(int.MinValue, int.MaxValue)))
+				.Select(i => (uint)i);
 
-			bool shouldPass = true;
-			var sb = new StringBuilder();
-			foreach (var i in numbers)
-			{
-				var u = (uint)i;
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("# " + u.ToString("n0"));
-
-				IEnumerable<byte> newtonsoft;
-				IEnumerable<byte> mine;
-				GetBoth(UnsafeJson.Convert.WriteUInt32, u, out newtonsoft, out mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## Newtonsoft");
-				Hex.Dump(sb, newtonsoft);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## UnsafeJson");
-				Hex.Dump(sb, mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				bool equal = Enumerable.SequenceEqual(newtonsoft, mine);
-				sb.AppendFormat("### Equal: {0}", equal);
-				int diff = IndexOfDiff(newtonsoft, mine);
-				if (diff != -1)
-				{
-					sb.AppendFormat("### Difference at: {0:x}", diff);
-				}
-
-				if (!equal) shouldPass = false;
-			}
-
-			ApprovalTests.Approvals.Verify(sb.ToString());
-
-			Assert.True(shouldPass, "Look at the approval, this failed");
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteUInt32,
+				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
-		[Fact]
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpInt32()
 		{
 			var rand = new Random(42);
@@ -158,58 +104,34 @@ namespace Tests
 					0,
 					-1,
 					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
 					int.MinValue,
 					int.MaxValue,
 					int.MinValue + 1,
 					int.MaxValue - 1,
 				});
 
-			bool shouldPass = true;
-			var sb = new StringBuilder();
-			foreach (var i in numbers)
-			{
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("# " + i.ToString("n0"));
 
-				IEnumerable<byte> newtonsoft;
-				IEnumerable<byte> mine;
-				GetBoth(UnsafeJson.Convert.WriteInt32, i, out newtonsoft, out mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## Newtonsoft");
-				Hex.Dump(sb, newtonsoft);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## UnsafeJson");
-				Hex.Dump(sb, mine);
-
-				sb.AppendLine();
-				sb.AppendLine();
-				bool equal = Enumerable.SequenceEqual(newtonsoft, mine);
-				sb.AppendFormat("### Equal: {0}", equal);
-				int diff = IndexOfDiff(newtonsoft, mine);
-				if (diff != -1)
-				{
-					sb.AppendFormat("### Difference at: {0:x}", diff);
-				}
-
-				if (!equal) shouldPass = false;
-			}
-
-			ApprovalTests.Approvals.Verify(sb.ToString());
-
-			Assert.True(shouldPass, "Look at the approval, this failed");
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteInt32,
+				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
-		[Fact]
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpGuid()
 		{
 			var rand = new Random(42);
 			var bytes = new byte[16];
-			var numbers = new[] { 
+			var guids = new[] { 
 					Guid.Empty,
 				}
 				.Concat(Enumerable
@@ -220,17 +142,35 @@ namespace Tests
 						return new Guid(bytes);
 					}));
 
+			Approve(
+				guids,
+				UnsafeJson.Convert.WriteGuidFormatD,
+				(sb, g) => sb.AppendLine("# " + g));
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpBoolean()
+		{
+			Approve(
+				new[] { true, false },
+				UnsafeJson.Convert.WriteBoolean,
+				(sb, b) => sb.Append("# " + b),
+				5);
+		}
+
+		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)
+		{
 			bool shouldPass = true;
 			var sb = new StringBuilder();
-			foreach (var g in numbers)
+			foreach (var v in values)
 			{
 				sb.AppendLine();
 				sb.AppendLine();
-				sb.AppendLine("# " + g);
+				heading(sb, v);
 
 				IEnumerable<byte> newtonsoft;
 				IEnumerable<byte> mine;
-				GetBoth(UnsafeJson.Convert.WriteGuidFormatD, g, out newtonsoft, out mine);
+				GetBoth(writer, v, out newtonsoft, out mine, minBuffer);
 
 				sb.AppendLine();
 				sb.AppendLine();
@@ -244,12 +184,15 @@ namespace Tests
 
 				sb.AppendLine();
 				sb.AppendLine();
-				bool equal = Enumerable.SequenceEqual(newtonsoft, mine);
+				bool equal = mine != null && Enumerable.SequenceEqual(newtonsoft, mine);
 				sb.AppendFormat("### Equal: {0}", equal);
-				int diff = IndexOfDiff(newtonsoft, mine);
-				if (diff != -1)
+				if (mine != null)
 				{
-					sb.AppendFormat("### Difference at: {0:x}", diff);
+					int diff = IndexOfDiff(newtonsoft, mine);
+					if (diff != -1)
+					{
+						sb.AppendFormat("### Difference at: {0:x}", diff);
+					}
 				}
 
 				if (!equal) shouldPass = false;
@@ -277,10 +220,7 @@ namespace Tests
 			return -1;
 		}
 
-
-		public unsafe delegate int LowWriter<T>(T value, byte* dst, int avail);
-
-		static unsafe void GetBoth<T>(LowWriter<T> lw, T s, out IEnumerable<byte> newtonsoft, out IEnumerable<byte> unsafeJson)
+		static unsafe void GetBoth<T>(LowWriter<T> lw, T s, out IEnumerable<byte> newtonsoft, out IEnumerable<byte> unsafeJson, int? minBuffer = null)
 		{
 			var ms = new MemoryStream();
 			int len;
@@ -292,6 +232,7 @@ namespace Tests
 			}
 			newtonsoft = ms.GetBuffer().Take(len);
 
+			if (minBuffer.HasValue && minBuffer.Value > len) len = minBuffer.Value;
 			var mine = new byte[len];
 
 			fixed (byte* bs = mine)
@@ -299,11 +240,6 @@ namespace Tests
 				var result = lw.Invoke(s, bs, len);
 				unsafeJson = result < 0 ? null : mine.Take(result);
 			}
-		}
-
-		static unsafe void GetBoth(string s, out IEnumerable<byte> newtonsoft, out IEnumerable<byte> unsafeJson)
-		{
-			GetBoth(UnsafeJson.ConvertUTF.WriteStringUtf8, s, out newtonsoft, out unsafeJson);
 		}
 	}
 }

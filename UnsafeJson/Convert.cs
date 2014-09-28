@@ -210,9 +210,9 @@ namespace UnsafeJson
 			return SIZEOF_GUID_D;
 		}
 
-		internal static int WriteBool(bool b, byte* dst, int avail)
+		internal static int WriteBoolean(bool b, byte* dst, int avail)
 		{
-			if (avail < 5) return 5;
+			if (avail < 5) return -5;
 
 			if (b)
 			{
@@ -358,13 +358,14 @@ namespace UnsafeJson
 			}
 
 			if (size > avail) return -size;
+			c += size - 1;
 
 			var digitPairs = DIGIT_PAIRS;
 			while(val>=100)
 			{
 				int pos = (int)(val % 100);
 				val /= 100;
-				*(ushort*)(c-1) = *(digitPairs + pos);
+				*(ushort*)(c - 1) = *(digitPairs + pos);
 				c-=2;
 			}
 

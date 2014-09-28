@@ -49,7 +49,12 @@ namespace Tests.Util
 			char[] printable = Enumerable.Repeat(' ', 16).ToArray();
 			
 			builder.AppendLine();
-			
+
+			if (bytes == null)
+			{
+				builder.Append("null");
+				return;
+			}
 		
 			int count = 0;
 			int index = 0;
