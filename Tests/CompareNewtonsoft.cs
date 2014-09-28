@@ -158,6 +158,44 @@ namespace Tests
 				5);
 		}
 
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpDateTime()
+		{
+			var someEpoch = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			var rand = new Random(42);
+			var bytes = new byte[16];
+			var dts = new[] { 
+					DateTime.MinValue,
+					DateTime.MaxValue,
+					someEpoch,
+					someEpoch.AddTicks(1000000),
+					someEpoch.AddTicks(1200000),
+					someEpoch.AddTicks(1230000),
+					someEpoch.AddTicks(1234000),
+					someEpoch.AddTicks(1234500),
+					someEpoch.AddTicks(1234560),
+					someEpoch.AddTicks(1234567),
+				}
+				.Concat(Enumerable
+					.Range(0, 16)
+					.Select(_ =>
+					{
+						return someEpoch.AddTicks(rand.Next(int.MinValue, int.MaxValue));
+					}))
+				.Concat(Enumerable
+					.Range(0, 16)
+					.Select(_ =>
+					{
+						return someEpoch.AddSeconds(rand.Next(int.MinValue, int.MaxValue));
+					}));
+
+			Approve(
+				dts,
+				UnsafeJson.Convert.WriteDateTime8601,
+				(sb, g) => sb.AppendLine("# " + g),
+				UnsafeJson.Convert.SIZEOF_DATETIME_8601);
+		}
+
 		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)
 		{
 			bool shouldPass = true;

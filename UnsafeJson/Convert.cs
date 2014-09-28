@@ -309,6 +309,7 @@ namespace UnsafeJson
 			return size;
 		}
 
+		// from http://stackoverflow.com/a/4351484
 		internal static int WriteUInt32(uint val, byte* c, int avail)
 		{
 			if(val==0)
@@ -375,6 +376,78 @@ namespace UnsafeJson
 				val /= 10;
 			}
 			return size;
+		}
+
+		const int TICKS_PER_SECOND = 10000000;
+		//2014-09-28T14:58:35.8439067Z // 28
+		internal const int SIZEOF_DATETIME_8601 = 28 + 2; // 28, 2 quotes
+		internal static int WriteDateTime8601(DateTime val, byte* c, int avail)
+		{
+			if (avail < SIZEOF_DATETIME_8601) return -SIZEOF_DATETIME_8601;
+
+			int part;
+			byte* start = c;
+			var digitPairs = DIGIT_PAIRS;
+			*c++ = (byte)'"';
+
+			part = val.Year;
+			*(ushort*)c = *(digitPairs + part / 100);
+			c += 2;
+			*(ushort*)c = *(digitPairs + part % 100);
+			c += 2;
+			*c++ = (byte)'-';
+
+			part = val.Month;
+			*(ushort*)c = *(digitPairs + part);
+			c += 2;
+			*c++ = (byte)'-';
+
+			part = val.Day;
+			*(ushort*)c = *(digitPairs + part);
+			c += 2;
+			*c++ = (byte)'T';
+
+			part = val.Hour;
+			*(ushort*)c = *(digitPairs + part);
+			c += 2;
+			*c++ = (byte)':';
+
+			part = val.Minute;
+			*(ushort*)c = *(digitPairs + part);
+			c += 2;
+			*c++ = (byte)':';
+
+			part = val.Second;
+			*(ushort*)c = *(digitPairs + part);
+			c += 2;
+
+			part = (int)(val.Ticks % TICKS_PER_SECOND);
+
+			if (part != 0)
+			{
+				*c = (byte)'.';
+				*(ushort*)(c + 6) = *(digitPairs + part % 100);
+				part /= 100;
+				*(ushort*)(c + 4) = *(digitPairs + part % 100);
+				part /= 100;
+				*(ushort*)(c + 2) = *(digitPairs + part % 100);
+				part /= 100;
+				*(c + 1) = (byte)('0' + part);
+
+				// omit trailing zeroes
+				int used = 7;
+				while (*(c + used) == (byte)'0') used--;
+				c += used + 1;
+			}
+
+			if (val.Kind == DateTimeKind.Utc)
+			{
+				*c++ = (byte)'Z';
+			}
+
+			*c++ = (byte)'"';
+
+			return (int)(c - start);
 		}
 		#endregion
 	}
