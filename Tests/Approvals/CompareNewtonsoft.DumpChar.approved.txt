@@ -1,0 +1,2194 @@
+﻿
+
+# utf8
+
+
+0000   30                                                  0
+
+## Newtonsoft
+
+
+0000   22 30 22                                            "0"
+
+## UnsafeJson
+
+
+0000   22 30 22                                            "0"
+
+### Equal: True
+
+# utf8
+
+
+0000   00                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 30 22                             "\u0000"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 30 22                             "\u0000"
+
+### Equal: True
+
+# utf8
+
+
+0000   01                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 31 22                             "\u0001"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 31 22                             "\u0001"
+
+### Equal: True
+
+# utf8
+
+
+0000   02                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 32 22                             "\u0002"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 32 22                             "\u0002"
+
+### Equal: True
+
+# utf8
+
+
+0000   03                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 33 22                             "\u0003"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 33 22                             "\u0003"
+
+### Equal: True
+
+# utf8
+
+
+0000   04                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 34 22                             "\u0004"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 34 22                             "\u0004"
+
+### Equal: True
+
+# utf8
+
+
+0000   05                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 35 22                             "\u0005"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 35 22                             "\u0005"
+
+### Equal: True
+
+# utf8
+
+
+0000   06                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 36 22                             "\u0006"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 36 22                             "\u0006"
+
+### Equal: True
+
+# utf8
+
+
+0000   07                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 37 22                             "\u0007"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 37 22                             "\u0007"
+
+### Equal: True
+
+# utf8
+
+
+0000   08                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 62 22                                         "\b"
+
+## UnsafeJson
+
+
+0000   22 5c 62 22                                         "\b"
+
+### Equal: True
+
+# utf8
+
+
+0000   09                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 74 22                                         "\t"
+
+## UnsafeJson
+
+
+0000   22 5c 74 22                                         "\t"
+
+### Equal: True
+
+# utf8
+
+
+0000   0a                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 6e 22                                         "\n"
+
+## UnsafeJson
+
+
+0000   22 5c 6e 22                                         "\n"
+
+### Equal: True
+
+# utf8
+
+
+0000   0b                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 62 22                             "\u000b"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 62 22                             "\u000b"
+
+### Equal: True
+
+# utf8
+
+
+0000   0c                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 66 22                                         "\f"
+
+## UnsafeJson
+
+
+0000   22 5c 66 22                                         "\f"
+
+### Equal: True
+
+# utf8
+
+
+0000   0d                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 72 22                                         "\r"
+
+## UnsafeJson
+
+
+0000   22 5c 72 22                                         "\r"
+
+### Equal: True
+
+# utf8
+
+
+0000   0e                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 65 22                             "\u000e"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 65 22                             "\u000e"
+
+### Equal: True
+
+# utf8
+
+
+0000   0f                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 66 22                             "\u000f"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 30 66 22                             "\u000f"
+
+### Equal: True
+
+# utf8
+
+
+0000   10                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 30 22                             "\u0010"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 30 22                             "\u0010"
+
+### Equal: True
+
+# utf8
+
+
+0000   11                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 31 22                             "\u0011"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 31 22                             "\u0011"
+
+### Equal: True
+
+# utf8
+
+
+0000   12                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 32 22                             "\u0012"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 32 22                             "\u0012"
+
+### Equal: True
+
+# utf8
+
+
+0000   13                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 33 22                             "\u0013"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 33 22                             "\u0013"
+
+### Equal: True
+
+# utf8
+
+
+0000   14                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 34 22                             "\u0014"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 34 22                             "\u0014"
+
+### Equal: True
+
+# utf8
+
+
+0000   15                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 35 22                             "\u0015"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 35 22                             "\u0015"
+
+### Equal: True
+
+# utf8
+
+
+0000   16                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 36 22                             "\u0016"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 36 22                             "\u0016"
+
+### Equal: True
+
+# utf8
+
+
+0000   17                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 37 22                             "\u0017"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 37 22                             "\u0017"
+
+### Equal: True
+
+# utf8
+
+
+0000   18                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 38 22                             "\u0018"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 38 22                             "\u0018"
+
+### Equal: True
+
+# utf8
+
+
+0000   19                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 39 22                             "\u0019"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 39 22                             "\u0019"
+
+### Equal: True
+
+# utf8
+
+
+0000   1a                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 61 22                             "\u001a"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 61 22                             "\u001a"
+
+### Equal: True
+
+# utf8
+
+
+0000   1b                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 62 22                             "\u001b"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 62 22                             "\u001b"
+
+### Equal: True
+
+# utf8
+
+
+0000   1c                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 63 22                             "\u001c"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 63 22                             "\u001c"
+
+### Equal: True
+
+# utf8
+
+
+0000   1d                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 64 22                             "\u001d"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 64 22                             "\u001d"
+
+### Equal: True
+
+# utf8
+
+
+0000   1e                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 65 22                             "\u001e"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 65 22                             "\u001e"
+
+### Equal: True
+
+# utf8
+
+
+0000   1f                                                  .
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 31 66 22                             "\u001f"
+
+## UnsafeJson
+
+
+0000   22 5c 75 30 30 31 66 22                             "\u001f"
+
+### Equal: True
+
+# utf8
+
+
+0000   20                                                   
+
+## Newtonsoft
+
+
+0000   22 20 22                                            " "
+
+## UnsafeJson
+
+
+0000   22 20 22                                            " "
+
+### Equal: True
+
+# utf8
+
+
+0000   21                                                  !
+
+## Newtonsoft
+
+
+0000   22 21 22                                            "!"
+
+## UnsafeJson
+
+
+0000   22 21 22                                            "!"
+
+### Equal: True
+
+# utf8
+
+
+0000   22                                                  "
+
+## Newtonsoft
+
+
+0000   22 5c 22 22                                         "\""
+
+## UnsafeJson
+
+
+0000   22 5c 22 22                                         "\""
+
+### Equal: True
+
+# utf8
+
+
+0000   23                                                  #
+
+## Newtonsoft
+
+
+0000   22 23 22                                            "#"
+
+## UnsafeJson
+
+
+0000   22 23 22                                            "#"
+
+### Equal: True
+
+# utf8
+
+
+0000   24                                                  $
+
+## Newtonsoft
+
+
+0000   22 24 22                                            "$"
+
+## UnsafeJson
+
+
+0000   22 24 22                                            "$"
+
+### Equal: True
+
+# utf8
+
+
+0000   25                                                  %
+
+## Newtonsoft
+
+
+0000   22 25 22                                            "%"
+
+## UnsafeJson
+
+
+0000   22 25 22                                            "%"
+
+### Equal: True
+
+# utf8
+
+
+0000   26                                                  &
+
+## Newtonsoft
+
+
+0000   22 26 22                                            "&"
+
+## UnsafeJson
+
+
+0000   22 26 22                                            "&"
+
+### Equal: True
+
+# utf8
+
+
+0000   27                                                  '
+
+## Newtonsoft
+
+
+0000   22 27 22                                            "'"
+
+## UnsafeJson
+
+
+0000   22 27 22                                            "'"
+
+### Equal: True
+
+# utf8
+
+
+0000   28                                                  (
+
+## Newtonsoft
+
+
+0000   22 28 22                                            "("
+
+## UnsafeJson
+
+
+0000   22 28 22                                            "("
+
+### Equal: True
+
+# utf8
+
+
+0000   29                                                  )
+
+## Newtonsoft
+
+
+0000   22 29 22                                            ")"
+
+## UnsafeJson
+
+
+0000   22 29 22                                            ")"
+
+### Equal: True
+
+# utf8
+
+
+0000   2a                                                  *
+
+## Newtonsoft
+
+
+0000   22 2a 22                                            "*"
+
+## UnsafeJson
+
+
+0000   22 2a 22                                            "*"
+
+### Equal: True
+
+# utf8
+
+
+0000   2b                                                  +
+
+## Newtonsoft
+
+
+0000   22 2b 22                                            "+"
+
+## UnsafeJson
+
+
+0000   22 2b 22                                            "+"
+
+### Equal: True
+
+# utf8
+
+
+0000   2c                                                  ,
+
+## Newtonsoft
+
+
+0000   22 2c 22                                            ","
+
+## UnsafeJson
+
+
+0000   22 2c 22                                            ","
+
+### Equal: True
+
+# utf8
+
+
+0000   2d                                                  -
+
+## Newtonsoft
+
+
+0000   22 2d 22                                            "-"
+
+## UnsafeJson
+
+
+0000   22 2d 22                                            "-"
+
+### Equal: True
+
+# utf8
+
+
+0000   2e                                                  .
+
+## Newtonsoft
+
+
+0000   22 2e 22                                            "."
+
+## UnsafeJson
+
+
+0000   22 2e 22                                            "."
+
+### Equal: True
+
+# utf8
+
+
+0000   2f                                                  /
+
+## Newtonsoft
+
+
+0000   22 2f 22                                            "/"
+
+## UnsafeJson
+
+
+0000   22 2f 22                                            "/"
+
+### Equal: True
+
+# utf8
+
+
+0000   30                                                  0
+
+## Newtonsoft
+
+
+0000   22 30 22                                            "0"
+
+## UnsafeJson
+
+
+0000   22 30 22                                            "0"
+
+### Equal: True
+
+# utf8
+
+
+0000   31                                                  1
+
+## Newtonsoft
+
+
+0000   22 31 22                                            "1"
+
+## UnsafeJson
+
+
+0000   22 31 22                                            "1"
+
+### Equal: True
+
+# utf8
+
+
+0000   32                                                  2
+
+## Newtonsoft
+
+
+0000   22 32 22                                            "2"
+
+## UnsafeJson
+
+
+0000   22 32 22                                            "2"
+
+### Equal: True
+
+# utf8
+
+
+0000   33                                                  3
+
+## Newtonsoft
+
+
+0000   22 33 22                                            "3"
+
+## UnsafeJson
+
+
+0000   22 33 22                                            "3"
+
+### Equal: True
+
+# utf8
+
+
+0000   34                                                  4
+
+## Newtonsoft
+
+
+0000   22 34 22                                            "4"
+
+## UnsafeJson
+
+
+0000   22 34 22                                            "4"
+
+### Equal: True
+
+# utf8
+
+
+0000   35                                                  5
+
+## Newtonsoft
+
+
+0000   22 35 22                                            "5"
+
+## UnsafeJson
+
+
+0000   22 35 22                                            "5"
+
+### Equal: True
+
+# utf8
+
+
+0000   36                                                  6
+
+## Newtonsoft
+
+
+0000   22 36 22                                            "6"
+
+## UnsafeJson
+
+
+0000   22 36 22                                            "6"
+
+### Equal: True
+
+# utf8
+
+
+0000   37                                                  7
+
+## Newtonsoft
+
+
+0000   22 37 22                                            "7"
+
+## UnsafeJson
+
+
+0000   22 37 22                                            "7"
+
+### Equal: True
+
+# utf8
+
+
+0000   38                                                  8
+
+## Newtonsoft
+
+
+0000   22 38 22                                            "8"
+
+## UnsafeJson
+
+
+0000   22 38 22                                            "8"
+
+### Equal: True
+
+# utf8
+
+
+0000   39                                                  9
+
+## Newtonsoft
+
+
+0000   22 39 22                                            "9"
+
+## UnsafeJson
+
+
+0000   22 39 22                                            "9"
+
+### Equal: True
+
+# utf8
+
+
+0000   3a                                                  :
+
+## Newtonsoft
+
+
+0000   22 3a 22                                            ":"
+
+## UnsafeJson
+
+
+0000   22 3a 22                                            ":"
+
+### Equal: True
+
+# utf8
+
+
+0000   3b                                                  ;
+
+## Newtonsoft
+
+
+0000   22 3b 22                                            ";"
+
+## UnsafeJson
+
+
+0000   22 3b 22                                            ";"
+
+### Equal: True
+
+# utf8
+
+
+0000   3c                                                  <
+
+## Newtonsoft
+
+
+0000   22 3c 22                                            "<"
+
+## UnsafeJson
+
+
+0000   22 3c 22                                            "<"
+
+### Equal: True
+
+# utf8
+
+
+0000   3d                                                  =
+
+## Newtonsoft
+
+
+0000   22 3d 22                                            "="
+
+## UnsafeJson
+
+
+0000   22 3d 22                                            "="
+
+### Equal: True
+
+# utf8
+
+
+0000   3e                                                  >
+
+## Newtonsoft
+
+
+0000   22 3e 22                                            ">"
+
+## UnsafeJson
+
+
+0000   22 3e 22                                            ">"
+
+### Equal: True
+
+# utf8
+
+
+0000   3f                                                  ?
+
+## Newtonsoft
+
+
+0000   22 3f 22                                            "?"
+
+## UnsafeJson
+
+
+0000   22 3f 22                                            "?"
+
+### Equal: True
+
+# utf8
+
+
+0000   40                                                  @
+
+## Newtonsoft
+
+
+0000   22 40 22                                            "@"
+
+## UnsafeJson
+
+
+0000   22 40 22                                            "@"
+
+### Equal: True
+
+# utf8
+
+
+0000   41                                                  A
+
+## Newtonsoft
+
+
+0000   22 41 22                                            "A"
+
+## UnsafeJson
+
+
+0000   22 41 22                                            "A"
+
+### Equal: True
+
+# utf8
+
+
+0000   42                                                  B
+
+## Newtonsoft
+
+
+0000   22 42 22                                            "B"
+
+## UnsafeJson
+
+
+0000   22 42 22                                            "B"
+
+### Equal: True
+
+# utf8
+
+
+0000   43                                                  C
+
+## Newtonsoft
+
+
+0000   22 43 22                                            "C"
+
+## UnsafeJson
+
+
+0000   22 43 22                                            "C"
+
+### Equal: True
+
+# utf8
+
+
+0000   44                                                  D
+
+## Newtonsoft
+
+
+0000   22 44 22                                            "D"
+
+## UnsafeJson
+
+
+0000   22 44 22                                            "D"
+
+### Equal: True
+
+# utf8
+
+
+0000   45                                                  E
+
+## Newtonsoft
+
+
+0000   22 45 22                                            "E"
+
+## UnsafeJson
+
+
+0000   22 45 22                                            "E"
+
+### Equal: True
+
+# utf8
+
+
+0000   46                                                  F
+
+## Newtonsoft
+
+
+0000   22 46 22                                            "F"
+
+## UnsafeJson
+
+
+0000   22 46 22                                            "F"
+
+### Equal: True
+
+# utf8
+
+
+0000   47                                                  G
+
+## Newtonsoft
+
+
+0000   22 47 22                                            "G"
+
+## UnsafeJson
+
+
+0000   22 47 22                                            "G"
+
+### Equal: True
+
+# utf8
+
+
+0000   48                                                  H
+
+## Newtonsoft
+
+
+0000   22 48 22                                            "H"
+
+## UnsafeJson
+
+
+0000   22 48 22                                            "H"
+
+### Equal: True
+
+# utf8
+
+
+0000   49                                                  I
+
+## Newtonsoft
+
+
+0000   22 49 22                                            "I"
+
+## UnsafeJson
+
+
+0000   22 49 22                                            "I"
+
+### Equal: True
+
+# utf8
+
+
+0000   4a                                                  J
+
+## Newtonsoft
+
+
+0000   22 4a 22                                            "J"
+
+## UnsafeJson
+
+
+0000   22 4a 22                                            "J"
+
+### Equal: True
+
+# utf8
+
+
+0000   4b                                                  K
+
+## Newtonsoft
+
+
+0000   22 4b 22                                            "K"
+
+## UnsafeJson
+
+
+0000   22 4b 22                                            "K"
+
+### Equal: True
+
+# utf8
+
+
+0000   4c                                                  L
+
+## Newtonsoft
+
+
+0000   22 4c 22                                            "L"
+
+## UnsafeJson
+
+
+0000   22 4c 22                                            "L"
+
+### Equal: True
+
+# utf8
+
+
+0000   4d                                                  M
+
+## Newtonsoft
+
+
+0000   22 4d 22                                            "M"
+
+## UnsafeJson
+
+
+0000   22 4d 22                                            "M"
+
+### Equal: True
+
+# utf8
+
+
+0000   4e                                                  N
+
+## Newtonsoft
+
+
+0000   22 4e 22                                            "N"
+
+## UnsafeJson
+
+
+0000   22 4e 22                                            "N"
+
+### Equal: True
+
+# utf8
+
+
+0000   4f                                                  O
+
+## Newtonsoft
+
+
+0000   22 4f 22                                            "O"
+
+## UnsafeJson
+
+
+0000   22 4f 22                                            "O"
+
+### Equal: True
+
+# utf8
+
+
+0000   50                                                  P
+
+## Newtonsoft
+
+
+0000   22 50 22                                            "P"
+
+## UnsafeJson
+
+
+0000   22 50 22                                            "P"
+
+### Equal: True
+
+# utf8
+
+
+0000   51                                                  Q
+
+## Newtonsoft
+
+
+0000   22 51 22                                            "Q"
+
+## UnsafeJson
+
+
+0000   22 51 22                                            "Q"
+
+### Equal: True
+
+# utf8
+
+
+0000   52                                                  R
+
+## Newtonsoft
+
+
+0000   22 52 22                                            "R"
+
+## UnsafeJson
+
+
+0000   22 52 22                                            "R"
+
+### Equal: True
+
+# utf8
+
+
+0000   53                                                  S
+
+## Newtonsoft
+
+
+0000   22 53 22                                            "S"
+
+## UnsafeJson
+
+
+0000   22 53 22                                            "S"
+
+### Equal: True
+
+# utf8
+
+
+0000   54                                                  T
+
+## Newtonsoft
+
+
+0000   22 54 22                                            "T"
+
+## UnsafeJson
+
+
+0000   22 54 22                                            "T"
+
+### Equal: True
+
+# utf8
+
+
+0000   55                                                  U
+
+## Newtonsoft
+
+
+0000   22 55 22                                            "U"
+
+## UnsafeJson
+
+
+0000   22 55 22                                            "U"
+
+### Equal: True
+
+# utf8
+
+
+0000   56                                                  V
+
+## Newtonsoft
+
+
+0000   22 56 22                                            "V"
+
+## UnsafeJson
+
+
+0000   22 56 22                                            "V"
+
+### Equal: True
+
+# utf8
+
+
+0000   57                                                  W
+
+## Newtonsoft
+
+
+0000   22 57 22                                            "W"
+
+## UnsafeJson
+
+
+0000   22 57 22                                            "W"
+
+### Equal: True
+
+# utf8
+
+
+0000   58                                                  X
+
+## Newtonsoft
+
+
+0000   22 58 22                                            "X"
+
+## UnsafeJson
+
+
+0000   22 58 22                                            "X"
+
+### Equal: True
+
+# utf8
+
+
+0000   59                                                  Y
+
+## Newtonsoft
+
+
+0000   22 59 22                                            "Y"
+
+## UnsafeJson
+
+
+0000   22 59 22                                            "Y"
+
+### Equal: True
+
+# utf8
+
+
+0000   5a                                                  Z
+
+## Newtonsoft
+
+
+0000   22 5a 22                                            "Z"
+
+## UnsafeJson
+
+
+0000   22 5a 22                                            "Z"
+
+### Equal: True
+
+# utf8
+
+
+0000   5b                                                  [
+
+## Newtonsoft
+
+
+0000   22 5b 22                                            "["
+
+## UnsafeJson
+
+
+0000   22 5b 22                                            "["
+
+### Equal: True
+
+# utf8
+
+
+0000   5c                                                  \
+
+## Newtonsoft
+
+
+0000   22 5c 5c 22                                         "\\"
+
+## UnsafeJson
+
+
+0000   22 5c 5c 22                                         "\\"
+
+### Equal: True
+
+# utf8
+
+
+0000   5d                                                  ]
+
+## Newtonsoft
+
+
+0000   22 5d 22                                            "]"
+
+## UnsafeJson
+
+
+0000   22 5d 22                                            "]"
+
+### Equal: True
+
+# utf8
+
+
+0000   5e                                                  ^
+
+## Newtonsoft
+
+
+0000   22 5e 22                                            "^"
+
+## UnsafeJson
+
+
+0000   22 5e 22                                            "^"
+
+### Equal: True
+
+# utf8
+
+
+0000   5f                                                  _
+
+## Newtonsoft
+
+
+0000   22 5f 22                                            "_"
+
+## UnsafeJson
+
+
+0000   22 5f 22                                            "_"
+
+### Equal: True
+
+# utf8
+
+
+0000   60                                                  `
+
+## Newtonsoft
+
+
+0000   22 60 22                                            "`"
+
+## UnsafeJson
+
+
+0000   22 60 22                                            "`"
+
+### Equal: True
+
+# utf8
+
+
+0000   61                                                  a
+
+## Newtonsoft
+
+
+0000   22 61 22                                            "a"
+
+## UnsafeJson
+
+
+0000   22 61 22                                            "a"
+
+### Equal: True
+
+# utf8
+
+
+0000   62                                                  b
+
+## Newtonsoft
+
+
+0000   22 62 22                                            "b"
+
+## UnsafeJson
+
+
+0000   22 62 22                                            "b"
+
+### Equal: True
+
+# utf8
+
+
+0000   63                                                  c
+
+## Newtonsoft
+
+
+0000   22 63 22                                            "c"
+
+## UnsafeJson
+
+
+0000   22 63 22                                            "c"
+
+### Equal: True
+
+# utf8
+
+
+0000   64                                                  d
+
+## Newtonsoft
+
+
+0000   22 64 22                                            "d"
+
+## UnsafeJson
+
+
+0000   22 64 22                                            "d"
+
+### Equal: True
+
+# utf8
+
+
+0000   65                                                  e
+
+## Newtonsoft
+
+
+0000   22 65 22                                            "e"
+
+## UnsafeJson
+
+
+0000   22 65 22                                            "e"
+
+### Equal: True
+
+# utf8
+
+
+0000   66                                                  f
+
+## Newtonsoft
+
+
+0000   22 66 22                                            "f"
+
+## UnsafeJson
+
+
+0000   22 66 22                                            "f"
+
+### Equal: True
+
+# utf8
+
+
+0000   67                                                  g
+
+## Newtonsoft
+
+
+0000   22 67 22                                            "g"
+
+## UnsafeJson
+
+
+0000   22 67 22                                            "g"
+
+### Equal: True
+
+# utf8
+
+
+0000   68                                                  h
+
+## Newtonsoft
+
+
+0000   22 68 22                                            "h"
+
+## UnsafeJson
+
+
+0000   22 68 22                                            "h"
+
+### Equal: True
+
+# utf8
+
+
+0000   69                                                  i
+
+## Newtonsoft
+
+
+0000   22 69 22                                            "i"
+
+## UnsafeJson
+
+
+0000   22 69 22                                            "i"
+
+### Equal: True
+
+# utf8
+
+
+0000   6a                                                  j
+
+## Newtonsoft
+
+
+0000   22 6a 22                                            "j"
+
+## UnsafeJson
+
+
+0000   22 6a 22                                            "j"
+
+### Equal: True
+
+# utf8
+
+
+0000   6b                                                  k
+
+## Newtonsoft
+
+
+0000   22 6b 22                                            "k"
+
+## UnsafeJson
+
+
+0000   22 6b 22                                            "k"
+
+### Equal: True
+
+# utf8
+
+
+0000   6c                                                  l
+
+## Newtonsoft
+
+
+0000   22 6c 22                                            "l"
+
+## UnsafeJson
+
+
+0000   22 6c 22                                            "l"
+
+### Equal: True
+
+# utf8
+
+
+0000   6d                                                  m
+
+## Newtonsoft
+
+
+0000   22 6d 22                                            "m"
+
+## UnsafeJson
+
+
+0000   22 6d 22                                            "m"
+
+### Equal: True
+
+# utf8
+
+
+0000   6e                                                  n
+
+## Newtonsoft
+
+
+0000   22 6e 22                                            "n"
+
+## UnsafeJson
+
+
+0000   22 6e 22                                            "n"
+
+### Equal: True
+
+# utf8
+
+
+0000   6f                                                  o
+
+## Newtonsoft
+
+
+0000   22 6f 22                                            "o"
+
+## UnsafeJson
+
+
+0000   22 6f 22                                            "o"
+
+### Equal: True
+
+# utf8
+
+
+0000   70                                                  p
+
+## Newtonsoft
+
+
+0000   22 70 22                                            "p"
+
+## UnsafeJson
+
+
+0000   22 70 22                                            "p"
+
+### Equal: True
+
+# utf8
+
+
+0000   71                                                  q
+
+## Newtonsoft
+
+
+0000   22 71 22                                            "q"
+
+## UnsafeJson
+
+
+0000   22 71 22                                            "q"
+
+### Equal: True
+
+# utf8
+
+
+0000   72                                                  r
+
+## Newtonsoft
+
+
+0000   22 72 22                                            "r"
+
+## UnsafeJson
+
+
+0000   22 72 22                                            "r"
+
+### Equal: True
+
+# utf8
+
+
+0000   73                                                  s
+
+## Newtonsoft
+
+
+0000   22 73 22                                            "s"
+
+## UnsafeJson
+
+
+0000   22 73 22                                            "s"
+
+### Equal: True
+
+# utf8
+
+
+0000   74                                                  t
+
+## Newtonsoft
+
+
+0000   22 74 22                                            "t"
+
+## UnsafeJson
+
+
+0000   22 74 22                                            "t"
+
+### Equal: True
+
+# utf8
+
+
+0000   75                                                  u
+
+## Newtonsoft
+
+
+0000   22 75 22                                            "u"
+
+## UnsafeJson
+
+
+0000   22 75 22                                            "u"
+
+### Equal: True
+
+# utf8
+
+
+0000   76                                                  v
+
+## Newtonsoft
+
+
+0000   22 76 22                                            "v"
+
+## UnsafeJson
+
+
+0000   22 76 22                                            "v"
+
+### Equal: True
+
+# utf8
+
+
+0000   77                                                  w
+
+## Newtonsoft
+
+
+0000   22 77 22                                            "w"
+
+## UnsafeJson
+
+
+0000   22 77 22                                            "w"
+
+### Equal: True
+
+# utf8
+
+
+0000   78                                                  x
+
+## Newtonsoft
+
+
+0000   22 78 22                                            "x"
+
+## UnsafeJson
+
+
+0000   22 78 22                                            "x"
+
+### Equal: True
+
+# utf8
+
+
+0000   79                                                  y
+
+## Newtonsoft
+
+
+0000   22 79 22                                            "y"
+
+## UnsafeJson
+
+
+0000   22 79 22                                            "y"
+
+### Equal: True
+
+# utf8
+
+
+0000   7a                                                  z
+
+## Newtonsoft
+
+
+0000   22 7a 22                                            "z"
+
+## UnsafeJson
+
+
+0000   22 7a 22                                            "z"
+
+### Equal: True
+
+# utf8
+
+
+0000   7b                                                  {
+
+## Newtonsoft
+
+
+0000   22 7b 22                                            "{"
+
+## UnsafeJson
+
+
+0000   22 7b 22                                            "{"
+
+### Equal: True
+
+# utf8
+
+
+0000   7c                                                  |
+
+## Newtonsoft
+
+
+0000   22 7c 22                                            "|"
+
+## UnsafeJson
+
+
+0000   22 7c 22                                            "|"
+
+### Equal: True
+
+# utf8
+
+
+0000   7d                                                  }
+
+## Newtonsoft
+
+
+0000   22 7d 22                                            "}"
+
+## UnsafeJson
+
+
+0000   22 7d 22                                            "}"
+
+### Equal: True
+
+# utf8
+
+
+0000   7e                                                  ~
+
+## Newtonsoft
+
+
+0000   22 7e 22                                            "~"
+
+## UnsafeJson
+
+
+0000   22 7e 22                                            "~"
+
+### Equal: True
+
+# utf8
+
+
+0000   7f                                                  .
+
+## Newtonsoft
+
+
+0000   22 7f 22                                            "."
+
+## UnsafeJson
+
+
+0000   22 7f 22                                            "."
+
+### Equal: True

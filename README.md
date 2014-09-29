@@ -36,7 +36,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.String`  
 	  writer done
 	- from `System.Char`  
-	  TODO
+	  writer done
 	- from `System.Guid`  
 	  writer done
 	- from `System.DateTime`  

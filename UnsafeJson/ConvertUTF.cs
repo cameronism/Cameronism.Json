@@ -100,6 +100,33 @@ namespace UnsafeJson
 		const int firstByteMark_4 = 0xF0;
 
 
+		public unsafe static int WriteCharUtf8(char value, byte* dst, int avail)
+		{
+			const int required = 3; // best case is unescaped ASCII + 2 for the quotes
+			if (required > avail) return -required;
+			
+			byte* ptr = dst;
+			
+			*(ptr++) = (byte)'"'; 
+			
+			ushort* sourceStart = (ushort*)&value;
+			ushort* sourceEnd = sourceStart + 1;
+			byte* targetStart = ptr;
+			byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+			var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
+			
+			// optimistic
+			ptr = targetStart;
+			
+			if (result == ConvertUTF.ConversionResult.targetExhausted)
+			{
+				// pessimistic estimate: 4x the number of unconverted chars + what we started with
+				return -(avail + 4 * (int)(sourceEnd - sourceStart));
+			}
+			
+			*(ptr++) = (byte)'"';
+			return (int)(ptr - dst);
+		}
 		public unsafe static int WriteStringUtf8(string value, byte* dst, int avail)
 		{
 			if (value == null) return Convert.WriteNull(dst, avail);

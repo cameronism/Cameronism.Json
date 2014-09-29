@@ -62,6 +62,21 @@ namespace Tests
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpChar()
+		{
+			Approve(
+				new char[] {
+					'0',
+				}.Concat(Enumerable.Range(0, 128).Select(i => (char)i)),
+				UnsafeJson.ConvertUTF.WriteCharUtf8,
+				(sb, s) =>
+				{
+					sb.AppendLine("# utf8");
+					Hex.Dump(sb, Encoding.UTF8.GetBytes(s.ToString()));
+				});
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpUInt32()
 		{
 			var rand = new Random(42);
