@@ -449,6 +449,115 @@ namespace UnsafeJson
 
 			return (int)(c - start);
 		}
+
+		#region floating point
+		static bool IsFinite(double d)
+		{
+			ulong u = *(ulong*)&d;
+			return (u & 0x7ff0000000000000ul) != 0x7ff0000000000000ul;
+		}
+
+		static bool IsFinite(float f)
+		{
+			uint u = *(uint*)&f;
+			return (u & 0x7f800000u) != 0x7f800000u;
+		}
+
+		internal const string NAN = "\"NaN\"";
+		internal const string POSITIVE_INFINITY = "\"Infinity\"";
+		internal const string NEGATIVE_INFINITY = "\"-Infinity\"";
+
+		static int WriteASCII(string s, byte* c, int avail)
+		{
+			if (s.Length > avail) return -s.Length;
+
+			int ix;
+			for (ix = 0; ix < s.Length; ix++)
+			{
+				*(c + ix) = (byte)s[ix];
+			}
+			return ix;
+		}
+
+		static int WriteGeneralFloat(string floatNumber, byte* c, int avail)
+		{
+			int requiredLength = floatNumber.Length + 2; // +2 in case we need to append ".0"
+			if (requiredLength > avail) return -requiredLength;
+
+			bool needsDot = true;
+			int ix;
+			for (ix = 0; ix < floatNumber.Length; ix++)
+			{
+				int ch = floatNumber[ix];
+				*(c + ix) = (byte)ch;
+				if (ch == (int)'.')
+				{
+					needsDot = false;
+				}
+			}
+
+			if (needsDot)
+			{
+				*(c + ix++) = (byte)'.';
+				*(c + ix++) = (byte)'0';
+			}
+
+			return ix;
+		}
+
+		internal static int WriteDouble(double val, byte* c, int avail)
+		{
+			string s;
+			if (IsFinite(val))
+			{
+				// need an allocation free alternative
+				s = val.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+				return WriteGeneralFloat(s, c, avail);
+			}
+			else
+			{
+				s = 
+					double.IsNaN(val) ? NAN : 
+					double.IsPositiveInfinity(val) ? POSITIVE_INFINITY :
+					NEGATIVE_INFINITY;
+				return WriteASCII(s, c, avail);
+			}
+		}
+
+		internal static int WriteSingle(float val, byte* c, int avail)
+		{
+			string s;
+			if (IsFinite(val))
+			{
+				// need an allocation free alternative
+				s = val.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+				return WriteGeneralFloat(s, c, avail);
+			}
+			else
+			{
+				s = 
+					float.IsNaN(val) ? NAN : 
+					float.IsPositiveInfinity(val) ? POSITIVE_INFINITY :
+					NEGATIVE_INFINITY;
+				return WriteASCII(s, c, avail);
+			}
+		}
+		#endregion
+
+		internal static int WriteDecimal(decimal val, byte* c, int avail)
+		{
+			// need an allocation free alternative
+			var s = val.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+			if (s.Length > avail) return -s.Length;
+
+			int ix;
+			for (ix = 0; ix < s.Length; ix++)
+			{
+				*(c + ix) = (byte)s[ix];
+			}
+			return ix;
+		}
 		#endregion
 	}
 }

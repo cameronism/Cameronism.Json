@@ -77,6 +77,86 @@ namespace Tests
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpDouble()
+		{
+			var rand = new Random(42);
+			var buffer = new byte[8];
+			var numbers = new double[] {
+					0,
+					double.NaN,
+					double.PositiveInfinity,
+					double.NegativeInfinity,
+					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					-1,
+					int.MinValue,
+					int.MaxValue,
+					int.MinValue + 1,
+					int.MaxValue - 1,
+				}.Concat(Enumerable
+					.Range(0, 128)
+					.Select(i => 
+					{
+						rand.NextBytes(buffer);
+						return BitConverter.ToDouble(buffer, 0);
+					}));
+
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteDouble,
+				(sb, g) => sb.AppendLine("# " + g),
+				64);
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpSingle()
+		{
+			var rand = new Random(42);
+			var buffer = new byte[4];
+			var numbers = new float[] {
+					0,
+					float.NaN,
+					float.PositiveInfinity,
+					float.NegativeInfinity,
+					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					-1,
+					int.MinValue,
+					int.MaxValue,
+					int.MinValue + 1,
+					int.MaxValue - 1,
+				}.Concat(Enumerable
+					.Range(0, 128)
+					.Select(i => 
+					{
+						rand.NextBytes(buffer);
+						return BitConverter.ToSingle(buffer, 0);
+					}));
+
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteSingle,
+				(sb, g) => sb.AppendLine("# " + g),
+				64);
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpUInt32()
 		{
 			var rand = new Random(42);
@@ -213,7 +293,7 @@ namespace Tests
 
 		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)
 		{
-			bool shouldPass = true;
+			int failed = 0;
 			var sb = new StringBuilder();
 			foreach (var v in values)
 			{
@@ -248,12 +328,12 @@ namespace Tests
 					}
 				}
 
-				if (!equal) shouldPass = false;
+				if (!equal) failed++;
 			}
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 
-			Assert.True(shouldPass, "Look at the approval, this failed");
+			Assert.True(failed == 0, String.Format("Look at the approval, {0} comparisons failed", failed));
 		}
 
 		static int IndexOfDiff(IEnumerable<byte> xs, IEnumerable<byte> ys)

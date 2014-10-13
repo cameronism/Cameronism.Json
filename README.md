@@ -61,10 +61,14 @@ No deserialization (use JIL or Newtonsoft)
 	  cast to `UInt32`, probably not worth special case
 	- from `System.SByte`  
 	  cast to `Int32`, probably not worth special case
+	- from `System.Int64`  
+	  TODO
+	- from `System.UInt64`  
+	  TODO
 	- from `System.Double`  
-	  TODO
-	- from `System.Float`  
-	  TODO
+	  writer done, wastefully uses ToString
+	- from `System.Single`  
+	  writer done, wastefully uses ToString
 	- from `System.Decimal`  
 	  TODO
 	- from `System.DateTime`  
