@@ -70,7 +70,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.Single`  
 	  writer done, wastefully uses ToString
 	- from `System.Decimal`  
-	  TODO
+	  writer done, wastefully uses ToString
 	- from `System.DateTime`  
 	  TODO
 	- from enum  

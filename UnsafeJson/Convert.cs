@@ -542,22 +542,14 @@ namespace UnsafeJson
 				return WriteASCII(s, c, avail);
 			}
 		}
-		#endregion
 
 		internal static int WriteDecimal(decimal val, byte* c, int avail)
 		{
 			// need an allocation free alternative
-			var s = val.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-			if (s.Length > avail) return -s.Length;
-
-			int ix;
-			for (ix = 0; ix < s.Length; ix++)
-			{
-				*(c + ix) = (byte)s[ix];
-			}
-			return ix;
+			var s = val.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
+			return WriteGeneralFloat(s, c, avail);
 		}
+		#endregion
 		#endregion
 	}
 }

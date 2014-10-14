@@ -157,6 +157,54 @@ namespace Tests
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpDecimal()
+		{
+			var rand = new Random(42);
+			var buffer = new byte[16];
+			var numbers = new decimal[] {
+					0,
+					decimal.MinValue,
+					decimal.MaxValue,
+					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					-1,
+					int.MinValue,
+					int.MaxValue,
+					int.MinValue + 1,
+					int.MaxValue - 1,
+				}.Concat(Enumerable
+					.Range(0, 128)
+					.Select(i => 
+					{
+						rand.NextBytes(buffer);
+
+						byte scale = (byte)(buffer[13] & 31);
+						if (scale > 28) scale = 0; // more small numbers
+
+						return new decimal(
+							lo: BitConverter.ToInt32(buffer, 0),
+							mid: BitConverter.ToInt32(buffer, 4),
+							hi: BitConverter.ToInt32(buffer, 8),
+							isNegative: buffer[12] % 2 == 0,
+							scale: scale);
+					}));
+
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteDecimal,
+				(sb, g) => sb.AppendLine("# " + g),
+				64);
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpUInt32()
 		{
 			var rand = new Random(42);
