@@ -62,9 +62,9 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.SByte`  
 	  cast to `Int32`, probably not worth special case
 	- from `System.Int64`  
-	  TODO
+	  writer done
 	- from `System.UInt64`  
-	  TODO
+	  writer done
 	- from `System.Double`  
 	  writer done, wastefully uses ToString
 	- from `System.Single`  

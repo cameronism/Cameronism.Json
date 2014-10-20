@@ -377,6 +377,148 @@ namespace UnsafeJson
 			}
 			return size;
 		}
+		internal static int WriteUInt64(ulong val, byte* c, int avail)
+		{
+			if (val <= 0xFFFFFFFFul) return WriteUInt32((uint)val, c, avail);
+
+			// max length is 20
+			// min length is 10 (called WriteUInt32 for small enough values)
+
+			int size;
+			if (val >= 100000000000000ul)
+			{
+				if (val >= 100000000000000000ul)
+				{
+					if (val >= 10000000000000000000ul)
+						size = 20;
+					else if (val >= 1000000000000000000ul)
+						size = 19;
+					else 
+						size = 18;
+				}
+				else 
+				{
+					if (val >= 10000000000000000ul)
+						size = 17;
+					else if (val >= 1000000000000000ul)
+						size = 16;
+					else 
+						size = 15;
+				}
+			}
+			else 
+			{
+				if (val >= 100000000000ul)
+				{
+					if (val >= 10000000000000ul)
+						size = 14;
+					else if (val >= 1000000000000ul)
+						size = 13;
+					else 
+						size = 12;
+				}
+				else 
+				{
+					if (val >= 10000000000ul)
+						size = 11;
+					else 
+						size = 10;
+				}
+			}
+
+			if (size > avail) return -size;
+			c += size - 1;
+
+			var digitPairs = DIGIT_PAIRS;
+			while(val>=100)
+			{
+				int pos = (int)(val % 100);
+				val /= 100;
+				*(ushort*)(c - 1) = *(digitPairs + pos);
+				c-=2;
+			}
+
+			while(val>0)
+			{
+				*c--=(byte)('0' + (val % 10));
+				val /= 10;
+			}
+			return size;
+		}
+		internal static int WriteInt64(long n, byte* c, int avail)
+		{
+			if (n <= 2147483647 && n >= -2147483648) return WriteInt32((int)n, c, avail);
+
+			// long.MaxValue length is 19
+			// min length is 10 (small enough values go to WriteInt32
+
+			int sign = n < 0 ? -1 : 0;
+			ulong val = (ulong)((n ^ sign) - sign);
+
+			int size;
+			if(val>=100000000000000L)
+			{
+				if(val>=10000000000000000L)
+				{
+					if(val>=1000000000000000000L)
+						size=19;
+					else if(val>=100000000000000000L)
+						size=18;
+					else 
+						size=17;
+				}
+				else
+				{
+					if(val>=1000000000000000L)
+						size=16;
+					else
+						size=15;
+				}
+			}
+			else 
+			{
+				if(val>=1000000000000L)
+				{
+					if(val>=10000000000000L)
+						size=14;
+					else
+						size=13;
+				}
+				else
+				{
+					if(val>=100000000000L)
+						size=12;
+					else if(val>=10000000000L)
+						size=11;
+					else
+						size=10;
+				}
+			}
+
+			size -= sign;
+			if (size > avail) return -size;
+
+			if(sign != 0)
+				*c=(byte)'-';
+
+			c += size-1;
+
+			var digitPairs = DIGIT_PAIRS;
+			while(val>=100)
+			{
+				int pos = (int)(val % 100);
+				val /= 100;
+				*(ushort*)(c-1) = *(digitPairs + pos);
+				c-=2;
+			}
+
+			while(val>0)
+			{
+				*c--=(byte)('0' + (val % 10));
+				val /= 10;
+			}
+			return size;
+		}
 
 		const int TICKS_PER_SECOND = 10000000;
 		//2014-09-28T14:58:35.8439067Z // 28

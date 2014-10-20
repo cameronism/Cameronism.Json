@@ -237,6 +237,94 @@ namespace Tests
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpUInt64()
+		{
+			var numbers = new ulong[] {
+					0,
+					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					12345678901,
+					123456789012,
+					1234567890123,
+					12345678901234,
+					123456789012345,
+					1234567890123456,
+					12345678901234567,
+					123456789012345678,
+					1234567890123456789,
+					12345678901234567890,
+					long.MaxValue,
+					ulong.MaxValue,
+				};
+
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteUInt64,
+				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpInt64()
+		{
+			var numbers = new long[] {
+					0,
+					1,
+					12,
+					123,
+					1234,
+					12345,
+					123456,
+					1234567,
+					12345678,
+					123456789,
+					1234567890,
+					12345678901,
+					123456789012,
+					1234567890123,
+					12345678901234,
+					123456789012345,
+					1234567890123456,
+					12345678901234567,
+					123456789012345678,
+					1234567890123456789,
+					long.MaxValue,
+					long.MinValue,
+					-1,
+					-12,
+					-123,
+					-1234,
+					-12345,
+					-123456,
+					-1234567,
+					-12345678,
+					-123456789,
+					-1234567890,
+					-12345678901,
+					-123456789012,
+					-1234567890123,
+					-12345678901234,
+					-123456789012345,
+					-1234567890123456,
+					-12345678901234567,
+					-123456789012345678,
+					-1234567890123456789,
+				};
+
+			Approve(
+				numbers,
+				UnsafeJson.Convert.WriteInt64,
+				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public unsafe void DumpInt32()
 		{
 			var rand = new Random(42);
