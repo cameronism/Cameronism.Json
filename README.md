@@ -2,6 +2,9 @@
 
 Serialization only (no deserialization). Entirely built around `byte*`
 
+# FIXME switch to nuget for Sigil
+
+
 ## Supports
 
 ### .NET -> JSON
@@ -41,6 +44,8 @@ No deserialization (use JIL or Newtonsoft)
 	  writer done
 	- from `System.DateTime`  
 	  writer done
+	- from `System.DateTimeOffset`  
+	  TODO
 	- from `System.Net.IPAddress`  
 	  TODO
 	- from enum
@@ -74,7 +79,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.DateTime`  
 	  TODO
 	- from enum  
-	  TODO
+	  TODO, this will be the default handling
 - object
 	- from type composed of other supported types  
 	  TODO

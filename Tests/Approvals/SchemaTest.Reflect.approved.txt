@@ -1,0 +1,793 @@
+﻿
+
+# System.Int32
+{
+  "NetType": "System.Int32",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Boolean
+{
+  "NetType": "System.Boolean",
+  "JsonType": "Boolean",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Byte
+{
+  "NetType": "System.Byte",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Char
+{
+  "NetType": "System.Char",
+  "JsonType": "String",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.DateTime
+{
+  "NetType": "System.DateTime",
+  "JsonType": "String",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Decimal
+{
+  "NetType": "System.Decimal",
+  "JsonType": "Number",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Double
+{
+  "NetType": "System.Double",
+  "JsonType": "Number",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Int16
+{
+  "NetType": "System.Int16",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Int64
+{
+  "NetType": "System.Int64",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.SByte
+{
+  "NetType": "System.SByte",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Single
+{
+  "NetType": "System.Single",
+  "JsonType": "Number",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.String
+{
+  "NetType": "System.String",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.UInt16
+{
+  "NetType": "System.UInt16",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.UInt32
+{
+  "NetType": "System.UInt32",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.UInt64
+{
+  "NetType": "System.UInt64",
+  "JsonType": "Integer",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Int32>
+{
+  "NetType": "System.Nullable<System.Int32>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Boolean>
+{
+  "NetType": "System.Nullable<System.Boolean>",
+  "JsonType": "Boolean",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Byte>
+{
+  "NetType": "System.Nullable<System.Byte>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Char>
+{
+  "NetType": "System.Nullable<System.Char>",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.DateTime>
+{
+  "NetType": "System.Nullable<System.DateTime>",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Decimal>
+{
+  "NetType": "System.Nullable<System.Decimal>",
+  "JsonType": "Number",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Double>
+{
+  "NetType": "System.Nullable<System.Double>",
+  "JsonType": "Number",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Int16>
+{
+  "NetType": "System.Nullable<System.Int16>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Int64>
+{
+  "NetType": "System.Nullable<System.Int64>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.SByte>
+{
+  "NetType": "System.Nullable<System.SByte>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Single>
+{
+  "NetType": "System.Nullable<System.Single>",
+  "JsonType": "Number",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.UInt16>
+{
+  "NetType": "System.Nullable<System.UInt16>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.UInt32>
+{
+  "NetType": "System.Nullable<System.UInt32>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.UInt64>
+{
+  "NetType": "System.Nullable<System.UInt64>",
+  "JsonType": "Integer",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Guid
+{
+  "NetType": "System.Guid",
+  "JsonType": "String",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Guid>
+{
+  "NetType": "System.Nullable<System.Guid>",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.IEnumerable<System.Int32>
+{
+  "NetType": "System.Collections.Generic.IEnumerable<System.Int32>",
+  "JsonType": "Array",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.Int32",
+    "JsonType": "Integer",
+    "Nullable": false,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.String[]
+{
+  "NetType": "System.String[]",
+  "JsonType": "Array",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.String",
+    "JsonType": "String",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.IReadOnlyList<System.Guid>
+{
+  "NetType": "System.Collections.Generic.IReadOnlyList<System.Guid>",
+  "JsonType": "Array",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.Guid",
+    "JsonType": "String",
+    "Nullable": false,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# <>f__AnonymousType0<System.Int32>
+{
+  "NetType": "<>f__AnonymousType0<System.Int32>",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "i",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "i",
+          "MemberType": "System.Int32"
+        }
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.List<<>f__AnonymousType1<System.String>>
+{
+  "NetType": "System.Collections.Generic.List<<>f__AnonymousType1<System.String>>",
+  "JsonType": "Array",
+  "Nullable": true,
+  "Items": {
+    "NetType": "<>f__AnonymousType1<System.String>",
+    "JsonType": "Object",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": [
+      {
+        "Key": "s",
+        "Value": {
+          "NetType": "System.String",
+          "JsonType": "String",
+          "Nullable": true,
+          "Items": null,
+          "Keys": null,
+          "Members": null,
+          "FieldInfo": null,
+          "PropertyInfo": {
+            "Name": "s",
+            "MemberType": "System.String"
+          }
+        }
+      }
+    ],
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.Dictionary<System.String, System.String>
+{
+  "NetType": "System.Collections.Generic.Dictionary<System.String, System.String>",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.String",
+    "JsonType": "String",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": {
+    "NetType": "System.String",
+    "JsonType": "String",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.IReadOnlyDictionary<System.Guid, System.DayOfWeek>
+{
+  "NetType": "System.Collections.Generic.IReadOnlyDictionary<System.Guid, System.DayOfWeek>",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.DayOfWeek",
+    "JsonType": "Integer",
+    "Nullable": false,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": {
+    "NetType": "System.Guid",
+    "JsonType": "String",
+    "Nullable": false,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Collections.Generic.KeyValuePair<System.Int32, System.Int32>
+{
+  "NetType": "System.Collections.Generic.KeyValuePair<System.Int32, System.Int32>",
+  "JsonType": "Object",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "Key",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "Key",
+          "MemberType": "System.Int32"
+        }
+      }
+    },
+    {
+      "Key": "Value",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "Value",
+          "MemberType": "System.Int32"
+        }
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.Collections.Generic.KeyValuePair<System.Int32, System.Int32>>
+{
+  "NetType": "System.Nullable<System.Collections.Generic.KeyValuePair<System.Int32, System.Int32>>",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "Key",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "Key",
+          "MemberType": "System.Int32"
+        }
+      }
+    },
+    {
+      "Key": "Value",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "Value",
+          "MemberType": "System.Int32"
+        }
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.DateTimeOffset
+{
+  "NetType": "System.DateTimeOffset",
+  "JsonType": "String",
+  "Nullable": false,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Nullable<System.DateTimeOffset>
+{
+  "NetType": "System.Nullable<System.DateTimeOffset>",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# System.Net.IPAddress
+{
+  "NetType": "System.Net.IPAddress",
+  "JsonType": "String",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# Tests.ExplicitDataMemberOrder
+{
+  "NetType": "Tests.ExplicitDataMemberOrder",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "A",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "A",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    },
+    {
+      "Key": "B",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "B",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    },
+    {
+      "Key": "C",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "C",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}

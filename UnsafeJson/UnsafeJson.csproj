@@ -32,6 +32,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Sigil">
+      <HintPath>..\..\pl\Resources\Build\Sigil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,9 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Composites.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="ConvertUTF.cs" />
+    <Compile Include="JsonType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schema.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
