@@ -86,7 +86,7 @@ namespace Tests
 			public int A;
 		}
 
-		static string HumanName(Type t)
+		public static string HumanName(Type t)
 		{
 			var ns = t.Namespace;
 			var name = t.Name;

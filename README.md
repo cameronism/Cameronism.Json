@@ -2,7 +2,7 @@
 
 Serialization only (no deserialization). Entirely built around `byte*`
 
-# FIXME switch to nuget for Sigil
+# FIXME switch back to nuget for sigil once [LoadIndirect supports char and bool](https://github.com/kevin-montrose/Sigil/pull/21)
 
 
 ## Supports

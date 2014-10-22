@@ -1,0 +1,468 @@
+﻿
+
+# System.Int32
+ldarg.0
+ldind.i4
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Boolean
+ldarg.0
+ldind.i1
+ldarg.1
+ldarg.2
+call Int32 WriteBoolean(Boolean, Byte*, Int32)
+ret
+
+
+
+# System.Byte
+ldarg.0
+ldind.u1
+conv.u4
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.Char
+ldarg.0
+ldind.u2
+ldarg.1
+ldarg.2
+call Int32 WriteCharUtf8(Char, Byte*, Int32)
+ret
+
+
+
+# System.DateTime
+ldarg.0
+ldobj System.DateTime
+ldarg.1
+ldarg.2
+call Int32 WriteDateTime8601(System.DateTime, Byte*, Int32)
+ret
+
+
+
+# System.Decimal
+ldarg.0
+ldobj System.Decimal
+ldarg.1
+ldarg.2
+call Int32 WriteDecimal(System.Decimal, Byte*, Int32)
+ret
+
+
+
+# System.Double
+ldarg.0
+ldind.r8
+ldarg.1
+ldarg.2
+call Int32 WriteDouble(Double, Byte*, Int32)
+ret
+
+
+
+# System.Int16
+ldarg.0
+ldind.i2
+conv.i4
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Int64
+ldarg.0
+ldind.i8
+ldarg.1
+ldarg.2
+call Int32 WriteInt64(Int64, Byte*, Int32)
+ret
+
+
+
+# System.SByte
+ldarg.0
+ldind.i1
+conv.i4
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Single
+ldarg.0
+ldind.r4
+ldarg.1
+ldarg.2
+call Int32 WriteSingle(Single, Byte*, Int32)
+ret
+
+
+
+# System.String
+ldarg.0
+ldind.ref
+ldarg.1
+ldarg.2
+call Int32 WriteStringUtf8(System.String, Byte*, Int32)
+ret
+
+
+
+# System.UInt16
+ldarg.0
+ldind.u2
+conv.u4
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.UInt32
+ldarg.0
+ldind.u4
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.UInt64
+ldarg.0
+ldind.i8
+ldarg.1
+ldarg.2
+call Int32 WriteUInt64(UInt64, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Int32>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Int32 GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Boolean>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Boolean GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteBoolean(Boolean, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Byte>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Byte GetValueOrDefault()
+conv.u4
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Char>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Char GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteCharUtf8(Char, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.DateTime>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call System.DateTime GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteDateTime8601(System.DateTime, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Decimal>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call System.Decimal GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteDecimal(System.Decimal, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Double>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Double GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteDouble(Double, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Int16>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Int16 GetValueOrDefault()
+conv.i4
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Int64>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Int64 GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteInt64(Int64, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.SByte>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call SByte GetValueOrDefault()
+conv.i4
+ldarg.1
+ldarg.2
+call Int32 WriteInt32(Int32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Single>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call Single GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteSingle(Single, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.UInt16>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call UInt16 GetValueOrDefault()
+conv.u4
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.UInt32>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call UInt32 GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteUInt32(UInt32, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.UInt64>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call UInt64 GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteUInt64(UInt64, Byte*, Int32)
+ret
+
+
+
+# System.Guid
+ldarg.0
+ldobj System.Guid
+ldarg.1
+ldarg.2
+call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
+ret
+
+
+
+# System.Nullable<System.Guid>
+ldarg.0
+dup
+call Boolean get_HasValue()
+brtrue.s HasValue_true
+pop
+ldarg.1
+ldarg.2
+call Int32 WriteNull(Byte*, Int32)
+ret
+
+HasValue_true:
+call System.Guid GetValueOrDefault()
+ldarg.1
+ldarg.2
+call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
+ret
+
