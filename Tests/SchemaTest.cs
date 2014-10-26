@@ -76,7 +76,7 @@ namespace Tests
 		#endregion
 
 		[System.Runtime.Serialization.DataContract]
-		class ExplicitDataMemberOrder
+		public class ExplicitDataMemberOrder
 		{
 			[System.Runtime.Serialization.DataMember(Order=3)]
 			public int C;

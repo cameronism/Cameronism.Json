@@ -2,8 +2,17 @@
 
 Serialization only (no deserialization). Entirely built around `byte*`
 
-# FIXME switch back to nuget for sigil once [LoadIndirect supports char and bool](https://github.com/kevin-montrose/Sigil/pull/21)
+## Misc TODO
 
+- switch back to nuget for sigil once [LoadIndirect supports char and bool](https://github.com/kevin-montrose/Sigil/pull/21)
+- Better return value when insufficient space
+  + object serializer
+    * currently just doubles original avail param
+    * `member result - minLength` might be sufficient
+    * should decrease available before serializing member, save some room for following members
+- Minimum length (and maybe reserved length) per schema  
+  DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
+- Inline constant properties (see optimizations)
 
 ## Supports
 
@@ -31,7 +40,7 @@ Serialization only (no deserialization). Entirely built around `byte*`
 - IDictionary&lt;TKey, TValue&gt; **(TODO)**
 	- implementations where TKey is a string or enumeration
 
-### JSON -> .NET
+### JSON types from .NET types
 
 No deserialization (use JIL or Newtonsoft)
 
@@ -41,9 +50,9 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.Char`  
 	  writer done
 	- from `System.Guid`  
-	  writer done
+	  writer done, only the "D" format
 	- from `System.DateTime`  
-	  writer done
+	  writer done, only ISO8601
 	- from `System.DateTimeOffset`  
 	  TODO
 	- from `System.Net.IPAddress`  
@@ -79,10 +88,10 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.DateTime`  
 	  TODO
 	- from enum  
-	  TODO, this will be the default handling
+	  handled by delegate generator
 - object
 	- from type composed of other supported types  
-	  TODO
+	  handled by delegate generator, needs testing
 	- from `IDictionary<TKey, TValue>`  
 	  TODO, requires TKey to be string or enum
 - array
@@ -100,7 +109,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.String`  
 	  writer done
 	- from `System.Nullable<>`  
-	  TODO
+	  handled by delegate generator for primitives and non-dictionary objects
 
 ## Optimizations
 
@@ -109,3 +118,8 @@ No deserialization (use JIL or Newtonsoft)
   TODO
 - Whitespace for 8 byte alignment  
   TODO
+- Inline constant properties
+  TODO
+  Properties that return a constant will not be called, the serialized value
+  will be calculated when generating serialization method
+

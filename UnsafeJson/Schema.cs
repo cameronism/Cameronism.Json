@@ -25,6 +25,42 @@ namespace UnsafeJson
 		public FieldInfo FieldInfo { get; set; }
 		public PropertyInfo PropertyInfo { get; set; }
 
+		public int CalculateMinimumLength(bool considerNullMembers = true, bool considerNullSelf = false)
+		{
+			switch (JsonType)
+			{
+				case JsonType.String:
+					return 2; // ""
+				case JsonType.Number:
+					return 3; // 0.0
+				case JsonType.Integer:
+					return 1; // 0
+				case JsonType.Boolean:
+					return 4; // true
+				case JsonType.Array:
+					return 2; // []
+				case JsonType.Object:
+					if (Keys != null || (Members != null && Members.Count == 0)) return 2; // {}
+
+					if (Members == null) break;
+
+					var min = 2 + Members.Count - 1; // {} + ,
+					foreach (var member in Members)
+					{
+						min += member.Key.Length + 3; // "member name":
+
+						var memberMin = member.Value.CalculateMinimumLength();
+						min += considerNullMembers && member.Value.Nullable && memberMin > 4 ? 4 : memberMin;
+					}
+
+					if (considerNullSelf && Nullable && min > 4) return 4;
+
+					return min;
+			}
+
+			throw new ArgumentException();
+		}
+
 		static KeyValuePair<string, Schema> Reflect(FieldInfo fi)
 		{
 			var s = Reflect(fi.FieldType);
