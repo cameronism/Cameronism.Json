@@ -5,3 +5,4 @@ packages/
 *.swp
 *.csproj.user
 *.txt.bak
+*.received.txt

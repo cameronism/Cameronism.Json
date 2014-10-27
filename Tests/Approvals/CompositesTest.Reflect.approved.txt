@@ -526,7 +526,7 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br.s _label1
 
 _label0:
 ldloc.1
@@ -633,8 +633,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -888,8 +886,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -1095,12 +1091,8 @@ ldc.i4.5
 sub
 stloc.1
 call B`1 get_j()
-stloc.2
-ldloc.1
-ldloc.2
 dup
 brtrue.s _label6
-pop
 pop
 ldloc.1
 ldc.i4.4
@@ -1148,14 +1140,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
-br _label7
+br.s _label7
 
 _label6:
 ldloc.1
 ldc.i4.7
 bge.s _label9
-pop
 pop
 pop
 ldarg.2
@@ -1217,7 +1207,6 @@ ldc.i4.0
 bgt.s _label10
 pop
 pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -1238,7 +1227,6 @@ ldloc.1
 ldc.i4.1
 bge.s _label11
 pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -1257,22 +1245,8 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label7:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label12
@@ -1297,8 +1271,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -1423,12 +1395,8 @@ sub
 stloc.1
 dup
 call B`1 get_i()
-stloc.2
-ldloc.1
-ldloc.2
 dup
 brtrue.s _label4
-pop
 pop
 ldloc.1
 ldc.i4.4
@@ -1477,14 +1445,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label5
 
 _label4:
 ldloc.1
 ldc.i4.7
 bge.s _label7
-pop
 pop
 pop
 pop
@@ -1548,7 +1514,6 @@ bgt.s _label8
 pop
 pop
 pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -1570,7 +1535,6 @@ ldc.i4.1
 bge.s _label9
 pop
 pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -1589,22 +1553,8 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label5:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.7
 bge.s _label10
@@ -1709,8 +1659,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -1835,12 +1783,8 @@ sub
 stloc.1
 dup
 call B`2 get_i()
-stloc.2
-ldloc.1
-ldloc.2
 dup
 brtrue.s _label4
-pop
 pop
 ldloc.1
 ldc.i4.4
@@ -1889,14 +1833,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label5
 
 _label4:
 ldloc.1
 ldc.i4.s 16
 bge.s _label7
-pop
 pop
 pop
 pop
@@ -1962,7 +1904,6 @@ pop
 pop
 pop
 pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -1982,7 +1923,6 @@ stloc.1
 ldloc.1
 ldc.i4.s 10
 bge.s _label9
-pop
 pop
 pop
 pop
@@ -2037,17 +1977,12 @@ ldc.i4.5
 sub
 stloc.1
 call B`1 get_j()
-stloc.3
-ldloc.1
-ldloc.3
 dup
 brtrue.s _label10
-pop
 pop
 ldloc.1
 ldc.i4.4
 bge.s _label12
-pop
 pop
 pop
 ldarg.2
@@ -2092,15 +2027,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label11
 
 _label10:
 ldloc.1
 ldc.i4.7
 bge.s _label13
-pop
-pop
 pop
 pop
 pop
@@ -2164,8 +2096,6 @@ bgt.s _label14
 pop
 pop
 pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -2187,8 +2117,6 @@ ldc.i4.1
 bge.s _label15
 pop
 pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -2207,26 +2135,11 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label11:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label16
-pop
 pop
 pop
 ldarg.2
@@ -2247,22 +2160,8 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label5:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.7
 bge.s _label17
@@ -2367,8 +2266,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -2574,12 +2471,8 @@ ldc.i4.5
 sub
 stloc.1
 call B`1 get_j()
-stloc.2
-ldloc.1
-ldloc.2
 dup
 brtrue.s _label6
-pop
 pop
 ldloc.1
 ldc.i4.4
@@ -2627,14 +2520,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label7
 
 _label6:
 ldloc.1
 ldc.i4.s 10
 bge.s _label9
-pop
 pop
 pop
 ldarg.2
@@ -2688,17 +2579,12 @@ ldc.i4.5
 sub
 stloc.1
 call B`2 get_i()
-stloc.3
-ldloc.1
-ldloc.3
 dup
 brtrue.s _label10
-pop
 pop
 ldloc.1
 ldc.i4.4
 bge.s _label12
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -2742,15 +2628,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label11
 
 _label10:
 ldloc.1
 ldc.i4.s 16
 bge.s _label13
-pop
-pop
 pop
 pop
 ldarg.2
@@ -2814,8 +2697,6 @@ bgt.s _label14
 pop
 pop
 pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -2835,8 +2716,6 @@ stloc.1
 ldloc.1
 ldc.i4.s 10
 bge.s _label15
-pop
-pop
 pop
 pop
 ldarg.2
@@ -2890,18 +2769,12 @@ ldc.i4.5
 sub
 stloc.1
 call B`1 get_j()
-stloc.s 4
-ldloc.1
-ldloc.s 4
 dup
 brtrue.s _label16
-pop
 pop
 ldloc.1
 ldc.i4.4
 bge.s _label18
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -2945,16 +2818,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
-br _label17
+br.s _label17
 
 _label16:
 ldloc.1
 ldc.i4.7
 bge.s _label19
-pop
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3016,9 +2885,6 @@ ldc.i4.0
 bgt.s _label20
 pop
 pop
-pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -3039,9 +2905,6 @@ ldloc.1
 ldc.i4.1
 bge.s _label21
 pop
-pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -3060,27 +2923,11 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label17:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label22
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -3100,26 +2947,11 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label11:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label23
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -3139,22 +2971,8 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label7:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label24
@@ -3179,8 +2997,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -3386,12 +3202,8 @@ ldc.i4.5
 sub
 stloc.1
 call B`1 get_j()
-stloc.2
-ldloc.1
-ldloc.2
 dup
 brtrue.s _label6
-pop
 pop
 ldloc.1
 ldc.i4.4
@@ -3439,14 +3251,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label7
 
 _label6:
 ldloc.1
 ldc.i4.s 10
 bge.s _label9
-pop
 pop
 pop
 ldarg.2
@@ -3500,17 +3310,12 @@ ldc.i4.5
 sub
 stloc.1
 call B`2 get_i()
-stloc.3
-ldloc.1
-ldloc.3
 dup
 brtrue.s _label10
-pop
 pop
 ldloc.1
 ldc.i4.4
 bge.s _label12
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -3554,15 +3359,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label11
 
 _label10:
 ldloc.1
 ldc.i4.s 16
 bge.s _label13
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3626,8 +3428,6 @@ bgt.s _label14
 pop
 pop
 pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -3647,8 +3447,6 @@ stloc.1
 ldloc.1
 ldc.i4.s 10
 bge.s _label15
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3702,18 +3500,12 @@ ldc.i4.5
 sub
 stloc.1
 call B`2 get_j()
-stloc.s 4
-ldloc.1
-ldloc.s 4
 dup
 brtrue.s _label16
-pop
 pop
 ldloc.1
 ldc.i4.4
 bge.s _label18
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -3757,16 +3549,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br _label17
 
 _label16:
 ldloc.1
 ldc.i4.s 14
 bge.s _label19
-pop
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3830,9 +3618,6 @@ bgt.s _label20
 pop
 pop
 pop
-pop
-pop
-pop
 ldarg.2
 ldc.i4.s 254
 mul
@@ -3852,9 +3637,6 @@ stloc.1
 ldloc.1
 ldc.i4.8
 bge.s _label21
-pop
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3908,8 +3690,8 @@ ldc.i4.5
 sub
 stloc.1
 call System.Nullable`1[System.Guid] get_j()
-stloc.s 5
-ldloca.s 5
+stloc.2
+ldloca.s 2
 dup
 call Boolean get_HasValue()
 brtrue.s _label23
@@ -3917,9 +3699,6 @@ pop
 ldloc.1
 ldc.i4.4
 bge.s _label24
-pop
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -3963,7 +3742,6 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br.s _label22
 
 _label23:
@@ -3971,14 +3749,9 @@ call System.Guid GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
-
-_label22:
 dup
 ldc.i4.0
 bgt.s _label25
-pop
-pop
-pop
 pop
 pop
 ldarg.2
@@ -3997,12 +3770,11 @@ mul
 ldloc.1
 add
 stloc.1
+
+_label22:
 ldloc.1
 ldc.i4.1
 bge.s _label26
-pop
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -4022,27 +3794,11 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label17:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label27
-pop
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -4062,26 +3818,11 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label11:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label28
-pop
 pop
 ldarg.2
 ldc.i4.s 254
@@ -4101,22 +3842,8 @@ ldloc.1
 ldc.i4.1
 sub
 stloc.1
-ldloc.1
-sub
-ldc.i4.m1
-mul
 
 _label7:
-dup
-conv.i
-ldloc.0
-add
-stloc.0
-ldc.i4.m1
-mul
-ldloc.1
-add
-stloc.1
 ldloc.1
 ldc.i4.1
 bge.s _label29
@@ -4141,8 +3868,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -4395,8 +4120,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 ret
 
 
@@ -4701,8 +4424,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 
 _label1:
 ret
@@ -4991,7 +4712,6 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br.s _label5
 
 _label6:
@@ -4999,8 +4719,6 @@ call Int32 GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
-
-_label5:
 dup
 ldc.i4.0
 bgt.s _label8
@@ -5022,6 +4740,8 @@ mul
 ldloc.1
 add
 stloc.1
+
+_label5:
 ldloc.1
 ldc.i4.1
 bge.s _label9
@@ -5046,8 +4766,6 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
-mul
 ret
 
 
@@ -5388,7 +5106,6 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-ldc.i4.4
 br.s _label8
 
 _label9:
@@ -5396,8 +5113,6 @@ call Int32 GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
-
-_label8:
 dup
 ldc.i4.0
 bgt.s _label11
@@ -5419,6 +5134,8 @@ mul
 ldloc.1
 add
 stloc.1
+
+_label8:
 ldloc.1
 ldc.i4.1
 bge.s _label12
@@ -5443,8 +5160,103 @@ sub
 stloc.1
 ldloc.1
 sub
-ldc.i4.m1
+
+_label1:
+ret
+
+
+
+# <>f__AnonymousType0
+ldarg.1
+stloc.0
+ldarg.2
+stloc.1
+ldarg.2
+ldarg.0
+ldind.ref
+brtrue.s _label0
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldc.i4.s 254
 mul
+ret
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+ldc.i4.4
+br.s _label1
+
+_label0:
+ldloc.1
+ldc.i4.2
+bge.s _label3
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 123
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 125
+stind.i1
+ldloc.1
+ldc.i4.2
+sub
+stloc.1
+ldloc.1
+sub
 
 _label1:
 ret

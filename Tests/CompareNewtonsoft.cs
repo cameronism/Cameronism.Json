@@ -15,8 +15,8 @@ namespace Tests
 	{
 		public unsafe delegate int LowWriter<T>(T value, byte* dst, int avail);
 
-		static readonly Encoding _utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-		static readonly Newtonsoft.Json.JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
+		internal static readonly Encoding _utf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+		internal static readonly Newtonsoft.Json.JsonSerializer _serializer = new Newtonsoft.Json.JsonSerializer();
 
 		public static IEnumerable<string> InterestingStrings
 		{
@@ -472,7 +472,7 @@ namespace Tests
 			Assert.True(failed == 0, String.Format("Look at the approval, {0} comparisons failed", failed));
 		}
 
-		static int IndexOfDiff(IEnumerable<byte> xs, IEnumerable<byte> ys)
+		internal static int IndexOfDiff(IEnumerable<byte> xs, IEnumerable<byte> ys)
 		{
 			using (var en = xs.GetEnumerator())
 			{

@@ -61,7 +61,7 @@ namespace UnsafeJson
 			emit.LoadArgument(2);
 			emit.StoreLocal(local);
 
-			// CRITICAL before calling any composite methods top of stack must be `value` followed by `available`
+			// CRITICAL before calling any composite methods top of stack must be `value` followed by `available` when pushResult is true
 			emit.LoadArgument(2);
 
 			emit.LoadArgument(0);
@@ -71,22 +71,22 @@ namespace UnsafeJson
 			{
 				if (schema.NetType.IsArray)
 				{
-					EmitArray(schema, emit);
+					EmitArray(schema, emit, pushResult: true);
 				}
 				else
 				{
-					EmitEnumerable(schema, emit);
+					EmitEnumerable(schema, emit, pushResult: true);
 				}
 			}
 			else if (schema.JsonType == JsonType.Object)
 			{
 				if (schema.Keys != null)
 				{
-					EmitDictionary(schema, emit);
+					EmitDictionary(schema, emit, pushResult: true);
 				}
 				else
 				{
-					EmitObject(schema, emit);
+					EmitObject(schema, emit, pushResult: true);
 				}
 			}
 
@@ -95,32 +95,28 @@ namespace UnsafeJson
 		}
 
 		/// <summary>Must be called with value on top of the stack</summary>
-		static void EmitInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth, out bool simple)
+		static void EmitInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth)
 		{
 			switch (schema.JsonType)
 			{
 				case JsonType.Array:
-					simple = false;
-					PrepareStackComposite(schema, emit);
 					if (schema.NetType.IsArray)
 					{
-						EmitArray(schema, emit, depth);
+						EmitArray(schema, emit, depth, pushResult: false);
 					}
 					else
 					{
-						EmitEnumerable(schema, emit, depth);
+						EmitEnumerable(schema, emit, depth, pushResult: false);
 					}
 					break;
 				case JsonType.Object:
-					simple = false;
-					PrepareStackComposite(schema, emit);
 					if (schema.Keys != null)
 					{
-						EmitDictionary(schema, emit, depth);
+						EmitDictionary(schema, emit, depth, pushResult: false);
 					}
 					else
 					{
-						EmitObject(schema, emit, depth);
+						EmitObject(schema, emit, depth, pushResult: false);
 					}
 					break;
 				case JsonType.String:
@@ -130,29 +126,12 @@ namespace UnsafeJson
 					MethodInfo simpleWriter;
 					if (TryGetSimpleWriter(schema.NetType, out simpleWriter))
 					{
-						simple = true;
 						EmitSimpleInline(schema, emit, simpleWriter, depth);
 						return;
 					}
 					throw new ArgumentException("JSON primitive writer not found for " + schema.NetType.Name);
 				default:
 					throw new ArgumentException("Unknown JsonType " + schema.JsonType);
-			}
-		}
-
-		/// <summary>Make the top of the stack `value` then `avail`</summary>
-		static void PrepareStackComposite<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit)
-		{
-			var type = schema.NetType;
-
-			// nullable methods expect Nullable<>*
-			if (Nullable.GetUnderlyingType(type) != null) type = type.MakePointerType();
-
-			using (var value = emit.DeclareLocal(type))
-			{
-				emit.StoreLocal(value);
-				emit.LoadLocal(LOCAL_AVAIL);
-				emit.LoadLocal(value);
 			}
 		}
 
@@ -282,6 +261,7 @@ namespace UnsafeJson
 			emit.Return();
 		}
 
+		// never pushes result
 		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo writer, int depth)
 		{
 			var effective = schema.NetType;
@@ -299,7 +279,7 @@ namespace UnsafeJson
 
 				emit.BranchIfTrue(hasValueTrue);
 				emit.Pop(); // discard value
-				WriteConstant(emit, "null", push: true, depth: depth);
+				WriteConstant(emit, "null", push: false, depth: depth);
 				emit.Branch(ifNull);
 
 				emit.MarkLabel(hasValueTrue);
@@ -319,13 +299,44 @@ namespace UnsafeJson
 			emit.LoadLocal(LOCAL_AVAIL);
 			emit.Call(writer);
 
+
+			emit.Duplicate(); // preserve the written count
+
+			// check if the write succeeded
+			var success = emit.DefineLabel();
+			emit.LoadConstant(0);
+			emit.BranchIfGreater(success);
+			{
+				ReturnFailed(emit, depth + 1);
+			}
+
+			emit.MarkLabel(success);
+			emit.Duplicate(); // preserve written count
+
+			// advance LOCAL_DST
+			emit.Convert<IntPtr>();
+			emit.LoadLocal(LOCAL_DST);
+			emit.Add();
+			emit.StoreLocal(LOCAL_DST);
+
+
+			// emit.Duplicate(); // preserve written count
+
+			// decrement LOCAL_AVAIL
+			emit.LoadConstant(-1);
+			emit.Multiply();
+			emit.LoadLocal(LOCAL_AVAIL);
+			emit.Add();
+			emit.StoreLocal(LOCAL_AVAIL);
+
+
 			if (underlying != null)
 			{
 				emit.MarkLabel(ifNull);
 			}
 		}
 
-		static void EmitArray<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0)
+		static void EmitArray<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			// FIXME null check
 			// FIXME write '['
@@ -389,31 +400,35 @@ namespace UnsafeJson
 			throw new NotImplementedException();
 		}
 
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0)
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			// FIXME same rules as EmitObject
 			throw new NotImplementedException();
 		}
 
-		static void EmitObject<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0)
+		static void EmitObject<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
 			Sigil.Label ifNull = null;
+			bool anyMembers = schema.Members.Any();
 			if (schema.Nullable)
 			{
 				var ifNotNull = emit.DefineLabel();
 				ifNull = emit.DefineLabel();
 
-				emit.Duplicate(); // preserve the value
+				if (anyMembers)
+				{
+					emit.Duplicate(); // preserve the value
+				}
 				if (systemNullable)
 				{
 					emit.Call(schema.NetType.GetProperty("HasValue").GetMethod);
 				}
 				emit.BranchIfTrue(ifNotNull);
-				emit.Pop(); // discard value
-				emit.Pop(); // discard avail
-				WriteConstant(emit, "null", push: true, depth: depth);
+				if (anyMembers) emit.Pop(); // discard value
+				if (pushResult) emit.Pop(); // discard avail
+				WriteConstant(emit, "null", push: pushResult, depth: depth);
 				emit.Branch(ifNull);
 
 				emit.MarkLabel(ifNotNull);
@@ -428,7 +443,7 @@ namespace UnsafeJson
 
 			if (schema.Members.Count == 0)
 			{
-				WriteConstant(emit, "{}", depth: depth);
+				WriteConstant(emit, "{}", depth: depth + 1);
 			}
 			else
 			{
@@ -440,7 +455,7 @@ namespace UnsafeJson
 					emit.LoadConstant(minLength);
 					emit.BranchIfGreaterOrEqual(enoughAvailable);
 					{
-						ReturnFailed(emit, depth + 2);
+						ReturnFailed(emit, depth + (pushResult ? 2: 1));
 					}
 
 					emit.MarkLabel(enoughAvailable);
@@ -467,7 +482,7 @@ namespace UnsafeJson
 						// preserve value except last time through the loop
 						emit.Duplicate();
 					}
-					int loopDepth = depth + (lastMember ? 2 : 3);
+					int loopDepth = depth + (lastMember ? 1 : 2) - (pushResult ? 0 : 1);
 
 					// get the member value
 					if (member.Value.FieldInfo != null)
@@ -489,51 +504,21 @@ namespace UnsafeJson
 					}
 
 					// write the member value
-					bool simpleWriter;
-					EmitInline(member.Value, emit, loopDepth - 1, out simpleWriter);
+					EmitInline(member.Value, emit, loopDepth);
 
-					// negative check if simple writer was used
-					// if another composite was inlined it (currently) will have bailed completely rather than push negative
-					if (simpleWriter)
-					{
-						emit.Duplicate(); // preserve the written count
+					// if we ran out of room inner writer will have bailed completely rather than push negative (currently)
 
-						// check if the write succeeded
-						var success = emit.DefineLabel();
-						emit.LoadConstant(0);
-						emit.BranchIfGreater(success);
-						{
-							ReturnFailed(emit, loopDepth);
-						}
-
-						emit.MarkLabel(success);
-					}
-
-					emit.Duplicate(); // preserve written count
-					// advance LOCAL_DST
-					emit.Convert<IntPtr>();
-					emit.LoadLocal(LOCAL_DST);
-					emit.Add();
-					emit.StoreLocal(LOCAL_DST);
-
-					// decrement LOCAL_AVAIL
-					emit.LoadConstant(-1);
-					emit.Multiply();
-					emit.LoadLocal(LOCAL_AVAIL);
-					emit.Add();
-					emit.StoreLocal(LOCAL_AVAIL);
+					// we probably won't care about result until we create more fine grained estimates when out of room
 				}
-				WriteConstant(emit, "}", depth: depth + 1);
+				WriteConstant(emit, "}", depth: depth + (pushResult ? 1 : 0));
 			}
 
-			// push bytes written
-			emit.LoadLocal(LOCAL_AVAIL);
-			emit.Subtract();
-
-			// subtract was in the wrong order
-			// TODO verify assembly just does subtraction in the right order, if not we'll need to swap before subtract
-			emit.LoadConstant(-1);
-			emit.Multiply();
+			if (pushResult)
+			{
+				// push bytes written
+				emit.LoadLocal(LOCAL_AVAIL);
+				emit.Subtract();
+			}
 
 			if (schema.Nullable)
 			{
@@ -541,7 +526,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void EmitDictionary<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0)
+		static void EmitDictionary<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			// FIXME same rules as EmitObject
 			throw new NotImplementedException();

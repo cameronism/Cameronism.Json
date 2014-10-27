@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Tests.Util;
 using Xunit;
 
 namespace Tests
@@ -96,6 +98,8 @@ namespace Tests
 				typeof(MyStructWithFields<int, int?, string>),
 				typeof(MyStructWithFields<int, int?, string>?),
 
+				GetType(new { }),
+
 				//typeof(string[]),
 				//typeof(IEnumerable<int>),
 				//typeof(IReadOnlyList<Guid>),
@@ -122,6 +126,126 @@ namespace Tests
 			ApprovalTests.Approvals.Verify(sb.ToString());
 
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
+		}
+
+		[Fact]
+		public unsafe void AttemptSerialize()
+		{
+			var buffer = new byte[4096];
+			var sb = new StringBuilder();
+			int failed = 0;
+
+			failed += SerializeValues<int?>(sb, buffer, 1, int.MaxValue, null);
+			failed += SerializeValues<Guid?>(sb, buffer, Guid.Empty, Guid.Parse("41d091ba-d6bb-4795-969a-28d1509de6b6"), null);
+			failed += SerializeValues<DayOfWeek?>(sb, buffer, DayOfWeek.Monday, DayOfWeek.Friday, null);
+			failed += SerializeValues(sb, buffer, new { }, null);
+			failed += SerializeValues(sb, buffer, A(1), null);
+			failed += SerializeValues(sb, buffer, A(1,2), null);
+			failed += SerializeValues(sb, buffer, A((int?)1,2),  A((int?)null,2));
+			failed += SerializeValues(sb, buffer, A(2,(int?)1),  A(2,(int?)null));
+			failed += SerializeValues(sb, buffer, A(2,(int?)1),  A(2,(int?)null));
+			failed += SerializeValues<KeyValuePair<string, Guid>>(sb, buffer, new KeyValuePair<string, Guid>(null, Guid.Empty));
+			failed += SerializeValues<KeyValuePair<string, Guid>?>(sb, buffer, new KeyValuePair<string, Guid>(null, Guid.Empty), null);
+			failed += SerializeValues(sb, buffer, A(A(3,4),(int?)1),  A(A(3,4),(int?)null), A((B<int, int>)null,(int?)null));
+			failed += SerializeValues(sb, buffer, A((int?)1,A(3,4)),  A((int?)null, A(3,4)), A((int?)null, (B<int, int>)null));
+
+			ApprovalTests.Approvals.Verify(sb.ToString());
+			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
+		}
+
+		/// <summary>Return count of failed values</summary>
+		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		{
+			sb.AppendLine();
+			sb.AppendLine();
+			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
+
+			UnsafeJson.Convert.LowWriter<T> writer;
+			string instructions;
+			try
+			{
+				var emit = UnsafeJson.Composites.Create<T>(UnsafeJson.Schema.Reflect(typeof(T)));
+				writer = emit.CreateDelegate(out instructions);
+			}
+			catch (Sigil.SigilVerificationException sve)
+			{
+				sb.AppendLine("## failed");
+				sb.AppendLine(sve.ToString());
+
+				return values.Length;
+			}
+
+			int failed = 0;
+			for (int i = 0; i < values.Length; i++)
+			{
+				for (int j = 0; j < buffer.Length; j++) buffer[j] = 0;
+
+				var value = values[i];
+				int myResult;
+				var mine = GetBytes(value, writer, buffer, out myResult);
+				var newtonsoft = GetNewtonsoft(value);
+
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine("## Newtonsoft " + i);
+				Hex.Dump(sb, newtonsoft);
+
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine("## UnsafeJson " + i);
+				Hex.Dump(sb, mine);
+
+				sb.AppendLine();
+				sb.AppendLine();
+				bool equal = mine != null && Enumerable.SequenceEqual(newtonsoft, mine);
+				sb.AppendFormat("### Equal: {0}", equal);
+				if (mine != null)
+				{
+					int diff = CompareNewtonsoft.IndexOfDiff(newtonsoft, mine);
+					if (diff != -1)
+					{
+						sb.AppendFormat("### Difference at: {0:x}", diff);
+					}
+				}
+				else
+				{
+
+					sb.AppendFormat("### result: {0}", myResult);
+				}
+
+				failed += equal ? 0 : 1;
+			}
+
+			if (failed > 0)
+			{
+				sb.AppendLine();
+				sb.AppendLine(instructions);
+			}
+
+			return failed;
+		}
+
+		unsafe static IEnumerable<byte> GetBytes<T>(T value, UnsafeJson.Convert.LowWriter<T> writer, byte[] buffer, out int result)
+		{
+			fixed (byte* bs = buffer)
+			{
+				result = writer.Invoke(ref value, bs, buffer.Length);
+			}
+
+			return result < 0 ? null : buffer.Take(result);
+		}
+
+		static IEnumerable<byte> GetNewtonsoft<T>(T value)
+		{
+			var ms = new MemoryStream();
+			int len;
+			using (var writer = new StreamWriter(ms, CompareNewtonsoft._utf8))
+			{
+				CompareNewtonsoft._serializer.Serialize(writer, value, typeof(T));
+				writer.Flush();
+				len = (int)ms.Position;
+			}
+			return ms.GetBuffer().Take(len);
 		}
 
 		static readonly MethodInfo DescribeMethod = typeof(CompositesTest).GetMethod("Describe", BindingFlags.Static | BindingFlags.NonPublic);
