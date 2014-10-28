@@ -731,9 +731,9 @@
 }
 
 
-# Tests.ExplicitDataMemberOrder
+# Tests.SchemaTest+ExplicitDataMemberOrder
 {
-  "NetType": "Tests.ExplicitDataMemberOrder",
+  "NetType": "Tests.SchemaTest+ExplicitDataMemberOrder",
   "JsonType": "Object",
   "Nullable": true,
   "Items": null,

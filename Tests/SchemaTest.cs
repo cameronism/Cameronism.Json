@@ -88,13 +88,36 @@ namespace Tests
 
 		public static string HumanName(Type t)
 		{
-			var ns = t.Namespace;
 			var name = t.Name;
-			if (t.IsGenericType)
-			{
-				name = name.Substring(0, name.IndexOf('`')) + "<" +  String.Join(", ", t.GetGenericArguments().Select(a => HumanName(a))) + ">";
+			if (t.IsGenericParameter) return name;
 
+			var original = t;
+			var ns = t.Namespace;
+
+			var ix = name.IndexOf('`');
+			if (ix != -1)
+			{
+				var genericArgs = t.GetGenericArguments();
+				name = name.Substring(0, ix) + "<" + String.Join(", ", genericArgs.Select(a => HumanName(a))) + ">";
+				if (t.IsArray) name += "[]";
 			}
+
+			while (t.IsNested)
+			{
+				t = t.DeclaringType;
+				var next = t.Name;
+
+				ix = next.IndexOf('`');
+				if (ix != -1)
+				{
+					var genericArgs = original.GetGenericArguments();
+					next = next.Substring(0, ix) + "<" + String.Join(", ", genericArgs.Select(a => HumanName(a))) + ">";
+				}
+
+				name = next + "+" + name;
+			}
+
+
 			return String.IsNullOrEmpty(ns) ? name : ns + "." + name;
 		}
 

@@ -152,7 +152,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Int32>
+# Tests.CompositesTest+B<System.Int32>
 
 
 ## Newtonsoft 0
@@ -179,7 +179,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Int32, System.Int32>
+# Tests.CompositesTest+B<System.Int32, System.Int32>
 
 
 ## Newtonsoft 0
@@ -206,7 +206,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Nullable<System.Int32>, System.Int32>
+# Tests.CompositesTest+B<System.Nullable<System.Int32>, System.Int32>
 
 
 ## Newtonsoft 0
@@ -233,7 +233,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Int32, System.Nullable<System.Int32>>
+# Tests.CompositesTest+B<System.Int32, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -260,7 +260,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Int32, System.Nullable<System.Int32>>
+# Tests.CompositesTest+B<System.Int32, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -341,7 +341,7 @@
 
 ### Equal: True
 
-# Tests.B<Tests.B<System.Int32, System.Int32>, System.Nullable<System.Int32>>
+# Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, System.Int32>, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -386,7 +386,7 @@
 
 ### Equal: True
 
-# Tests.B<System.Nullable<System.Int32>, Tests.B<System.Int32, System.Int32>>
+# Tests.CompositesTest+B<System.Nullable<System.Int32>, Tests.CompositesTest+B<System.Int32, System.Int32>>
 
 
 ## Newtonsoft 0
@@ -494,7 +494,7 @@
 
 ### Equal: True
 
-# System.Nullable`1[]
+# System.Nullable<System.Int32>[]
 
 
 ## Newtonsoft 0
@@ -581,7 +581,7 @@
 
 ### Equal: True
 
-# Tests.B`1[]
+# Tests.B<System.Nullable<System.Int32>>[]
 
 
 ## Newtonsoft 0

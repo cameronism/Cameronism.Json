@@ -468,7 +468,7 @@ ret
 
 
 
-# Tests.B<System.Int32>
+# Tests.CompositesTest+B<System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -639,7 +639,7 @@ ret
 
 
 
-# Tests.B<System.Int32, System.Int32>
+# Tests.CompositesTest+B<System.Int32, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -892,7 +892,7 @@ ret
 
 
 
-# Tests.B<System.Int32, Tests.B<System.Int32>>
+# Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -1277,7 +1277,7 @@ ret
 
 
 
-# Tests.B<Tests.B<System.Int32>, System.Int32>
+# Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32>, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -1665,7 +1665,7 @@ ret
 
 
 
-# Tests.B<Tests.B<System.Int32, Tests.B<System.Int32>>, System.Int32>
+# Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -2272,7 +2272,7 @@ ret
 
 
 
-# Tests.B<System.Int32, Tests.B<Tests.B<System.Int32, Tests.B<System.Int32>>>>
+# Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -3003,7 +3003,7 @@ ret
 
 
 
-# Tests.B<System.Guid, Tests.B<Tests.B<System.Int32, Tests.B<System.Int32, System.Nullable<System.Guid>>>>>
+# Tests.CompositesTest+B<System.Guid, Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32, System.Nullable<System.Guid>>>>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -4430,7 +4430,7 @@ ret
 
 
 
-# Tests.MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>
+# Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>
 ldarg.1
 stloc.0
 ldarg.2
@@ -4770,7 +4770,7 @@ ret
 
 
 
-# System.Nullable<Tests.MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>>
+# System.Nullable<Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>>
 ldarg.1
 stloc.0
 ldarg.2

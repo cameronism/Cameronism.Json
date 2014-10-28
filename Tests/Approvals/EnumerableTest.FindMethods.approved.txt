@@ -1,0 +1,54 @@
+﻿fixme still need to get more selective about which methods to use
+
+# System.Collections.Generic.List<System.Int32>
+## GetEnumerator
+Return Type: System.Collections.Generic.List<System.Int32>+Enumerator
+IsVirtual: False
+Declaring Type: System.Collections.Generic.List<System.Int32>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.Generic.List<System.Int32>+Enumerator
+
+## get_Current
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.List<System.Int32>+Enumerator
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.List<System.Int32>
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.Collections.Generic.List<System.Int32>+Enumerator
+
+
+# System.Collections.Generic.IEnumerable<System.Int32>
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Int32>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Int32>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Int32>
+
+## get_Count
+`null`
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
