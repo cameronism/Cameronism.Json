@@ -91,12 +91,12 @@ No deserialization (use JIL or Newtonsoft)
 	  handled by delegate generator
 - object
 	- from type composed of other supported types  
-	  handled by delegate generator, needs testing
+	  handled by delegate generator
 	- from `IDictionary<TKey, TValue>`  
 	  TODO, requires TKey to be string or enum
 - array
 	- from array  
-	  TODO
+	  handled by delegate generator
 	- from `IEnumerable<>`  
 	  TODO
 - true

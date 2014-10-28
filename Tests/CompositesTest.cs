@@ -100,7 +100,8 @@ namespace Tests
 
 				GetType(new { }),
 
-				//typeof(string[]),
+				typeof(int[]),
+				typeof(int[][]),
 				//typeof(IEnumerable<int>),
 				//typeof(IReadOnlyList<Guid>),
 
@@ -148,6 +149,11 @@ namespace Tests
 			failed += SerializeValues<KeyValuePair<string, Guid>?>(sb, buffer, new KeyValuePair<string, Guid>(null, Guid.Empty), null);
 			failed += SerializeValues(sb, buffer, A(A(3,4),(int?)1),  A(A(3,4),(int?)null), A((B<int, int>)null,(int?)null));
 			failed += SerializeValues(sb, buffer, A((int?)1,A(3,4)),  A((int?)null, A(3,4)), A((int?)null, (B<int, int>)null));
+			failed += SerializeValues(sb, buffer, new int[0], new[] { 1 }, new[] { 1, 2 }, new[] { 1, 2, 3 }, (int[])null);
+			failed += SerializeValues(sb, buffer, new int?[] { 1 }, new int?[] { null });
+			failed += SerializeValues(sb, buffer, new int[][] { new[] { 1 }, null, new[] { 1, 2, 3 } }, null);
+			failed += SerializeValues(sb, buffer, new int[][][] { new[] { new[] { 1 }, null, new int[0] }, null, new[] { new[] { 1, 2, 3 } }, null }, null);
+			failed += SerializeValues(sb, buffer, new[] { A((int?)1), A((int?)null), }, null);
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");

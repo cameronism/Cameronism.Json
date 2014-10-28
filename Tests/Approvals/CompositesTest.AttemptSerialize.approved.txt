@@ -430,3 +430,182 @@
 0010   6c 6c 7d                                            ll}
 
 ### Equal: True
+
+# System.Int32[]
+
+
+## Newtonsoft 0
+
+
+0000   5b 5d                                               []
+
+## UnsafeJson 0
+
+
+0000   5b 5d                                               []
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   5b 31 5d                                            [1]
+
+## UnsafeJson 1
+
+
+0000   5b 31 5d                                            [1]
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   5b 31 2c 32 5d                                      [1,2]
+
+## UnsafeJson 2
+
+
+0000   5b 31 2c 32 5d                                      [1,2]
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   5b 31 2c 32 2c 33 5d                                [1,2,3]
+
+## UnsafeJson 3
+
+
+0000   5b 31 2c 32 2c 33 5d                                [1,2,3]
+
+### Equal: True
+
+## Newtonsoft 4
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 4
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# System.Nullable`1[]
+
+
+## Newtonsoft 0
+
+
+0000   5b 31 5d                                            [1]
+
+## UnsafeJson 0
+
+
+0000   5b 31 5d                                            [1]
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   5b 6e 75 6c 6c 5d                                   [null]
+
+## UnsafeJson 1
+
+
+0000   5b 6e 75 6c 6c 5d                                   [null]
+
+### Equal: True
+
+# System.Int32[][]
+
+
+## Newtonsoft 0
+
+
+0000   5b 5b 31 5d 2c 6e 75 6c   6c 2c 5b 31 2c 32 2c 33   [[1],nul l,[1,2,3
+0010   5d 5d                                               ]]
+
+## UnsafeJson 0
+
+
+0000   5b 5b 31 5d 2c 6e 75 6c   6c 2c 5b 31 2c 32 2c 33   [[1],nul l,[1,2,3
+0010   5d 5d                                               ]]
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 1
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# System.Int32[][][]
+
+
+## Newtonsoft 0
+
+
+0000   5b 5b 5b 31 5d 2c 6e 75   6c 6c 2c 5b 5d 5d 2c 6e   [[[1],nu ll,[]],n
+0010   75 6c 6c 2c 5b 5b 31 2c   32 2c 33 5d 5d 2c 6e 75   ull,[[1, 2,3]],nu
+0020   6c 6c 5d                                            ll]
+
+## UnsafeJson 0
+
+
+0000   5b 5b 5b 31 5d 2c 6e 75   6c 6c 2c 5b 5d 5d 2c 6e   [[[1],nu ll,[]],n
+0010   75 6c 6c 2c 5b 5b 31 2c   32 2c 33 5d 5d 2c 6e 75   ull,[[1, 2,3]],nu
+0020   6c 6c 5d                                            ll]
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 1
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# Tests.B`1[]
+
+
+## Newtonsoft 0
+
+
+0000   5b 7b 22 69 22 3a 31 7d   2c 7b 22 69 22 3a 6e 75   [{"i":1} ,{"i":nu
+0010   6c 6c 7d 5d                                         ll}]
+
+## UnsafeJson 0
+
+
+0000   5b 7b 22 69 22 3a 31 7d   2c 7b 22 69 22 3a 6e 75   [{"i":1} ,{"i":nu
+0010   6c 6c 7d 5d                                         ll}]
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 1
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True

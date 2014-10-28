@@ -97,6 +97,11 @@ namespace UnsafeJson
 		/// <summary>Must be called with value on top of the stack</summary>
 		static void EmitInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth)
 		{
+			if (Nullable.GetUnderlyingType(schema.NetType) != null)
+			{
+				PushAddress(emit, schema.NetType);
+			}
+
 			switch (schema.JsonType)
 			{
 				case JsonType.Array:
@@ -338,66 +343,93 @@ namespace UnsafeJson
 
 		static void EmitArray<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
-			// FIXME null check
-			// FIXME write '['
 
-			var endLoop = emit.DefineLabel("endLoop");
-			var beginLoop = emit.DefineLabel("beginLoop");
+			var ifNotNull = emit.DefineLabel();
+			var ifNull = emit.DefineLabel();
 
-			/* var theArray = arg0; */
-			var theArray = emit.DeclareLocal(schema.NetType, "theArray");
-			emit.StoreLocal(theArray);
+			emit.Duplicate(); // preserve the value
+			emit.BranchIfTrue(ifNotNull);
+			emit.Pop(); // discard value
+			if (pushResult) emit.Pop(); // discard avail
+			WriteConstant(emit, "null", push: pushResult, depth: depth);
+			emit.Branch(ifNull);
+
+			emit.MarkLabel(ifNotNull);
+
+			int localDepth = pushResult ? 2 : 1;
+
+			// begin array
+			WriteConstant(emit, "[", depth: depth + localDepth);
+
+			var endLoop = emit.DefineLabel();
+			var beginLoop = emit.DefineLabel();
 
 			/* var ix = 0; */
-			var ix = emit.DeclareLocal<int>("ix");
-			emit.LoadConstant(0);
-			emit.StoreLocal(ix);
+			using (var ix = emit.DeclareLocal<int>())
+			{
+				emit.LoadConstant(0);
+				emit.StoreLocal(ix);
 
-			/* goto endLoop; */
-			emit.Branch(endLoop);
+				/* goto endLoop; */
+				emit.Branch(endLoop);
 
-			/* beginLoop: */
-			emit.MarkLabel(beginLoop);
+				/* beginLoop: */
+				emit.MarkLabel(beginLoop);
 
-			//FIXME write ','
+				// write ','
+				var afterComma = emit.DefineLabel();
+				emit.LoadLocal(ix);
+				emit.BranchIfFalse(afterComma);
+				WriteConstant(emit, ",", depth: depth + localDepth);
 
-			/* `push` theArray[ix] */
-			emit.LoadLocal(theArray);
-			emit.LoadLocal(ix);
-			emit.LoadElement(schema.Items.NetType);
+				emit.MarkLabel(afterComma);
 
-			//FIXME do something with element
+				/* `push` theArray[ix] */
+				emit.Duplicate(); // preserve array value
+				emit.LoadLocal(ix);
+				emit.LoadElement(schema.Items.NetType);
 
-			/* ix += 1; */
-			emit.LoadLocal(ix);
-			emit.LoadConstant(1);
-			emit.Add();
-			emit.StoreLocal(ix);
+				// write the element
+				EmitInline(schema.Items, emit, depth + localDepth);
+
+				/* ix += 1; */
+				emit.LoadLocal(ix);
+				emit.LoadConstant(1);
+				emit.Add();
+				emit.StoreLocal(ix);
 
 
-			/* endLoop: */
-			emit.MarkLabel(endLoop);
+				/* endLoop: */
+				emit.MarkLabel(endLoop);
 
 
-			/* if (ix < theArray.Length) goto beginLoop; */
-			emit.LoadLocal(ix);
-			emit.LoadLocal(theArray);
-			emit.LoadLength(schema.Items.NetType);
-			emit.Convert<int>();
-			emit.BranchIfLess(beginLoop);
+				/* if (theArray.Length > ix) goto beginLoop; */
+				emit.Duplicate(); // preserve array value
+				emit.LoadLength(schema.Items.NetType);
+				emit.Convert<int>();
+				emit.LoadLocal(ix);
+				emit.BranchIfGreater(beginLoop);
+			}
 
-			// FIXME write ']'
+			// discard array value
+			emit.Pop();
 
-			// FIXME return bytes written
+			// end array
+			WriteConstant(emit, "]", depth: depth + localDepth - 1);
 
-			/* return 0; */
-			emit.LoadConstant(0);
 
-			// FIXME this will probably need locals:
-			//   destination
-			//   available length
-			//   result (maybe)
-			throw new NotImplementedException();
+
+			if (pushResult)
+			{
+				// push bytes written
+				emit.LoadLocal(LOCAL_AVAIL);
+				emit.Subtract();
+			}
+
+			if (schema.Nullable)
+			{
+				emit.MarkLabel(ifNull);
+			}
 		}
 
 		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
@@ -496,11 +528,6 @@ namespace UnsafeJson
 							PushAddress(emit, systemNullable ? underlying : schema.NetType);
 						}
 						emit.Call(member.Value.PropertyInfo.GetMethod);
-					}
-
-					if (Nullable.GetUnderlyingType(member.Value.NetType) != null)
-					{
-						PushAddress(emit, member.Value.NetType);
 					}
 
 					// write the member value

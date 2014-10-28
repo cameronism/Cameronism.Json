@@ -5261,3 +5261,526 @@ sub
 _label1:
 ret
 
+
+
+# System.Int32[]
+ldarg.1
+stloc.0
+ldarg.2
+stloc.1
+ldarg.2
+ldarg.0
+ldind.ref
+dup
+brtrue.s _label0
+pop
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+ldc.i4.4
+br _label1
+
+_label0:
+ldloc.1
+ldc.i4.1
+bge.s _label3
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldc.i4.0
+stloc.2
+br.s _label4
+
+_label5:
+ldloc.2
+brfalse.s _label6
+ldloc.1
+ldc.i4.1
+bge.s _label7
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label7:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label6:
+dup
+ldloc.2
+ldelem.i4
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label8
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label8:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+ldloc.2
+ldc.i4.1
+add
+stloc.2
+
+_label4:
+dup
+ldlen
+conv.i4
+ldloc.2
+bgt.s _label5
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label9
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label9:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldloc.1
+sub
+
+_label1:
+ret
+
+
+
+# System.Int32[][]
+ldarg.1
+stloc.0
+ldarg.2
+stloc.1
+ldarg.2
+ldarg.0
+ldind.ref
+dup
+brtrue.s _label0
+pop
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+ldc.i4.4
+br _label1
+
+_label0:
+ldloc.1
+ldc.i4.1
+bge.s _label3
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldc.i4.0
+stloc.2
+br _label4
+
+_label5:
+ldloc.2
+brfalse.s _label6
+ldloc.1
+ldc.i4.1
+bge.s _label7
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label7:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label6:
+dup
+ldloc.2
+ldelem.ref
+dup
+brtrue.s _label8
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label10
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label10:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+br _label9
+
+_label8:
+ldloc.1
+ldc.i4.1
+bge.s _label11
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label11:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldc.i4.0
+stloc.3
+br.s _label12
+
+_label13:
+ldloc.3
+brfalse.s _label14
+ldloc.1
+ldc.i4.1
+bge.s _label15
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label15:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label14:
+dup
+ldloc.3
+ldelem.i4
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label16
+pop
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label16:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+ldloc.3
+ldc.i4.1
+add
+stloc.3
+
+_label12:
+dup
+ldlen
+conv.i4
+ldloc.3
+bgt.s _label13
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label17
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label17:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label9:
+ldloc.2
+ldc.i4.1
+add
+stloc.2
+
+_label4:
+dup
+ldlen
+conv.i4
+ldloc.2
+bgt _label5
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label18
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label18:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldloc.1
+sub
+
+_label1:
+ret
+
