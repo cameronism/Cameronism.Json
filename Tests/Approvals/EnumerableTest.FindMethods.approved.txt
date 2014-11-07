@@ -1,6 +1,4 @@
-﻿fixme still need to get more selective about which methods to use
-
-# System.Collections.Generic.List<System.Int32>
+﻿# System.Collections.Generic.List<System.Int32>
 ## GetEnumerator
 Return Type: System.Collections.Generic.List<System.Int32>+Enumerator
 IsVirtual: False
@@ -45,6 +43,218 @@ Declaring Type: System.Collections.Generic.IEnumerator<System.Int32>
 
 ## get_Count
 `null`
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# Tests.EnumerableTest+ExplicitEnumerableBadCount
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Boolean>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Boolean>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Boolean>
+
+## get_Count
+`null`
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# Tests.EnumerableTest+ExplicitReadOnlyCollection
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Guid>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Guid>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Guid
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Guid>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IReadOnlyCollection<System.Guid>
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Byte>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Byte>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Byte
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Byte>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
+## GetEnumerator
+Return Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+IsVirtual: False
+Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: False
+Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+
+## get_Current
+Return Type: System.SByte
+IsVirtual: False
+Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IReadOnlyCollection<System.SByte>
+
+## Dispose
+`null`
+
+
+# System.Collections.Generic.ICollection<System.Int16>
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Int16>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Int16>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Int16
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Int16>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.ICollection<System.Int16>
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# System.Collections.Generic.IReadOnlyCollection<System.UInt16>
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.UInt16>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.UInt16>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.UInt16
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.UInt16>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IReadOnlyCollection<System.UInt16>
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# System.Collections.Generic.IReadOnlyList<System.Int64>
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.Int64>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.Int64>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.Int64
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.Int64>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IReadOnlyCollection<System.Int64>
+
+## Dispose
+Return Type: System.Void
+IsVirtual: True
+Declaring Type: System.IDisposable
+
+
+# System.Collections.Generic.IList<System.UInt64>
+## GetEnumerator
+Return Type: System.Collections.Generic.IEnumerator<System.UInt64>
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerable<System.UInt64>
+
+## MoveNext
+Return Type: System.Boolean
+IsVirtual: True
+Declaring Type: System.Collections.IEnumerator
+
+## get_Current
+Return Type: System.UInt64
+IsVirtual: True
+Declaring Type: System.Collections.Generic.IEnumerator<System.UInt64>
+
+## get_Count
+Return Type: System.Int32
+IsVirtual: True
+Declaring Type: System.Collections.Generic.ICollection<System.UInt64>
 
 ## Dispose
 Return Type: System.Void

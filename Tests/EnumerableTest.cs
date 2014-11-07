@@ -12,6 +12,50 @@ namespace Tests
 {
 	public class EnumerableTest
 	{
+		class ExplicitEnumerableBadCount : IEnumerable<bool>
+		{
+			IEnumerator<bool> IEnumerable<bool>.GetEnumerator() { throw new NotImplementedException(); } 
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw new NotImplementedException(); } 
+			/// <summary>
+			/// This should not be picked up since neither ICollection<> or IReadOnlyCollection are implemented
+			/// </summary>
+			public int Count
+			{
+				get
+				{
+					return 0;
+				}
+			}
+		}
+
+		class ExplicitReadOnlyCollection : IReadOnlyCollection<Guid>
+		{
+			int IReadOnlyCollection<Guid>.Count { get { throw new NotImplementedException(); } } 
+			IEnumerator<Guid> IEnumerable<Guid>.GetEnumerator() { throw new NotImplementedException(); } 
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw new NotImplementedException(); }
+		}
+		class ExplicitReadOnlyCollectionImplicitCount : IReadOnlyCollection<byte>
+		{
+			public int Count { get { throw new NotImplementedException(); } }
+			IEnumerator<byte> IEnumerable<byte>.GetEnumerator() { throw new NotImplementedException(); }
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw new NotImplementedException(); }
+		}
+		class ExplicitReadOnlyCollectionPublicEnumerator : IReadOnlyCollection<sbyte>
+		{
+			public struct Enumerator
+			{
+				public bool MoveNext() { return false; }
+				public sbyte Current { get { return 0; } }
+			}
+
+			public Enumerator GetEnumerator() { return new Enumerator(); }
+			int IReadOnlyCollection<sbyte>.Count { get { throw new NotImplementedException(); } } 
+			IEnumerator<sbyte> IEnumerable<sbyte>.GetEnumerator() { throw new NotImplementedException(); } 
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw new NotImplementedException(); }
+		}
+
+
+
 		[Fact]
 		public void FindMethods()
 		{
@@ -21,6 +65,14 @@ namespace Tests
 			{
 				typeof(List<int>),
 				typeof(IEnumerable<int>),
+				typeof(ExplicitEnumerableBadCount),
+				typeof(ExplicitReadOnlyCollection),
+				typeof(ExplicitReadOnlyCollectionImplicitCount),
+				typeof(ExplicitReadOnlyCollectionPublicEnumerator),
+				typeof(ICollection<short>),
+				typeof(IReadOnlyCollection<ushort>),
+				typeof(IReadOnlyList<long>),
+				typeof(IList<ulong>),
 			})
 			{
 				var methods = EnumerableInfo.FindMethods(type);
