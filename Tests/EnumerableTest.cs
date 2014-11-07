@@ -120,7 +120,7 @@ namespace Tests
 			var sb = new StringBuilder();
 			int failed = 0;
 
-			failed += SerializeValues<IEnumerable<int>>(sb, buffer, 
+			failed += SerializeValues<IEnumerable<int>>(sb, buffer, true,
 				null, 
 				new List<int> { },
 				new List<int> { 1 },
@@ -138,9 +138,9 @@ namespace Tests
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
 		}
 
-		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, bool approveIL, params T[] values)
 		{
-			return CompositesTest.SerializeValues(sb, buffer, values);
+			return CompositesTest.SerializeValues(sb, buffer, values, approveIL);
 		}
 
 	}

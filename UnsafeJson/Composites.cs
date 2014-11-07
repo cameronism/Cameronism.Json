@@ -466,44 +466,45 @@ namespace UnsafeJson
 
 			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : emit.BeginExceptionBlock();
 
-			using (var ix = emit.DeclareLocal<int>())
-			{
-				// ix = 0;
-				emit.LoadConstant(0);
-				emit.StoreLocal(ix);
+			// unroll the first iteration so the loop can always write the comma
 
-				emit.Branch(loopBottom);
-				emit.MarkLabel(loopTop);
-
-				// write ','
-				var afterComma = emit.DefineLabel();
-				emit.LoadLocal(ix);
-				emit.BranchIfFalse(afterComma);
-				WriteConstant(emit, ",", depth: depth + localDepth);
-
-				// ix = 1
-				emit.MarkLabel(afterComma);
-				emit.LoadConstant(1);
-				emit.StoreLocal(ix);
+			/* if (!enumerator.MoveNext()) goto closeArray; */
+			emit.Duplicate(); // preserve enumerator
+			CallCorrectly(emit, enumerable.MoveNext);
+			emit.BranchIfFalse(closeArray);
 
 
-				// preserve enumerator
-				emit.Duplicate();
-				// push enumerator.Current
-				CallCorrectly(emit, enumerable.get_Current);
+			// push enumerator.Current
+			emit.Duplicate(); // preserve enumerator
+			// push enumerator.Current
+			CallCorrectly(emit, enumerable.get_Current);
 
-				// write the element
-				EmitInline(schema.Items, emit, depth + localDepth);
+			// write the first element
+			EmitInline(schema.Items, emit, depth + localDepth);
+
+			emit.Branch(loopBottom);
+			emit.MarkLabel(loopTop);
+
+			// write ','
+			WriteConstant(emit, ",", depth: depth + localDepth);
+
+			// preserve enumerator
+			emit.Duplicate();
+			// push enumerator.Current
+			CallCorrectly(emit, enumerable.get_Current);
+
+			// write the element
+			EmitInline(schema.Items, emit, depth + localDepth);
 
 
-				/* endLoop: */
-				emit.MarkLabel(loopBottom);
+			/* endLoop: */
+			emit.MarkLabel(loopBottom);
 
-				/* if (enumerator.MoveNext()) goto beginLoop; */
-				emit.Duplicate(); // preserve enumerator
-				CallCorrectly(emit, enumerable.MoveNext);
-				emit.BranchIfTrue(loopTop);
-			}
+			/* if (enumerator.MoveNext()) goto beginLoop; */
+			emit.Duplicate(); // preserve enumerator
+			CallCorrectly(emit, enumerable.MoveNext);
+			emit.BranchIfTrue(loopTop);
+
 
 			emit.MarkLabel(closeArray);
 

@@ -160,7 +160,12 @@ namespace Tests
 		}
 
 		/// <summary>Return count of failed values</summary>
-		internal static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		{
+			return SerializeValues(sb, buffer, values, false);
+		}
+
+		internal static int SerializeValues<T>(StringBuilder sb, byte[] buffer, T[] values, bool approveIL)
 		{
 			sb.AppendLine();
 			sb.AppendLine();
@@ -179,6 +184,14 @@ namespace Tests
 				sb.AppendLine(sve.ToString());
 
 				return values.Length;
+			}
+
+			if (approveIL)
+			{
+				sb.AppendLine();
+				sb.AppendLine("## il");
+				sb.AppendLine(instructions);
+				sb.AppendLine();
 			}
 
 			int failed = 0;
