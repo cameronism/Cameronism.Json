@@ -132,7 +132,38 @@ namespace Tests
 				Enumerable.Repeat(3, 0),
 				Enumerable.Repeat(3, 1),
 				Enumerable.Repeat(3, 2),
+				Enumerable.Repeat(3, 3),
 				null);
+
+			failed += SerializeValues(sb, buffer, true,
+				new List<int> { },
+				new List<int> { 1 },
+				new List<int> { 1, 2 },
+				new List<int> { 1, 2, 3 });
+
+			failed += SerializeValues<IList<int?>>(sb, buffer, false,
+				new int?[] { },
+				new List<int?> { null },
+				new int?[] { 1 },
+				new List<int?> { 1, null },
+				new int?[] { 1, 2 },
+				new List<int?> { 1, 2, null },
+				new int?[] { 1, 2, 3 },
+				new List<int?> { 1, 2, 3, null });
+
+			failed += SerializeValues<IReadOnlyCollection<int?>>(sb, buffer, false,
+				new int?[] { },
+				new List<int?> { null }.AsReadOnly(),
+				new int?[] { 1 },
+				new List<int?> { 1, null },
+				new int?[] { 1, 2 },
+				new List<int?> { 1, 2, null },
+				new int?[] { 1, 2, 3 },
+				new List<int?> { 1, 2, 3, null });
+
+
+			failed += SerializeValues(sb, buffer, false,
+				new List<int?> { null }.AsReadOnly());
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");

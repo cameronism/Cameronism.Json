@@ -461,8 +461,14 @@ namespace UnsafeJson
 
 			
 			// call GetEnumerator
-			CallCorrectly(emit, enumerable.GetEnumerator);
+			CallCorrectly(emit, enumerable.GetEnumerator, schema.NetType);
 			var enumeratorType = enumerable.GetEnumerator.ReturnType;
+
+			// use the pointer for enumerator structs
+			if (enumeratorType.IsValueType)
+			{
+				PushAddress(emit, enumeratorType);
+			}
 
 			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : emit.BeginExceptionBlock();
 
@@ -470,14 +476,14 @@ namespace UnsafeJson
 
 			/* if (!enumerator.MoveNext()) goto closeArray; */
 			emit.Duplicate(); // preserve enumerator
-			CallCorrectly(emit, enumerable.MoveNext);
+			CallCorrectly(emit, enumerable.MoveNext, enumeratorType);
 			emit.BranchIfFalse(closeArray);
 
 
 			// push enumerator.Current
 			emit.Duplicate(); // preserve enumerator
 			// push enumerator.Current
-			CallCorrectly(emit, enumerable.get_Current);
+			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
 
 			// write the first element
 			EmitInline(schema.Items, emit, depth + localDepth);
@@ -491,7 +497,7 @@ namespace UnsafeJson
 			// preserve enumerator
 			emit.Duplicate();
 			// push enumerator.Current
-			CallCorrectly(emit, enumerable.get_Current);
+			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
 
 			// write the element
 			EmitInline(schema.Items, emit, depth + localDepth);
@@ -502,7 +508,7 @@ namespace UnsafeJson
 
 			/* if (enumerator.MoveNext()) goto beginLoop; */
 			emit.Duplicate(); // preserve enumerator
-			CallCorrectly(emit, enumerable.MoveNext);
+			CallCorrectly(emit, enumerable.MoveNext, enumeratorType);
 			emit.BranchIfTrue(loopTop);
 
 
@@ -538,11 +544,11 @@ namespace UnsafeJson
 			}
 		}
 
-		static void CallCorrectly<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo mi, Type constrainCandidate = null)
+		static void CallCorrectly<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo mi, Type instanceType)
 		{
 			if (mi.IsVirtual)
 			{
-				emit.CallVirtual(mi, constrained: constrainCandidate != null && constrainCandidate.IsValueType ? constrainCandidate : null);
+				emit.CallVirtual(mi, constrained: instanceType != null && instanceType.IsValueType ? instanceType : null);
 			}
 			else
 			{

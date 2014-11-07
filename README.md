@@ -99,7 +99,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from array  
 	  handled by delegate generator
 	- from `IEnumerable<>`  
-	  TODO
+	  handled by delegate generator
 - true
 	- from `System.Boolean`  
 	  writer done
