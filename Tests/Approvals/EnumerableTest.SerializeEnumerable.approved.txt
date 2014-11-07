@@ -1,0 +1,148 @@
+﻿
+
+# System.Collections.Generic.IEnumerable<System.Int32>
+
+
+## Newtonsoft 0
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 0
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   5b 5d                                               []
+
+## UnsafeJson 1
+
+
+0000   5b 5d                                               []
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   5b 31 5d                                            [1]
+
+## UnsafeJson 2
+
+
+0000   5b 31 5d                                            [1]
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   5b 31 2c 32 5d                                      [1,2]
+
+## UnsafeJson 3
+
+
+0000   5b 31 2c 32 5d                                      [1,2]
+
+### Equal: True
+
+## Newtonsoft 4
+
+
+0000   5b 5d                                               []
+
+## UnsafeJson 4
+
+
+0000   5b 5d                                               []
+
+### Equal: True
+
+## Newtonsoft 5
+
+
+0000   5b 32 5d                                            [2]
+
+## UnsafeJson 5
+
+
+0000   5b 32 5d                                            [2]
+
+### Equal: True
+
+## Newtonsoft 6
+
+
+0000   5b 32 2c 34 5d                                      [2,4]
+
+## UnsafeJson 6
+
+
+0000   5b 32 2c 34 5d                                      [2,4]
+
+### Equal: True
+
+## Newtonsoft 7
+
+
+0000   5b 5d                                               []
+
+## UnsafeJson 7
+
+
+0000   5b 5d                                               []
+
+### Equal: True
+
+## Newtonsoft 8
+
+
+0000   5b 5d                                               []
+
+## UnsafeJson 8
+
+
+0000   5b 5d                                               []
+
+### Equal: True
+
+## Newtonsoft 9
+
+
+0000   5b 33 5d                                            [3]
+
+## UnsafeJson 9
+
+
+0000   5b 33 5d                                            [3]
+
+### Equal: True
+
+## Newtonsoft 10
+
+
+0000   5b 33 2c 33 5d                                      [3,3]
+
+## UnsafeJson 10
+
+
+0000   5b 33 2c 33 5d                                      [3,3]
+
+### Equal: True
+
+## Newtonsoft 11
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 11
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True

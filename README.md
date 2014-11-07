@@ -13,6 +13,7 @@ Serialization only (no deserialization). Entirely built around `byte*`
 - Minimum length (and maybe reserved length) per schema  
   DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
 - Inline constant properties (see optimizations)
+- Call Dispose on enumerators
 
 ## Supports
 

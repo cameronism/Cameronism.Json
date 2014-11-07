@@ -113,7 +113,35 @@ namespace Tests
 			sb.AppendLine();
 		}
 
+		[Fact]
+		public void SerializeEnumerable()
+		{
+			var buffer = new byte[4096];
+			var sb = new StringBuilder();
+			int failed = 0;
 
+			failed += SerializeValues<IEnumerable<int>>(sb, buffer, 
+				null, 
+				new List<int> { },
+				new List<int> { 1 },
+				new List<int> { 1, 2 },
+				new int[] { },
+				new int[] { 2 },
+				new int[] { 2, 4 },
+				Enumerable.Empty<int>(),
+				Enumerable.Repeat(3, 0),
+				Enumerable.Repeat(3, 1),
+				Enumerable.Repeat(3, 2),
+				null);
+
+			ApprovalTests.Approvals.Verify(sb.ToString());
+			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
+		}
+
+		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		{
+			return CompositesTest.SerializeValues(sb, buffer, values);
+		}
 
 	}
 }

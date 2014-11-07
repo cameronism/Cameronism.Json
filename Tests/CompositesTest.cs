@@ -160,7 +160,7 @@ namespace Tests
 		}
 
 		/// <summary>Return count of failed values</summary>
-		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
+		internal static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
 		{
 			sb.AppendLine();
 			sb.AppendLine();

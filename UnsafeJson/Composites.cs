@@ -9,6 +9,8 @@ namespace UnsafeJson
 {
 	internal unsafe class Composites
 	{
+		internal static bool CompletelyIgnoringDipose = true; // FIXME
+
 		// public delegate int LowWriter<T>(ref T value, byte* dst, int avail);
 
 		delegate int PrimitiveWriter<T>(T value, byte* dst, int avail);
@@ -434,8 +436,117 @@ namespace UnsafeJson
 
 		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
-			// FIXME same rules as EmitObject
-			throw new NotImplementedException();
+			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
+
+			var ifNotNull = emit.DefineLabel();
+			var ifNull = emit.DefineLabel();
+
+			emit.Duplicate(); // preserve the value
+			emit.BranchIfTrue(ifNotNull);
+			emit.Pop(); // discard value
+			if (pushResult) emit.Pop(); // discard avail
+			WriteConstant(emit, "null", push: pushResult, depth: depth);
+			emit.Branch(ifNull);
+
+			emit.MarkLabel(ifNotNull);
+
+			int localDepth = pushResult ? 2 : 1;
+
+			// begin array
+			WriteConstant(emit, "[", depth: depth + localDepth);
+
+			var loopBottom = emit.DefineLabel();
+			var loopTop = emit.DefineLabel();
+			var closeArray = emit.DefineLabel();
+
+			
+			// call GetEnumerator
+			CallCorrectly(emit, enumerable.GetEnumerator);
+			var enumeratorType = enumerable.GetEnumerator.ReturnType;
+
+			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : emit.BeginExceptionBlock();
+
+			using (var ix = emit.DeclareLocal<int>())
+			{
+				// ix = 0;
+				emit.LoadConstant(0);
+				emit.StoreLocal(ix);
+
+				emit.Branch(loopBottom);
+				emit.MarkLabel(loopTop);
+
+				// write ','
+				var afterComma = emit.DefineLabel();
+				emit.LoadLocal(ix);
+				emit.BranchIfFalse(afterComma);
+				WriteConstant(emit, ",", depth: depth + localDepth);
+
+				// ix = 1
+				emit.MarkLabel(afterComma);
+				emit.LoadConstant(1);
+				emit.StoreLocal(ix);
+
+
+				// preserve enumerator
+				emit.Duplicate();
+				// push enumerator.Current
+				CallCorrectly(emit, enumerable.get_Current);
+
+				// write the element
+				EmitInline(schema.Items, emit, depth + localDepth);
+
+
+				/* endLoop: */
+				emit.MarkLabel(loopBottom);
+
+				/* if (enumerator.MoveNext()) goto beginLoop; */
+				emit.Duplicate(); // preserve enumerator
+				CallCorrectly(emit, enumerable.MoveNext);
+				emit.BranchIfTrue(loopTop);
+			}
+
+			emit.MarkLabel(closeArray);
+
+			if (exceptionBlock != null)
+			{
+				var f = emit.BeginFinallyBlock(exceptionBlock);
+				CallCorrectly(emit, enumerable.Dispose, enumeratorType);
+				emit.EndFinallyBlock(f);
+				emit.EndExceptionBlock(exceptionBlock);
+			}
+			else
+			{
+				emit.Pop(); // discard enumerator
+			}
+
+			// end array
+			WriteConstant(emit, "]", depth: depth + localDepth - 1);
+
+
+
+			if (pushResult)
+			{
+				// push bytes written
+				emit.LoadLocal(LOCAL_AVAIL);
+				emit.Subtract();
+			}
+
+			if (schema.Nullable)
+			{
+				emit.MarkLabel(ifNull);
+			}
+		}
+
+		static void CallCorrectly<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo mi, Type constrainCandidate = null)
+		{
+			if (mi.IsVirtual)
+			{
+				emit.CallVirtual(mi, constrained: constrainCandidate != null && constrainCandidate.IsValueType ? constrainCandidate : null);
+			}
+			else
+			{
+				emit.Call(mi);
+			}
 		}
 
 		static void EmitObject<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
