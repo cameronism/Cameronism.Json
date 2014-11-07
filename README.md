@@ -4,7 +4,6 @@ Serialization only (no deserialization). Entirely built around `byte*`
 
 ## Misc TODO
 
-- switch back to nuget for sigil once [LoadIndirect supports char and bool](https://github.com/kevin-montrose/Sigil/pull/21)
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
@@ -14,6 +13,7 @@ Serialization only (no deserialization). Entirely built around `byte*`
   DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
 - Inline constant properties (see optimizations)
 - Call Dispose on enumerators
+- Performance test array with unrolled first iteration
 
 ## Supports
 
