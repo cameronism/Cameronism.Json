@@ -840,3 +840,543 @@ ret
 0000   5b 6e 75 6c 6c 5d                                   [null]
 
 ### Equal: True
+
+# System.Collections.Generic.Dictionary<System.String, System.Int32>
+
+## il
+ldarg.1
+stloc.0
+ldarg.2
+stloc.1
+ldarg.2
+ldarg.0
+ldind.ref
+dup
+brtrue.s _label0
+pop
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+ldc.i4.4
+br _label1
+
+_label0:
+ldloc.1
+ldc.i4.1
+bge.s _label3
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 123
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+call Enumerator GetEnumerator()
+stloc.2
+ldloca.s 2
+dup
+constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
+callvirt Boolean MoveNext()
+brfalse _label6
+dup
+constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
+callvirt System.Collections.Generic.KeyValuePair`2[System.String,System.Int32] get_Current()
+stloc.3
+ldloca.s 3
+dup
+call System.String get_Key()
+ldloc.0
+ldloc.1
+call Int32 WriteStringUtf8(System.String, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label7
+pop
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label7:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+ldloc.1
+ldc.i4.1
+bge.s _label8
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label8:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 58
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+call Int32 get_Value()
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label9
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label9:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+br _label4
+
+_label5:
+ldloc.1
+ldc.i4.1
+bge.s _label10
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label10:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+dup
+constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
+callvirt System.Collections.Generic.KeyValuePair`2[System.String,System.Int32] get_Current()
+stloc.3
+ldloca.s 3
+dup
+call System.String get_Key()
+ldloc.0
+ldloc.1
+call Int32 WriteStringUtf8(System.String, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label11
+pop
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label11:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+ldloc.1
+ldc.i4.1
+bge.s _label12
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label12:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 58
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+call Int32 get_Value()
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label13
+pop
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label13:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+
+_label4:
+dup
+constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
+callvirt Boolean MoveNext()
+brtrue _label5
+
+_label6:
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label14
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+_label14:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 125
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldloc.1
+sub
+
+_label1:
+ret
+
+
+
+
+## Newtonsoft 0
+
+
+0000   7b 7d                                               {}
+
+## UnsafeJson 0
+
+
+0000   7b 7d                                               {}
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+## UnsafeJson 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+## UnsafeJson 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 3
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# Tests.EnumerableTest+MyReadOnlyDictionary<System.String, System.Int32>
+
+
+## Newtonsoft 0
+
+
+0000   7b 7d                                               {}
+
+## UnsafeJson 0
+
+
+0000   7b 7d                                               {}
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+## UnsafeJson 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+## UnsafeJson 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 3
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# System.Collections.Generic.Dictionary<System.Char, System.Int32>
+
+
+## Newtonsoft 0
+
+
+0000   7b 7d                                               {}
+
+## UnsafeJson 0
+
+
+0000   7b 7d                                               {}
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+## UnsafeJson 1
+
+
+0000   7b 22 30 22 3a 30 7d                                {"0":0}
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+## UnsafeJson 2
+
+
+0000   7b 22 30 22 3a 30 2c 22   31 22 3a 31 7d            {"0":0," 1":1}
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 3
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# System.Collections.Generic.Dictionary<System.Guid, System.Int32[]>
+
+
+## Newtonsoft 0
+
+
+0000   7b 7d                                               {}
+
+## UnsafeJson 0
+
+
+0000   7b 7d                                               {}
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   7b 22 30 30 30 30 30 30   30 30 2d 30 30 30 30 2d   {"000000 00-0000-
+0010   30 30 30 30 2d 30 30 30   30 2d 30 30 30 30 30 30   0000-000 0-000000
+0020   30 30 30 30 30 30 22 3a   6e 75 6c 6c 7d            000000": null}
+
+## UnsafeJson 1
+
+
+0000   7b 22 30 30 30 30 30 30   30 30 2d 30 30 30 30 2d   {"000000 00-0000-
+0010   30 30 30 30 2d 30 30 30   30 2d 30 30 30 30 30 30   0000-000 0-000000
+0020   30 30 30 30 30 30 22 3a   6e 75 6c 6c 7d            000000": null}
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   7b 22 30 30 30 30 30 30   30 30 2d 30 30 30 30 2d   {"000000 00-0000-
+0010   30 30 30 30 2d 30 30 30   30 2d 30 30 30 30 30 30   0000-000 0-000000
+0020   30 30 30 30 30 30 22 3a   5b 30 5d 2c 22 38 33 38   000000": [0],"838
+0030   66 35 63 30 33 2d 65 64   35 36 2d 34 31 65 31 2d   f5c03-ed 56-41e1-
+0040   39 32 36 34 2d 36 38 36   62 62 31 38 64 30 61 37   9264-686 bb18d0a7
+0050   37 22 3a 5b 31 2c 32 5d   7d                        7":[1,2] }
+
+## UnsafeJson 2
+
+
+0000   7b 22 30 30 30 30 30 30   30 30 2d 30 30 30 30 2d   {"000000 00-0000-
+0010   30 30 30 30 2d 30 30 30   30 2d 30 30 30 30 30 30   0000-000 0-000000
+0020   30 30 30 30 30 30 22 3a   5b 30 5d 2c 22 38 33 38   000000": [0],"838
+0030   66 35 63 30 33 2d 65 64   35 36 2d 34 31 65 31 2d   f5c03-ed 56-41e1-
+0040   39 32 36 34 2d 36 38 36   62 62 31 38 64 30 61 37   9264-686 bb18d0a7
+0050   37 22 3a 5b 31 2c 32 5d   7d                        7":[1,2] }
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 3
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True

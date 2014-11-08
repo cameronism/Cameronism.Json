@@ -15,31 +15,6 @@ Serialization only (no deserialization). Entirely built around `byte*`
 - Call Dispose on enumerators
 - Performance test array with unrolled first iteration
 
-## Supports
-
-### .NET -> JSON
-
-(list from [JIL](https://github.com/kevin-montrose/Jil))
-
-- Strings 
-	- String **(writer done)**
-	- Char **(TODO)**
-- Boolean **(writer done)**
-- Integer numbers (int, long, byte, etc.)
-	- int, uint **(writer done)**
-	- long, ulong **(TODO)**
-- Floating point numbers (float, double, and decimal) **(TODO)**
-- DateTimes & DateTimeOffsets
-	- DateTime **(writer done)**
-	- DateTimeOffset **(TODO)**
-- Nullable types **(TODO)**
-- Enumerations **(TODO)**
-	- Including [Flags]
-- Guids **(writer done)**
-	- Only the "D" format
-- IList&lt;T&gt; implementations **(TODO)**
-- IDictionary&lt;TKey, TValue&gt; **(TODO)**
-	- implementations where TKey is a string or enumeration
 
 ### JSON types from .NET types
 
@@ -94,7 +69,10 @@ No deserialization (use JIL or Newtonsoft)
 	- from type composed of other supported types  
 	  handled by delegate generator
 	- from `IDictionary<TKey, TValue>`  
-	  TODO, requires TKey to be string or enum
+	  - string TKey  
+	    handled by delegate generator
+	  - enum TKey  
+	    TODO
 - array
 	- from array  
 	  handled by delegate generator

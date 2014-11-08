@@ -433,10 +433,21 @@ namespace UnsafeJson
 				emit.MarkLabel(ifNull);
 			}
 		}
-
 		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
+			EmitEnumerable(schema, emit, depth, pushResult, isArray: true);
+		}
+
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth, bool pushResult, bool isArray)
+		{
 			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
+			MethodInfo getKey = null;
+			MethodInfo getValue = null;
+			if (!isArray)
+			{
+				getKey = enumerable.get_Current.ReturnType.GetProperty("Key").GetMethod;
+				getValue = enumerable.get_Current.ReturnType.GetProperty("Value").GetMethod;
+			}
 
 			var ifNotNull = emit.DefineLabel();
 			var ifNull = emit.DefineLabel();
@@ -453,7 +464,7 @@ namespace UnsafeJson
 			int localDepth = pushResult ? 2 : 1;
 
 			// begin array
-			WriteConstant(emit, "[", depth: depth + localDepth);
+			WriteConstant(emit, isArray ? "[" : "{", depth: depth + localDepth);
 
 			var loopBottom = emit.DefineLabel();
 			var loopTop = emit.DefineLabel();
@@ -479,11 +490,22 @@ namespace UnsafeJson
 			CallCorrectly(emit, enumerable.MoveNext, enumeratorType);
 			emit.BranchIfFalse(closeArray);
 
-
 			// push enumerator.Current
 			emit.Duplicate(); // preserve enumerator
-			// push enumerator.Current
 			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
+
+			if (!isArray)
+			{
+				// we've got a KeyValuePair<,>
+				PushAddress(emit, getValue.DeclaringType);
+
+				emit.Duplicate(); // preserve KeyValuePair<,>*
+				emit.Call(getKey);
+				// write the first key
+				EmitInline(schema.Keys, emit, depth + localDepth + 1);
+				WriteConstant(emit, ":", depth: depth + localDepth + 1);
+				emit.Call(getValue);
+			}
 
 			// write the first element
 			EmitInline(schema.Items, emit, depth + localDepth);
@@ -494,10 +516,22 @@ namespace UnsafeJson
 			// write ','
 			WriteConstant(emit, ",", depth: depth + localDepth);
 
-			// preserve enumerator
-			emit.Duplicate();
 			// push enumerator.Current
+			emit.Duplicate();// preserve enumerator
 			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
+
+			if (!isArray)
+			{
+				// we've got a KeyValuePair<,>
+				PushAddress(emit, getValue.DeclaringType);
+
+				emit.Duplicate(); // preserve KeyValuePair<,>*
+				emit.Call(getKey);
+				// write the key
+				EmitInline(schema.Keys, emit, depth + localDepth + 1);
+				WriteConstant(emit, ":", depth: depth + localDepth + 1);
+				emit.Call(getValue);
+			}
 
 			// write the element
 			EmitInline(schema.Items, emit, depth + localDepth);
@@ -527,7 +561,7 @@ namespace UnsafeJson
 			}
 
 			// end array
-			WriteConstant(emit, "]", depth: depth + localDepth - 1);
+			WriteConstant(emit, isArray ? "]" : "}", depth: depth + localDepth - 1);
 
 
 
@@ -673,8 +707,9 @@ namespace UnsafeJson
 
 		static void EmitDictionary<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
-			// FIXME same rules as EmitObject
-			throw new NotImplementedException();
+			if (schema.Keys.JsonType != JsonType.String) throw new NotImplementedException();
+
+			EmitEnumerable(schema, emit, depth, pushResult, isArray: false);
 		}
 
 		static void PushAddress<T>(Sigil.Emit<Convert.LowWriter<T>> emit, Type type)

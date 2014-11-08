@@ -54,6 +54,61 @@ namespace Tests
 			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw new NotImplementedException(); }
 		}
 
+		class MyReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+		{
+			KeyValuePair<TKey,TValue>[] _Pairs;
+
+			private MyReadOnlyDictionary(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+			{
+				_Pairs = pairs.ToArray();
+			}
+
+			public bool ContainsKey(TKey key)
+			{
+				throw new NotImplementedException();
+			}
+
+			public IEnumerable<TKey> Keys
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public bool TryGetValue(TKey key, out TValue value)
+			{
+				throw new NotImplementedException();
+			}
+
+			public IEnumerable<TValue> Values
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public TValue this[TKey key]
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public int Count
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+			{
+				return ((IEnumerable<KeyValuePair<TKey, TValue>>)_Pairs).GetEnumerator();
+			}
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return _Pairs.GetEnumerator();
+			}
+
+			public static MyReadOnlyDictionary<TKey, TValue> Create(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+			{
+				return new MyReadOnlyDictionary<TKey, TValue>(pairs);
+			}
+		}
+
 
 
 		[Fact]
@@ -164,6 +219,37 @@ namespace Tests
 
 			failed += SerializeValues(sb, buffer, false,
 				new List<int?> { null }.AsReadOnly());
+
+			// Newtonsoft thinks this should be an object not an array :(
+			//failed += SerializeValues<IEnumerable<KeyValuePair<string, int>>>(sb, buffer, true,
+			//	new Dictionary<string, int> { },
+			//	new Dictionary<string, int> { { "0", 0 } },
+			//	new Dictionary<string, int> { { "0", 0 }, { "1", 1 } },
+			//	null);
+
+			failed += SerializeValues(sb, buffer, true,
+				new Dictionary<string, int> { },
+				new Dictionary<string, int> { { "0", 0 } },
+				new Dictionary<string, int> { { "0", 0 }, { "1", 1 } },
+				null);
+
+			failed += SerializeValues(sb, buffer, false,
+				MyReadOnlyDictionary<string, int>.Create(new Dictionary<string, int> { }),
+				MyReadOnlyDictionary<string, int>.Create(new Dictionary<string, int> { { "0", 0 } }),
+				MyReadOnlyDictionary<string, int>.Create(new Dictionary<string, int> { { "0", 0 }, { "1", 1 } }),
+				null);
+
+			failed += SerializeValues(sb, buffer, false,
+				new Dictionary<char, int> { },
+				new Dictionary<char, int> { { '0', 0 } },
+				new Dictionary<char, int> { { '0', 0 }, { '1', 1 } },
+				null);
+
+			failed += SerializeValues(sb, buffer, false,
+				new Dictionary<Guid, int[]> { },
+				new Dictionary<Guid, int[]> { { Guid.Empty, null } },
+				new Dictionary<Guid, int[]> { { Guid.Empty, new[] { 0 } }, { Guid.Parse("838f5c03-ed56-41e1-9264-686bb18d0a77"), new[] { 1, 2 } } },
+				null);
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
