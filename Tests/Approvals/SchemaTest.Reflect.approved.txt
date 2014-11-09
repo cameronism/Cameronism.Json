@@ -469,9 +469,9 @@
 }
 
 
-# <>f__AnonymousType1<System.Int32>
+# <>f__AnonymousType3<System.Int32>
 {
-  "NetType": "<>f__AnonymousType1<System.Int32>",
+  "NetType": "<>f__AnonymousType3<System.Int32>",
   "JsonType": "Object",
   "Nullable": true,
   "Items": null,
@@ -499,13 +499,13 @@
 }
 
 
-# System.Collections.Generic.List<<>f__AnonymousType2<System.String>>
+# System.Collections.Generic.List<<>f__AnonymousType4<System.String>>
 {
-  "NetType": "System.Collections.Generic.List<<>f__AnonymousType2<System.String>>",
+  "NetType": "System.Collections.Generic.List<<>f__AnonymousType4<System.String>>",
   "JsonType": "Array",
   "Nullable": true,
   "Items": {
-    "NetType": "<>f__AnonymousType2<System.String>",
+    "NetType": "<>f__AnonymousType4<System.String>",
     "JsonType": "Object",
     "Nullable": true,
     "Items": null,

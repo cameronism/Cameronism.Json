@@ -10,70 +10,6 @@ namespace Tests
 {
 	public class SchemaTest
 	{
-		#region converters
-		class TypeConverter : Newtonsoft.Json.JsonConverter
-		{
-			public override bool CanConvert(Type objectType)
-			{
-				return typeof(Type).IsAssignableFrom(objectType);
-			}
-
-			public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-			{
-				throw new NotSupportedException();
-			}
-
-			public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-			{
-				if (value == null)
-				{
-					writer.WriteNull();
-					return;
-				}
-
-				writer.WriteValue(HumanName((Type)value));
-			}
-		}
-
-		class MemberInfoConverter : Newtonsoft.Json.JsonConverter
-		{
-			public override bool CanConvert(Type objectType)
-			{
-				return typeof(FieldInfo).IsAssignableFrom(objectType) || typeof(PropertyInfo).IsAssignableFrom(objectType);
-			}
-
-			public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-			{
-				throw new NotSupportedException();
-			}
-
-			public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-			{
-				var fi = value as FieldInfo;
-				var pi = value as PropertyInfo;
-				var details = new
-				{
-					Name = 
-						fi != null ? fi.Name : 
-						pi != null ? pi.Name :
-						null,
-					MemberType =
-						fi != null ? fi.FieldType : 
-						pi != null ? pi.PropertyType :
-						null,
-				};
-
-				if (details.Name != null)
-				{
-					serializer.Serialize(writer, details);
-				}
-				else
-				{
-					writer.WriteNull();
-				}
-			}
-		}
-		#endregion
 
 		[System.Runtime.Serialization.DataContract]
 		public class ExplicitDataMemberOrder
@@ -130,9 +66,9 @@ namespace Tests
 		public void Reflect()
 		{
 			var converters = new Newtonsoft.Json.JsonConverter[] { 
-				new TypeConverter(), 
+				new NewtonsoftConverters.TypeConverter(), 
 				new Newtonsoft.Json.Converters.StringEnumConverter { },
-				new MemberInfoConverter(),
+				new NewtonsoftConverters.MemberInfoConverter(),
 			};
 			var sb = new StringBuilder();
 

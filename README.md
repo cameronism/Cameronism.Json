@@ -4,6 +4,7 @@ Serialization only (no deserialization). Entirely built around `byte*`
 
 ## Misc TODO
 
+- Console app for demo / benchmark
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
@@ -32,7 +33,7 @@ No deserialization (use JIL or Newtonsoft)
 	- from `System.DateTimeOffset`  
 	  TODO
 	- from `System.Net.IPAddress`  
-	  TODO
+	  handled by delegate generator, very Windows specific
 	- from enum
 		- FlagAttribute  
 		  TODO

@@ -21,6 +21,7 @@ namespace UnsafeJson
 		public static Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> Create<T>(Schema schema)
 		{
 			MethodInfo simpleWriter = null;
+			bool isSimple = false;
 
 			switch (schema.JsonType)
 			{
@@ -32,7 +33,8 @@ namespace UnsafeJson
 				case JsonType.Number:
 				case JsonType.Integer:
 				case JsonType.Boolean:
-					if (TryGetSimpleWriter(schema.NetType, out simpleWriter))
+					isSimple = TryGetSimpleWriter(schema.NetType, out simpleWriter);
+					if (isSimple)
 					{
 						break;
 					}
@@ -43,7 +45,7 @@ namespace UnsafeJson
 
 			var emit = Sigil.Emit<Convert.LowWriter<T>>.NewDynamicMethod(schema.NetType.Name + "_toJSON");
 
-			if (simpleWriter != null)
+			if (isSimple)
 			{
 				emit.LoadArgument(0);
 				LoadIndirect(emit, schema.NetType); // deref argument 0
@@ -220,6 +222,11 @@ namespace UnsafeJson
 						primitive = (PrimitiveWriter<Guid>)Convert.WriteGuidFormatD;
 						break;
 					}
+					if (effective == typeof(System.Net.IPAddress))
+					{
+						method = null;
+						return true;
+					}
 					method = null;
 					return false;
 			}
@@ -255,15 +262,7 @@ namespace UnsafeJson
 				effective = Nullable.GetUnderlyingType(effective);
 			}
 
-			var firstArg = writer.GetParameters()[0].ParameterType;
-			if (firstArg != effective)
-			{
-				emit.Convert(firstArg);
-			}
-
-			emit.LoadArgument(1);
-			emit.LoadArgument(2);
-			emit.Call(writer);
+			CallWriter(emit, writer, effective, false);
 
 			emit.Return();
 		}
@@ -296,16 +295,7 @@ namespace UnsafeJson
 				effective = underlying;
 			}
 
-			var firstArg = writer.GetParameters()[0].ParameterType;
-			if (firstArg != effective)
-			{
-				emit.Convert(firstArg);
-			}
-
-			emit.LoadLocal(LOCAL_DST);
-			emit.LoadLocal(LOCAL_AVAIL);
-			emit.Call(writer);
-
+			CallWriter(emit, writer, effective, true);
 
 			emit.Duplicate(); // preserve the written count
 
@@ -341,6 +331,105 @@ namespace UnsafeJson
 			{
 				emit.MarkLabel(ifNull);
 			}
+		}
+
+		static void CallWriter<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo writer, Type effective, bool useLocals)
+		{
+			if (writer == null)
+			{
+				if (effective == typeof(System.Net.IPAddress))
+				{
+					EmitIPAddress(emit, useLocals);
+					return;
+				}
+				throw new NotImplementedException();
+			}
+
+			var firstArg = writer.GetParameters()[0].ParameterType;
+			if (firstArg != effective)
+			{
+				emit.Convert(firstArg);
+			}
+
+			if (useLocals)
+			{
+				emit.LoadLocal(LOCAL_DST);
+				emit.LoadLocal(LOCAL_AVAIL);
+			}
+			else
+			{
+				emit.LoadArgument(1);
+				emit.LoadArgument(2);
+			}
+
+			emit.Call(writer);
+		}
+
+		static void EmitIPAddress<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, bool useLocals)
+		{
+			Action pushAvailable = () =>
+			{
+				if (useLocals)
+				{
+					emit.LoadLocal(LOCAL_DST);
+					emit.LoadLocal(LOCAL_AVAIL);
+				}
+				else
+				{
+					emit.LoadArgument(1);
+					emit.LoadArgument(2);
+				}
+			};
+
+			var ip = typeof(System.Net.IPAddress);
+
+			var notNull = emit.DefineLabel();
+			var done = emit.DefineLabel();
+
+			// preserve ip
+			emit.Duplicate();
+			emit.BranchIfTrue(notNull);
+
+			// value is null
+			{
+				emit.Pop(); // discard null
+
+				pushAvailable();
+				emit.Call(typeof(Convert).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
+
+				emit.Branch(done);
+			}
+
+			emit.MarkLabel(notNull);
+
+			// value is not null
+			{
+				var v6 = emit.DefineLabel();
+
+				emit.Duplicate();
+				emit.CallVirtual(ip.GetProperty("AddressFamily").GetMethod);
+				emit.LoadConstant((int)System.Net.Sockets.AddressFamily.InterNetwork);
+				emit.UnsignedBranchIfNotEqual(v6);
+
+				// if v4
+				{
+					emit.LoadField(ip.GetField("m_Address", BindingFlags.Instance | BindingFlags.NonPublic));
+					pushAvailable();
+					emit.Call(typeof(Convert).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
+
+					emit.Branch(done);
+				}
+				
+				// if not v4 (assume v6)
+				emit.MarkLabel(v6);
+				{
+					emit.LoadField(ip.GetField("m_Numbers", BindingFlags.Instance | BindingFlags.NonPublic));
+					pushAvailable();
+					emit.Call(typeof(Convert).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
+				}
+			}
+
+			emit.MarkLabel(done);
 		}
 
 		static void EmitArray<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)

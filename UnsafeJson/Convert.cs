@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -690,6 +691,78 @@ namespace UnsafeJson
 			// need an allocation free alternative
 			var s = val.ToString("G", System.Globalization.CultureInfo.InvariantCulture);
 			return WriteGeneralFloat(s, c, avail);
+		}
+		#endregion
+		#region IPAddress
+		[DllImport("ntdll.dll"), System.Security.SuppressUnmanagedCodeSecurity]
+		static extern byte* RtlIpv4AddressToStringA(byte* addr, byte* dst);
+
+		[DllImport("ntdll.dll"), System.Security.SuppressUnmanagedCodeSecurity]
+		static extern byte* RtlIpv6AddressToStringA(byte* addr, byte* dst);
+
+		internal static int WriteIPv4(long val, byte* dst, int avail)
+		{
+			// need at least 18 (16 for ip and 2 for quotes)
+			if (avail < 18) return -18;
+
+			*dst++ = (byte)'"';
+
+			byte* ip = ((byte*)&val); // little endian
+
+			byte* nullChar = RtlIpv4AddressToStringA(ip, dst);
+			long len = nullChar - dst;
+
+			if (len > 0 && len <= 16)
+			{
+				*nullChar = (byte)'"';
+				return 2 + (int)len;
+			}
+
+			return -18;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static void Swap2(byte* src, byte* dst, int offset)
+		{
+			*(dst + offset + 0) = *(src + offset + 1);
+			*(dst + offset + 1) = *(src + offset + 0);
+		}
+
+		internal static int WriteIPv6(ushort[] val, byte* dst, int avail)
+		{
+			// need at least 48 (46 for ip and 2 for quotes)
+			if (avail < 48) return -48;
+
+			*dst++ = (byte)'"';
+
+			// Guid is also 16 bytes
+			Guid fakeIP;
+			byte* ip;
+			fixed (ushort* uptr = val)
+			{
+				byte* src = (byte*)uptr;
+				ip = (byte*)&fakeIP;
+
+				// swap the bytes -- no idea why .NET keeps these in host order instead of network order
+				Swap2(src, ip, 0);
+				Swap2(src, ip, 2);
+				Swap2(src, ip, 4);
+				Swap2(src, ip, 6);
+				Swap2(src, ip, 8);
+				Swap2(src, ip, 10);
+				Swap2(src, ip, 12);
+				Swap2(src, ip, 14);
+			}
+
+			byte* nullChar = RtlIpv6AddressToStringA((byte*)ip, dst);
+			long len = nullChar - dst;
+			if (len > 0 && len <= 46)
+			{
+				*nullChar = (byte)'"';
+				return 2 + (int)len;
+			}
+
+			return -48;
 		}
 		#endregion
 		#endregion

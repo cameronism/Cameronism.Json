@@ -154,6 +154,14 @@ namespace Tests
 			failed += SerializeValues(sb, buffer, new int[][] { new[] { 1 }, null, new[] { 1, 2, 3 } }, null);
 			failed += SerializeValues(sb, buffer, new int[][][] { new[] { new[] { 1 }, null, new int[0] }, null, new[] { new[] { 1, 2, 3 } }, null }, null);
 			failed += SerializeValues(sb, buffer, new[] { A((int?)1), A((int?)null), }, null);
+			failed += SerializeValues(sb, buffer, System.Net.IPAddress.Any, System.Net.IPAddress.IPv6Any, System.Net.IPAddress.Parse("1.2.3.4"), System.Net.IPAddress.Parse("1:2::3:4"), System.Net.IPAddress.Parse("11AA:22BB::33CC:44DD"), null);
+			failed += SerializeValues(sb, buffer,
+				new { a = System.Net.IPAddress.Any },
+				new { a = System.Net.IPAddress.IPv6Any },
+				new { a = System.Net.IPAddress.Parse("1.2.3.4") },
+				new { a = System.Net.IPAddress.Parse("1:2::3:4") },
+				new { a = System.Net.IPAddress.Parse("11AA:22BB::33CC:44DD") },
+				new { a = (System.Net.IPAddress)null });
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");

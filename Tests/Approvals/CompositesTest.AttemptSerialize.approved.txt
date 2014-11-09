@@ -609,3 +609,157 @@
 0000   6e 75 6c 6c                                         null
 
 ### Equal: True
+
+# System.Net.IPAddress
+
+
+## Newtonsoft 0
+
+
+0000   22 30 2e 30 2e 30 2e 30   22                        "0.0.0.0 "
+
+## UnsafeJson 0
+
+
+0000   22 30 2e 30 2e 30 2e 30   22                        "0.0.0.0 "
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   22 3a 3a 22                                         "::"
+
+## UnsafeJson 1
+
+
+0000   22 3a 3a 22                                         "::"
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   22 31 2e 32 2e 33 2e 34   22                        "1.2.3.4 "
+
+## UnsafeJson 2
+
+
+0000   22 31 2e 32 2e 33 2e 34   22                        "1.2.3.4 "
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   22 31 3a 32 3a 3a 33 3a   34 22                     "1:2::3: 4"
+
+## UnsafeJson 3
+
+
+0000   22 31 3a 32 3a 3a 33 3a   34 22                     "1:2::3: 4"
+
+### Equal: True
+
+## Newtonsoft 4
+
+
+0000   22 31 31 61 61 3a 32 32   62 62 3a 3a 33 33 63 63   "11aa:22 bb::33cc
+0010   3a 34 34 64 64 22                                   :44dd"
+
+## UnsafeJson 4
+
+
+0000   22 31 31 61 61 3a 32 32   62 62 3a 3a 33 33 63 63   "11aa:22 bb::33cc
+0010   3a 34 34 64 64 22                                   :44dd"
+
+### Equal: True
+
+## Newtonsoft 5
+
+
+0000   6e 75 6c 6c                                         null
+
+## UnsafeJson 5
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# <>f__AnonymousType1<System.Net.IPAddress>
+
+
+## Newtonsoft 0
+
+
+0000   7b 22 61 22 3a 22 30 2e   30 2e 30 2e 30 22 7d      {"a":"0. 0.0.0"}
+
+## UnsafeJson 0
+
+
+0000   7b 22 61 22 3a 22 30 2e   30 2e 30 2e 30 22 7d      {"a":"0. 0.0.0"}
+
+### Equal: True
+
+## Newtonsoft 1
+
+
+0000   7b 22 61 22 3a 22 3a 3a   22 7d                     {"a":":: "}
+
+## UnsafeJson 1
+
+
+0000   7b 22 61 22 3a 22 3a 3a   22 7d                     {"a":":: "}
+
+### Equal: True
+
+## Newtonsoft 2
+
+
+0000   7b 22 61 22 3a 22 31 2e   32 2e 33 2e 34 22 7d      {"a":"1. 2.3.4"}
+
+## UnsafeJson 2
+
+
+0000   7b 22 61 22 3a 22 31 2e   32 2e 33 2e 34 22 7d      {"a":"1. 2.3.4"}
+
+### Equal: True
+
+## Newtonsoft 3
+
+
+0000   7b 22 61 22 3a 22 31 3a   32 3a 3a 33 3a 34 22 7d   {"a":"1: 2::3:4"}
+
+## UnsafeJson 3
+
+
+0000   7b 22 61 22 3a 22 31 3a   32 3a 3a 33 3a 34 22 7d   {"a":"1: 2::3:4"}
+
+### Equal: True
+
+## Newtonsoft 4
+
+
+0000   7b 22 61 22 3a 22 31 31   61 61 3a 32 32 62 62 3a   {"a":"11 aa:22bb:
+0010   3a 33 33 63 63 3a 34 34   64 64 22 7d               :33cc:44 dd"}
+
+## UnsafeJson 4
+
+
+0000   7b 22 61 22 3a 22 31 31   61 61 3a 32 32 62 62 3a   {"a":"11 aa:22bb:
+0010   3a 33 33 63 63 3a 34 34   64 64 22 7d               :33cc:44 dd"}
+
+### Equal: True
+
+## Newtonsoft 5
+
+
+0000   7b 22 61 22 3a 6e 75 6c   6c 7d                     {"a":nul l}
+
+## UnsafeJson 5
+
+
+0000   7b 22 61 22 3a 6e 75 6c   6c 7d                     {"a":nul l}
+
+### Equal: True
