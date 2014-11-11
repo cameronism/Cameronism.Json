@@ -70,6 +70,7 @@
     <Compile Include="ConvertUTF.cs" />
     <Compile Include="EnumerableInfo.cs" />
     <Compile Include="JsonType.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schema.cs" />
   </ItemGroup>
