@@ -5,6 +5,7 @@ Serialization only (no deserialization). Entirely built around `byte*`
 ## Misc TODO
 
 - Console app for demo / benchmark
+- Add unit test for (enumerable of) memberless object
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
