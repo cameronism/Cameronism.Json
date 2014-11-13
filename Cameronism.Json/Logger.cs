@@ -31,6 +31,23 @@ namespace Cameronism.Json
 		public bool SendOnWorkerThread { get; set; }
 		public Action<Exception, string> ErrorLogger { get; set; }
 		public Func<DateTime, string> LogNamer { get; set; }
+		public TimeSpan? Interval 
+		{
+			get
+			{
+				var delay = _TimerDelay;
+				return delay > 0 ? TimeSpan.FromMilliseconds(delay) : (TimeSpan?)null;
+			}
+			set
+			{
+				int delay = (int)value.GetValueOrDefault().TotalMilliseconds;
+				_TimerDelay = delay;
+
+				if (delay > 0) ScheduleNext();
+				else _Timer.Change(Timeout.Infinite, Timeout.Infinite);
+			}
+		}
+
 		#endregion
 		
 		#region fields
@@ -44,6 +61,8 @@ namespace Cameronism.Json
 		bool _Disposed;
 		long _Position;
 		long _Length;
+		Timer _Timer;
+		int _TimerDelay;
 		#endregion fields
 		
 		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
@@ -57,6 +76,7 @@ namespace Cameronism.Json
 			LogNamer = logNamer;
 			SendOnWorkerThread = true;
 			ReservedRecordSize = 64;
+			_Timer = new Timer(TimedSend);
 			
 			InitFile();
 		}
@@ -180,6 +200,7 @@ namespace Cameronism.Json
 				{
 					LogError(ex);
 				}
+				ScheduleNext();
 			}
 		}
 		
@@ -193,6 +214,24 @@ namespace Cameronism.Json
 			catch (Exception ex)
 			{
 				LogError(ex);
+			}
+			ScheduleNext();
+		}
+
+		void ScheduleNext()
+		{
+			var delay = _TimerDelay;
+			var timer = _Timer;
+			if (delay > 0 && timer != null)
+			{
+				try
+				{
+					timer.Change(delay, Timeout.Infinite);
+				}
+				catch (ObjectDisposedException)
+				{
+					// tolerate disposed
+				}
 			}
 		}
 		
@@ -212,6 +251,24 @@ namespace Cameronism.Json
 			}
 
 			Trace.TraceError(caller + Environment.NewLine + ex.ToString());
+		}
+
+		void TimedSend(object _)
+		{
+			lock (_Gate)
+			{
+				if (_Disposed) return;
+				
+				try
+				{
+					SendInternal();
+					InitFile();
+				}
+				catch (Exception ex)
+				{
+					LogError(ex);
+				}
+			}
 		}
 		
 		/// <summary>Send pending records</summary>
@@ -234,6 +291,7 @@ namespace Cameronism.Json
 				_Disposed = true;
 				if (_RecordCount > 0) SendInternal();
 				
+				TryDispose(_Timer);
 				TryDispose(_Accessor);
 				TryDispose(_Mapped);
 				TryDispose(_Stream);
@@ -242,6 +300,7 @@ namespace Cameronism.Json
 				_Accessor = null;
 				_Mapped = null;
 				_Stream = null;
+				_Timer = null;
 				//_Sender = null;
 			}
 		}
