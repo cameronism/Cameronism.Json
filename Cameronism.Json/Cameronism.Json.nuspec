@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Cameronism.Json</id>
+    <version>$version$</version>
+    <authors>cameronism</authors>
+    <owners>cameronism</owners>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+    <projectUrl>https://github.com/cameronism/Cameronism.Json</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fast JSON serializer</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>json</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>
