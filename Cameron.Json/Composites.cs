@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnsafeJson
+namespace Cameronism.Json
 {
 	internal unsafe class Composites
 	{
@@ -18,7 +18,7 @@ namespace UnsafeJson
 		const string LOCAL_DST = "destination";
 		const string LOCAL_AVAIL = "available";
 
-		public static Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> Create<T>(Schema schema)
+		public static Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> Create<T>(Schema schema)
 		{
 			MethodInfo simpleWriter = null;
 			bool isSimple = false;
@@ -99,7 +99,7 @@ namespace UnsafeJson
 		}
 
 		/// <summary>Must be called with value on top of the stack</summary>
-		static void EmitInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth)
+		static void EmitInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth)
 		{
 			if (Nullable.GetUnderlyingType(schema.NetType) != null)
 			{
@@ -144,7 +144,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void LoadIndirect<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, Type effective)
+		static void LoadIndirect<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, Type effective)
 		{
 			if (effective.IsClass || effective.IsInterface)
 			{
@@ -235,9 +235,9 @@ namespace UnsafeJson
 			return true;
 		}
 
-		static MethodInfo WriteNull = typeof(UnsafeJson.Convert).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
+		static MethodInfo WriteNull = typeof(Cameronism.Json.Convert).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
-		static void EmitSimpleComplete<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo writer)
+		static void EmitSimpleComplete<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer)
 		{
 			var effective = schema.NetType;
 
@@ -268,7 +268,7 @@ namespace UnsafeJson
 		}
 
 		// never pushes result
-		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo writer, int depth)
+		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer, int depth)
 		{
 			var effective = schema.NetType;
 			Sigil.Label ifNull = null;
@@ -333,7 +333,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void CallWriter<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo writer, Type effective, bool useLocals)
+		static void CallWriter<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer, Type effective, bool useLocals)
 		{
 			if (writer == null)
 			{
@@ -365,7 +365,7 @@ namespace UnsafeJson
 			emit.Call(writer);
 		}
 
-		static void EmitIPAddress<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, bool useLocals)
+		static void EmitIPAddress<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, bool useLocals)
 		{
 			Action pushAvailable = () =>
 			{
@@ -432,7 +432,7 @@ namespace UnsafeJson
 			emit.MarkLabel(done);
 		}
 
-		static void EmitArray<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitArray<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 
 			var ifNotNull = emit.DefineLabel();
@@ -522,12 +522,12 @@ namespace UnsafeJson
 				emit.MarkLabel(ifNull);
 			}
 		}
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			EmitEnumerable(schema, emit, depth, pushResult, isArray: true);
 		}
 
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth, bool pushResult, bool isArray)
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth, bool pushResult, bool isArray)
 		{
 			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
 			MethodInfo getKey = null;
@@ -667,7 +667,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void CallCorrectly<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, MethodInfo mi, Type instanceType)
+		static void CallCorrectly<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo mi, Type instanceType)
 		{
 			if (mi.IsVirtual)
 			{
@@ -679,7 +679,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void EmitObject<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitObject<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
@@ -794,7 +794,7 @@ namespace UnsafeJson
 			}
 		}
 
-		static void EmitDictionary<T>(Schema schema, Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitDictionary<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			if (schema.Keys.JsonType != JsonType.String) throw new NotImplementedException();
 
@@ -811,7 +811,7 @@ namespace UnsafeJson
 		}
 
 		/// <param name="push">Push the written byte count on success</param>
-		static int WriteConstant<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
+		static int WriteConstant<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
 		{
 			// ASSUMPTION: the string does not require JSON escaping
 			var bytes = Encoding.UTF8.GetBytes(s);
@@ -866,7 +866,7 @@ namespace UnsafeJson
 		}
 
 
-		static void ReturnFailed<T>(Sigil.Emit<UnsafeJson.Convert.LowWriter<T>> emit, int depth)
+		static void ReturnFailed<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth)
 		{
 			for (int i = 0; i < depth; i++) emit.Pop();
 

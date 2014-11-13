@@ -49,7 +49,7 @@ namespace Tests
 		{
 			Approve(
 				InterestingStrings,
-				UnsafeJson.ConvertUTF.WriteStringUtf8,
+				Cameronism.Json.ConvertUTF.WriteStringUtf8,
 				(sb, s) =>
 				{
 					if (s == null)
@@ -71,7 +71,7 @@ namespace Tests
 				new char[] {
 					'0',
 				}.Concat(Enumerable.Range(0, 128).Select(i => (char)i)),
-				UnsafeJson.ConvertUTF.WriteCharUtf8,
+				Cameronism.Json.ConvertUTF.WriteCharUtf8,
 				(sb, s) =>
 				{
 					sb.AppendLine("# utf8");
@@ -114,7 +114,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteDouble,
+				Cameronism.Json.Convert.WriteDouble,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -154,7 +154,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteSingle,
+				Cameronism.Json.Convert.WriteSingle,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -202,7 +202,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteDecimal,
+				Cameronism.Json.Convert.WriteDecimal,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -235,7 +235,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteUInt32,
+				Cameronism.Json.Convert.WriteUInt32,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -270,7 +270,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteUInt64,
+				Cameronism.Json.Convert.WriteUInt64,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -323,7 +323,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteInt64,
+				Cameronism.Json.Convert.WriteInt64,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -356,7 +356,7 @@ namespace Tests
 
 			Approve(
 				numbers,
-				UnsafeJson.Convert.WriteInt32,
+				Cameronism.Json.Convert.WriteInt32,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -378,7 +378,7 @@ namespace Tests
 
 			Approve(
 				guids,
-				UnsafeJson.Convert.WriteGuidFormatD,
+				Cameronism.Json.Convert.WriteGuidFormatD,
 				(sb, g) => sb.AppendLine("# " + g));
 		}
 
@@ -387,7 +387,7 @@ namespace Tests
 		{
 			Approve(
 				new[] { true, false },
-				UnsafeJson.Convert.WriteBoolean,
+				Cameronism.Json.Convert.WriteBoolean,
 				(sb, b) => sb.Append("# " + b),
 				5);
 		}
@@ -425,9 +425,9 @@ namespace Tests
 
 			Approve(
 				dts,
-				UnsafeJson.Convert.WriteDateTime8601,
+				Cameronism.Json.Convert.WriteDateTime8601,
 				(sb, g) => sb.AppendLine("# " + g),
-				UnsafeJson.Convert.SIZEOF_DATETIME_8601);
+				Cameronism.Json.Convert.SIZEOF_DATETIME_8601);
 		}
 
 		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)
@@ -451,7 +451,7 @@ namespace Tests
 
 				sb.AppendLine();
 				sb.AppendLine();
-				sb.AppendLine("## UnsafeJson");
+				sb.AppendLine("## Cameronism.Json");
 				Hex.Dump(sb, mine);
 
 				sb.AppendLine();

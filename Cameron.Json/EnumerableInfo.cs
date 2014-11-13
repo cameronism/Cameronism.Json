@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnsafeJson
+namespace Cameronism.Json
 {
 	internal class EnumerableInfo
 	{

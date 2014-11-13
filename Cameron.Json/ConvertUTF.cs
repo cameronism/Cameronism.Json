@@ -54,7 +54,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnsafeJson
+namespace Cameronism.Json
 {
 	unsafe static class ConvertUTF
 	{

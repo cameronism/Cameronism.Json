@@ -9,7 +9,7 @@ zero bytes dumped
 
 0000   22 22                                               ""
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 22                                               ""
@@ -23,7 +23,7 @@ zero bytes dumped
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   6e 75 6c 6c                                         null
@@ -96,7 +96,7 @@ zero bytes dumped
 0200   b6 c3 b7 c3 b8 c3 b9 c3   ba c3 bb c3 bc c3 bd c3   ........ ........
 0210   be c3 bf 22                                         ..."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 5c 75 30 30 30 30 5c   75 30 30 30 31 5c 75 30   "\u0000\ u0001\u0
@@ -209,7 +209,7 @@ zero bytes dumped
 01f0   b7 c7 b8 c7 b9 c7 ba c7   bb c7 bc c7 bd c7 be c7   ........ ........
 0200   bf 22                                               ."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 c4 80 c4 81 c4 82 c4   83 c4 84 c4 85 c4 86 c4   "....... ........
@@ -321,7 +321,7 @@ zero bytes dumped
 01f0   b7 cb b8 cb b9 cb ba cb   bb cb bc cb bd cb be cb   ........ ........
 0200   bf 22                                               ."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 c8 80 c8 81 c8 82 c8   83 c8 84 c8 85 c8 86 c8   "....... ........
@@ -433,7 +433,7 @@ zero bytes dumped
 01f0   b7 cf b8 cf b9 cf ba cf   bb cf bc cf bd cf be cf   ........ ........
 0200   bf 22                                               ."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 cc 80 cc 81 cc 82 cc   83 cc 84 cc 85 cc 86 cc   "....... ........
@@ -482,7 +482,7 @@ zero bytes dumped
 
 0000   22 f0 9f 8c 80 22                                   "...."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 f0 9f 8c 80 22                                   "...."
@@ -499,7 +499,7 @@ zero bytes dumped
 
 0000   22 f0 9f 98 81 22                                   "...."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 f0 9f 98 81 22                                   "...."
@@ -516,7 +516,7 @@ zero bytes dumped
 
 0000   22 e2 9c 82 22                                      "..."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 e2 9c 82 22                                      "..."
@@ -533,7 +533,7 @@ zero bytes dumped
 
 0000   22 f4 8f bf bf 22                                   "...."
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   22 f4 8f bf bf 22                                   "...."

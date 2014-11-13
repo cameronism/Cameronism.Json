@@ -56,7 +56,7 @@ namespace Json.Benchmarks
 
 		unsafe void Cameronism<T>(T item, UnmanagedMemoryStream ms)
 		{
-			int resul = UnsafeJson.Convert.Serialize(item, ms);
+			int resul = Cameronism.Json.Convert.Serialize(item, ms);
 			if (resul <= 0) throw new InsufficientMemoryException();
 		}
 

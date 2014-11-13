@@ -1,4 +1,4 @@
-﻿namespace UnsafeJson
+﻿namespace Cameronism.Json
 {
 	internal enum JsonType
 	{

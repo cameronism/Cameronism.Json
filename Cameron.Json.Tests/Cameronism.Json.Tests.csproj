@@ -7,8 +7,8 @@
     <ProjectGuid>{B092D906-ADB8-427D-A347-94539A66BFCA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>Cameronism.Json.Tests</RootNamespace>
+    <AssemblyName>Cameronism.Json.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -95,9 +95,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UnsafeJson\UnsafeJson.csproj">
+    <ProjectReference Include="..\Cameronism.Json\Cameronism.Json.csproj">
       <Project>{f5695bcc-d618-4a09-b1dc-23904ed4b3fa}</Project>
-      <Name>UnsafeJson</Name>
+      <Name>Cameronism.Json</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

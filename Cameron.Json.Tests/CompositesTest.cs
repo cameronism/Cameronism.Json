@@ -119,7 +119,7 @@ namespace Tests
 				//typeof(ExplicitDataMemberOrder),
 			})
 			{
-				var schema = UnsafeJson.Schema.Reflect(t);
+				var schema = Cameronism.Json.Schema.Reflect(t);
 				bool success = (bool)DescribeMethod.MakeGenericMethod(t).Invoke(null, new object[] { sb });
 				if (!success) failed++;
 			}
@@ -179,11 +179,11 @@ namespace Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			UnsafeJson.Convert.LowWriter<T> writer;
+			Cameronism.Json.Convert.LowWriter<T> writer;
 			string instructions;
 			try
 			{
-				var emit = UnsafeJson.Composites.Create<T>(UnsafeJson.Schema.Reflect(typeof(T)));
+				var emit = Cameronism.Json.Composites.Create<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 				writer = emit.CreateDelegate(out instructions);
 			}
 			catch (Sigil.SigilVerificationException sve)
@@ -219,7 +219,7 @@ namespace Tests
 
 				sb.AppendLine();
 				sb.AppendLine();
-				sb.AppendLine("## UnsafeJson " + i);
+				sb.AppendLine("## Cameronism.Json " + i);
 				Hex.Dump(sb, mine);
 
 				sb.AppendLine();
@@ -252,7 +252,7 @@ namespace Tests
 			return failed;
 		}
 
-		unsafe static IEnumerable<byte> GetBytes<T>(T value, UnsafeJson.Convert.LowWriter<T> writer, byte[] buffer, out int result)
+		unsafe static IEnumerable<byte> GetBytes<T>(T value, Cameronism.Json.Convert.LowWriter<T> writer, byte[] buffer, out int result)
 		{
 			fixed (byte* bs = buffer)
 			{
@@ -283,7 +283,7 @@ namespace Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			var emit = UnsafeJson.Composites.Create<T>(UnsafeJson.Schema.Reflect(typeof(T)));
+			var emit = Cameronism.Json.Composites.Create<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 
 			string instructions;
 			try

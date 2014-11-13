@@ -128,7 +128,7 @@ namespace Tests
 				typeof(ExplicitDataMemberOrder),
 			})
 			{
-				var schema = UnsafeJson.Schema.Reflect(t);
+				var schema = Cameronism.Json.Schema.Reflect(t);
 				var json = Newtonsoft.Json.JsonConvert.SerializeObject(schema, Newtonsoft.Json.Formatting.Indented, converters);
 
 				sb.AppendLine();

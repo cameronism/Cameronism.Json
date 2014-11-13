@@ -7,7 +7,7 @@
 
 0000   74 72 75 65                                         true
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   74 72 75 65                                         true
@@ -21,7 +21,7 @@
 
 0000   66 61 6c 73 65                                      false
 
-## UnsafeJson
+## Cameronism.Json
 
 
 0000   66 61 6c 73 65                                      false

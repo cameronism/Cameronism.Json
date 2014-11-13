@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UnsafeJson
+namespace Cameronism.Json
 {
 	public static class Logger
 	{

@@ -8,7 +8,7 @@
 
 0000   31                                                  1
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   31                                                  1
@@ -20,7 +20,7 @@
 
 0000   32 31 34 37 34 38 33 36   34 37                     21474836 47
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   32 31 34 37 34 38 33 36   34 37                     21474836 47
@@ -32,7 +32,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   6e 75 6c 6c                                         null
@@ -49,7 +49,7 @@
 0010   30 30 30 2d 30 30 30 30   2d 30 30 30 30 30 30 30   000-0000 -0000000
 0020   30 30 30 30 30 22                                   00000"
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   22 30 30 30 30 30 30 30   30 2d 30 30 30 30 2d 30   "0000000 0-0000-0
@@ -65,7 +65,7 @@
 0010   37 39 35 2d 39 36 39 61   2d 32 38 64 31 35 30 39   795-969a -28d1509
 0020   64 65 36 62 36 22                                   de6b6"
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   22 34 31 64 30 39 31 62   61 2d 64 36 62 62 2d 34   "41d091b a-d6bb-4
@@ -79,7 +79,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   6e 75 6c 6c                                         null
@@ -94,7 +94,7 @@
 
 0000   31                                                  1
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   31                                                  1
@@ -106,7 +106,7 @@
 
 0000   35                                                  5
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   35                                                  5
@@ -118,7 +118,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   6e 75 6c 6c                                         null
@@ -133,7 +133,7 @@
 
 0000   7b 7d                                               {}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 7d                                               {}
@@ -145,7 +145,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -160,7 +160,7 @@
 
 0000   7b 22 69 22 3a 31 7d                                {"i":1}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 31 7d                                {"i":1}
@@ -172,7 +172,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -187,7 +187,7 @@
 
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 32 7d            {"i":1," j":2}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 32 7d            {"i":1," j":2}
@@ -199,7 +199,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -214,7 +214,7 @@
 
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 32 7d            {"i":1," j":2}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 32 7d            {"i":1," j":2}
@@ -226,7 +226,7 @@
 
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 32 7d   {"i":nul l,"j":2}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 32 7d   {"i":nul l,"j":2}
@@ -241,7 +241,7 @@
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 31 7d            {"i":2," j":1}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 31 7d            {"i":2," j":1}
@@ -253,7 +253,7 @@
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 6e 75 6c 6c 7d   {"i":2," j":null}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 6e 75 6c 6c 7d   {"i":2," j":null}
@@ -268,7 +268,7 @@
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 31 7d            {"i":2," j":1}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 31 7d            {"i":2," j":1}
@@ -280,7 +280,7 @@
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 6e 75 6c 6c 7d   {"i":2," j":null}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 69 22 3a 32 2c 22   6a 22 3a 6e 75 6c 6c 7d   {"i":2," j":null}
@@ -298,7 +298,7 @@
 0020   30 30 2d 30 30 30 30 2d   30 30 30 30 2d 30 30 30   00-0000- 0000-000
 0030   30 30 30 30 30 30 30 30   30 22 7d                  00000000 0"}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 4b 65 79 22 3a 6e   75 6c 6c 2c 22 56 61 6c   {"Key":n ull,"Val
@@ -319,7 +319,7 @@
 0020   30 30 2d 30 30 30 30 2d   30 30 30 30 2d 30 30 30   00-0000- 0000-000
 0030   30 30 30 30 30 30 30 30   30 22 7d                  00000000 0"}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 4b 65 79 22 3a 6e   75 6c 6c 2c 22 56 61 6c   {"Key":n ull,"Val
@@ -334,7 +334,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -350,7 +350,7 @@
 0000   7b 22 69 22 3a 7b 22 69   22 3a 33 2c 22 6a 22 3a   {"i":{"i ":3,"j":
 0010   34 7d 2c 22 6a 22 3a 31   7d                        4},"j":1 }
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 7b 22 69   22 3a 33 2c 22 6a 22 3a   {"i":{"i ":3,"j":
@@ -364,7 +364,7 @@
 0000   7b 22 69 22 3a 7b 22 69   22 3a 33 2c 22 6a 22 3a   {"i":{"i ":3,"j":
 0010   34 7d 2c 22 6a 22 3a 6e   75 6c 6c 7d               4},"j":n ull}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 69 22 3a 7b 22 69   22 3a 33 2c 22 6a 22 3a   {"i":{"i ":3,"j":
@@ -378,7 +378,7 @@
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 6e 75   {"i":nul l,"j":nu
 0010   6c 6c 7d                                            ll}
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 6e 75   {"i":nul l,"j":nu
@@ -395,7 +395,7 @@
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 7b 22 69 22 3a   {"i":1," j":{"i":
 0010   33 2c 22 6a 22 3a 34 7d   7d                        3,"j":4} }
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 69 22 3a 31 2c 22   6a 22 3a 7b 22 69 22 3a   {"i":1," j":{"i":
@@ -409,7 +409,7 @@
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 7b 22   {"i":nul l,"j":{"
 0010   69 22 3a 33 2c 22 6a 22   3a 34 7d 7d               i":3,"j" :4}}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 7b 22   {"i":nul l,"j":{"
@@ -423,7 +423,7 @@
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 6e 75   {"i":nul l,"j":nu
 0010   6c 6c 7d                                            ll}
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   7b 22 69 22 3a 6e 75 6c   6c 2c 22 6a 22 3a 6e 75   {"i":nul l,"j":nu
@@ -439,7 +439,7 @@
 
 0000   5b 5d                                               []
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   5b 5d                                               []
@@ -451,7 +451,7 @@
 
 0000   5b 31 5d                                            [1]
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   5b 31 5d                                            [1]
@@ -463,7 +463,7 @@
 
 0000   5b 31 2c 32 5d                                      [1,2]
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   5b 31 2c 32 5d                                      [1,2]
@@ -475,7 +475,7 @@
 
 0000   5b 31 2c 32 2c 33 5d                                [1,2,3]
 
-## UnsafeJson 3
+## Cameronism.Json 3
 
 
 0000   5b 31 2c 32 2c 33 5d                                [1,2,3]
@@ -487,7 +487,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 4
+## Cameronism.Json 4
 
 
 0000   6e 75 6c 6c                                         null
@@ -502,7 +502,7 @@
 
 0000   5b 31 5d                                            [1]
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   5b 31 5d                                            [1]
@@ -514,7 +514,7 @@
 
 0000   5b 6e 75 6c 6c 5d                                   [null]
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   5b 6e 75 6c 6c 5d                                   [null]
@@ -530,7 +530,7 @@
 0000   5b 5b 31 5d 2c 6e 75 6c   6c 2c 5b 31 2c 32 2c 33   [[1],nul l,[1,2,3
 0010   5d 5d                                               ]]
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   5b 5b 31 5d 2c 6e 75 6c   6c 2c 5b 31 2c 32 2c 33   [[1],nul l,[1,2,3
@@ -543,7 +543,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -560,7 +560,7 @@
 0010   75 6c 6c 2c 5b 5b 31 2c   32 2c 33 5d 5d 2c 6e 75   ull,[[1, 2,3]],nu
 0020   6c 6c 5d                                            ll]
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   5b 5b 5b 31 5d 2c 6e 75   6c 6c 2c 5b 5d 5d 2c 6e   [[[1],nu ll,[]],n
@@ -574,7 +574,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -590,7 +590,7 @@
 0000   5b 7b 22 69 22 3a 31 7d   2c 7b 22 69 22 3a 6e 75   [{"i":1} ,{"i":nu
 0010   6c 6c 7d 5d                                         ll}]
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   5b 7b 22 69 22 3a 31 7d   2c 7b 22 69 22 3a 6e 75   [{"i":1} ,{"i":nu
@@ -603,7 +603,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   6e 75 6c 6c                                         null
@@ -618,7 +618,7 @@
 
 0000   22 30 2e 30 2e 30 2e 30   22                        "0.0.0.0 "
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   22 30 2e 30 2e 30 2e 30   22                        "0.0.0.0 "
@@ -630,7 +630,7 @@
 
 0000   22 3a 3a 22                                         "::"
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   22 3a 3a 22                                         "::"
@@ -642,7 +642,7 @@
 
 0000   22 31 2e 32 2e 33 2e 34   22                        "1.2.3.4 "
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   22 31 2e 32 2e 33 2e 34   22                        "1.2.3.4 "
@@ -654,7 +654,7 @@
 
 0000   22 31 3a 32 3a 3a 33 3a   34 22                     "1:2::3: 4"
 
-## UnsafeJson 3
+## Cameronism.Json 3
 
 
 0000   22 31 3a 32 3a 3a 33 3a   34 22                     "1:2::3: 4"
@@ -667,7 +667,7 @@
 0000   22 31 31 61 61 3a 32 32   62 62 3a 3a 33 33 63 63   "11aa:22 bb::33cc
 0010   3a 34 34 64 64 22                                   :44dd"
 
-## UnsafeJson 4
+## Cameronism.Json 4
 
 
 0000   22 31 31 61 61 3a 32 32   62 62 3a 3a 33 33 63 63   "11aa:22 bb::33cc
@@ -680,7 +680,7 @@
 
 0000   6e 75 6c 6c                                         null
 
-## UnsafeJson 5
+## Cameronism.Json 5
 
 
 0000   6e 75 6c 6c                                         null
@@ -695,7 +695,7 @@
 
 0000   7b 22 61 22 3a 22 30 2e   30 2e 30 2e 30 22 7d      {"a":"0. 0.0.0"}
 
-## UnsafeJson 0
+## Cameronism.Json 0
 
 
 0000   7b 22 61 22 3a 22 30 2e   30 2e 30 2e 30 22 7d      {"a":"0. 0.0.0"}
@@ -707,7 +707,7 @@
 
 0000   7b 22 61 22 3a 22 3a 3a   22 7d                     {"a":":: "}
 
-## UnsafeJson 1
+## Cameronism.Json 1
 
 
 0000   7b 22 61 22 3a 22 3a 3a   22 7d                     {"a":":: "}
@@ -719,7 +719,7 @@
 
 0000   7b 22 61 22 3a 22 31 2e   32 2e 33 2e 34 22 7d      {"a":"1. 2.3.4"}
 
-## UnsafeJson 2
+## Cameronism.Json 2
 
 
 0000   7b 22 61 22 3a 22 31 2e   32 2e 33 2e 34 22 7d      {"a":"1. 2.3.4"}
@@ -731,7 +731,7 @@
 
 0000   7b 22 61 22 3a 22 31 3a   32 3a 3a 33 3a 34 22 7d   {"a":"1: 2::3:4"}
 
-## UnsafeJson 3
+## Cameronism.Json 3
 
 
 0000   7b 22 61 22 3a 22 31 3a   32 3a 3a 33 3a 34 22 7d   {"a":"1: 2::3:4"}
@@ -744,7 +744,7 @@
 0000   7b 22 61 22 3a 22 31 31   61 61 3a 32 32 62 62 3a   {"a":"11 aa:22bb:
 0010   3a 33 33 63 63 3a 34 34   64 64 22 7d               :33cc:44 dd"}
 
-## UnsafeJson 4
+## Cameronism.Json 4
 
 
 0000   7b 22 61 22 3a 22 31 31   61 61 3a 32 32 62 62 3a   {"a":"11 aa:22bb:
@@ -757,7 +757,7 @@
 
 0000   7b 22 61 22 3a 6e 75 6c   6c 7d                     {"a":nul l}
 
-## UnsafeJson 5
+## Cameronism.Json 5
 
 
 0000   7b 22 61 22 3a 6e 75 6c   6c 7d                     {"a":nul l}

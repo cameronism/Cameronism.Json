@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using UnsafeJson;
+using Cameronism.Json;
 using Tests.Util;
-using Convert = UnsafeJson.Convert;
+using Convert = Cameronism.Json.Convert;
 
 namespace Tests
 {
