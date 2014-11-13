@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
@@ -12,13 +13,14 @@ namespace Cameronism.Json
 {
 	public static class Logger
 	{
-		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null)
+		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null)
 		{
-			return null;//new InternalLogger<T>(maxFileSize, flushRecordCount);
+			var writer = Convert.GetDelegate<T>();
+			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory);
 		}
 	}
 
-	public unsafe abstract class Logger<T> : IDisposable
+	public unsafe sealed class Logger<T> : IDisposable
 	{
 		#region properties
 		public int MaximumFileSize { get; set; }
@@ -27,10 +29,12 @@ namespace Cameronism.Json
 		public string LogDirectory { get; set; }
 		public string LogNameFormat { get; set; }
 		public bool SendOnWorkerThread { get; set; }
+		public Action<Exception, string> ErrorLogger { get; set; }
 		#endregion
 		
 		#region fields
 		readonly object _Gate = new object();
+		readonly Convert.LowWriter<T> _Writer;
 		Action<FileStream> _Sender;
 		FileStream _Stream;
 		MemoryMappedFile _Mapped;
@@ -41,19 +45,19 @@ namespace Cameronism.Json
 		long _Length;
 		#endregion fields
 		
-		public Logger(Action<FileStream> sender, int maxFileSize, int? flushRecordCount, string logNameFormat)
+		internal Logger(Action<FileStream> sender, Convert.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory)
 		{
 			_Sender = sender;
+			_Writer = writer;
 			MaximumFileSize = maxFileSize;
 			FlushRecordCount = flushRecordCount;
 			LogNameFormat = logNameFormat ?? "{0:yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'.'fff}.log.json";
+			LogDirectory = logDirectory;
 			SendOnWorkerThread = true;
 			ReservedRecordSize = 64;
 			
 			InitFile();
 		}
-		
-		protected abstract int Write(ref T value, byte* dst, int avail);
 
 		/// <summary>Queue a record</summary>
 		public void Write(ref T value)
@@ -68,7 +72,7 @@ namespace Cameronism.Json
 				{
 					var position = _Position;
 					byte* destination = (byte*)_Accessor.SafeMemoryMappedViewHandle.DangerousGetHandle() + position;
-					var result = Write(ref value, destination, (int)(_Length - (position + 1))); // + 1 for trailing comma (or ']')
+					var result = _Writer(ref value, destination, (int)(_Length - (position + 1))); // + 1 for trailing comma (or ']')
 						
 					if (result > 0)
 					{
@@ -187,7 +191,14 @@ namespace Cameronism.Json
 		
 		void LogError(Exception ex, [CallerMemberName]string caller = null)
 		{
-			throw new NotImplementedException();
+			var handler = ErrorLogger;
+			if (handler != null)
+			{
+				handler.Invoke(ex, caller);
+				return;
+			}
+
+			Trace.TraceError(caller + Environment.NewLine + ex.ToString());
 		}
 		
 		/// <summary>Send pending records</summary>
@@ -218,7 +229,7 @@ namespace Cameronism.Json
 				_Accessor = null;
 				_Mapped = null;
 				_Stream = null;
-				_Sender = null;
+				//_Sender = null;
 			}
 		}
 		

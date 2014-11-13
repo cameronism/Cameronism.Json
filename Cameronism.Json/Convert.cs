@@ -769,6 +769,21 @@ namespace Cameronism.Json
 
 		static Dictionary<Type, Delegate> _Cached = new Dictionary<Type, Delegate>();
 
+		internal static LowWriter<T> GetDelegate<T>()
+		{
+			LowWriter<T> lw = null;
+			lock (_Cached)
+			{
+				Delegate untyped;
+				if (_Cached.TryGetValue(typeof(T), out untyped))
+				{
+					lw = (LowWriter<T>)untyped;
+				}
+			}
+
+			return lw ?? CacheDelegate<T>();
+		}
+
 		public static LowWriter<T> CacheDelegate<T>()
 		{
 			var schema = Schema.Reflect(typeof(T));
@@ -783,18 +798,7 @@ namespace Cameronism.Json
 
 		public static int Serialize<T>(T item, byte* dst, int avail)
 		{
-			LowWriter<T> lw = null;
-			lock (_Cached)
-			{
-				Delegate untyped;
-				if (_Cached.TryGetValue(typeof(T), out untyped))
-				{
-					lw = (LowWriter<T>)untyped;
-				}
-			}
-
-			if (lw == null) lw = CacheDelegate<T>();
-			return lw.Invoke(ref item, dst, avail);
+			return GetDelegate<T>().Invoke(ref item, dst, avail);
 		}
 
 		public static int Serialize<T>(T item, System.IO.UnmanagedMemoryStream ms)
