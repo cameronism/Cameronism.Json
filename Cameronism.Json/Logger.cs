@@ -13,10 +13,10 @@ namespace Cameronism.Json
 {
 	public static class Logger
 	{
-		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null)
+		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null, Func<DateTime, string> logNamer = null)
 		{
 			var writer = Serializer.GetDelegate<T>();
-			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory);
+			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer);
 		}
 	}
 
@@ -30,6 +30,7 @@ namespace Cameronism.Json
 		public string LogNameFormat { get; set; }
 		public bool SendOnWorkerThread { get; set; }
 		public Action<Exception, string> ErrorLogger { get; set; }
+		public Func<DateTime, string> LogNamer { get; set; }
 		#endregion
 		
 		#region fields
@@ -45,7 +46,7 @@ namespace Cameronism.Json
 		long _Length;
 		#endregion fields
 		
-		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory)
+		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
 		{
 			_Sender = sender;
 			_Writer = writer;
@@ -53,6 +54,7 @@ namespace Cameronism.Json
 			FlushRecordCount = flushRecordCount;
 			LogNameFormat = logNameFormat ?? "{0:yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'.'fff}.log.json";
 			LogDirectory = logDirectory;
+			LogNamer = logNamer;
 			SendOnWorkerThread = true;
 			ReservedRecordSize = 64;
 			
@@ -111,7 +113,17 @@ namespace Cameronism.Json
 		string GetFilename()
 		{
 			var dir = LogDirectory ?? Path.GetTempPath();
-			var name = String.Format(LogNameFormat, DateTime.UtcNow);
+			var dt = DateTime.UtcNow;
+			var namer = LogNamer;
+			string name;
+			if (namer != null)
+			{
+				name = namer(dt);
+			}
+			else
+			{
+				name = String.Format(LogNameFormat, DateTime.UtcNow);
+			}
 			return Path.Combine(dir, name);
 		}
 		
@@ -148,6 +160,7 @@ namespace Cameronism.Json
 			_Mapped.Dispose();
 			_Accessor = null;
 			_Mapped = null;
+			_RecordCount = 0;
 			
 			var fs = _Stream;
 			_Stream = null;
