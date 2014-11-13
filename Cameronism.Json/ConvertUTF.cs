@@ -129,7 +129,7 @@ namespace Cameronism.Json
 		}
 		public unsafe static int WriteStringUtf8(string value, byte* dst, int avail)
 		{
-			if (value == null) return Convert.WriteNull(dst, avail);
+			if (value == null) return Serializer.WriteNull(dst, avail);
 			
 			
 			int required = value.Length + 2; // best case is unescaped ASCII + 2 for the quotes
@@ -223,8 +223,8 @@ namespace Cameronism.Json
 				Int32 bytesToWrite;
 				Int32 byteMark_len = 0;
 				byte* escaped = null;
-				if (ch < Convert.MAX_JSON_ESCAPE_CODEPOINT) {
-					escaped = Convert.JSON_ESCAPES + ch * Convert.MAX_JSON_ESCAPE_LENGTH;
+				if (ch < Serializer.MAX_JSON_ESCAPE_CODEPOINT) {
+					escaped = Serializer.JSON_ESCAPES + ch * Serializer.MAX_JSON_ESCAPE_LENGTH;
 					bytesToWrite = 1;
 					int next = *(escaped + 1);
 					if (next != 0) {

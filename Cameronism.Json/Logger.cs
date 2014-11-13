@@ -15,7 +15,7 @@ namespace Cameronism.Json
 	{
 		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null)
 		{
-			var writer = Convert.GetDelegate<T>();
+			var writer = Serializer.GetDelegate<T>();
 			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory);
 		}
 	}
@@ -34,7 +34,7 @@ namespace Cameronism.Json
 		
 		#region fields
 		readonly object _Gate = new object();
-		readonly Convert.LowWriter<T> _Writer;
+		readonly Serializer.LowWriter<T> _Writer;
 		Action<FileStream> _Sender;
 		FileStream _Stream;
 		MemoryMappedFile _Mapped;
@@ -45,7 +45,7 @@ namespace Cameronism.Json
 		long _Length;
 		#endregion fields
 		
-		internal Logger(Action<FileStream> sender, Convert.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory)
+		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory)
 		{
 			_Sender = sender;
 			_Writer = writer;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Cameronism.Json
 {
-	public unsafe static class Convert
+	public unsafe static class Serializer
 	{
 		public delegate int LowWriter<T>(ref T value, byte* dst, int avail);
 
@@ -117,7 +117,7 @@ namespace Cameronism.Json
 		internal static readonly ushort* DIGIT_PAIRS;
 		internal static readonly ushort* HEX_PAIRS_LOWER;
 		internal static readonly byte* JSON_ESCAPES;
-		static Convert()
+		static Serializer()
 		{
 			// Hold onto < 1K until the process exits
 			IntPtr ptr = Marshal.AllocHGlobal(SIZEOF_STATIC_LOOKUPS);

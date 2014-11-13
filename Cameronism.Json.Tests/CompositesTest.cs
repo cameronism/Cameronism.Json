@@ -179,7 +179,7 @@ namespace Cameronism.Json.Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			Cameronism.Json.Convert.LowWriter<T> writer;
+			Cameronism.Json.Serializer.LowWriter<T> writer;
 			string instructions;
 			try
 			{
@@ -252,7 +252,7 @@ namespace Cameronism.Json.Tests
 			return failed;
 		}
 
-		unsafe static IEnumerable<byte> GetBytes<T>(T value, Cameronism.Json.Convert.LowWriter<T> writer, byte[] buffer, out int result)
+		unsafe static IEnumerable<byte> GetBytes<T>(T value, Cameronism.Json.Serializer.LowWriter<T> writer, byte[] buffer, out int result)
 		{
 			fixed (byte* bs = buffer)
 			{

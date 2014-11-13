@@ -18,7 +18,7 @@ namespace Cameronism.Json
 		const string LOCAL_DST = "destination";
 		const string LOCAL_AVAIL = "available";
 
-		public static Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> Create<T>(Schema schema)
+		public static Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> Create<T>(Schema schema)
 		{
 			MethodInfo simpleWriter = null;
 			bool isSimple = false;
@@ -43,7 +43,7 @@ namespace Cameronism.Json
 					throw new ArgumentException("Unknown JsonType " + schema.JsonType);
 			}
 
-			var emit = Sigil.Emit<Convert.LowWriter<T>>.NewDynamicMethod(schema.NetType.Name + "_toJSON");
+			var emit = Sigil.Emit<Serializer.LowWriter<T>>.NewDynamicMethod(schema.NetType.Name + "_toJSON");
 
 			if (isSimple)
 			{
@@ -99,7 +99,7 @@ namespace Cameronism.Json
 		}
 
 		/// <summary>Must be called with value on top of the stack</summary>
-		static void EmitInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth)
+		static void EmitInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth)
 		{
 			if (Nullable.GetUnderlyingType(schema.NetType) != null)
 			{
@@ -144,7 +144,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void LoadIndirect<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, Type effective)
+		static void LoadIndirect<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, Type effective)
 		{
 			if (effective.IsClass || effective.IsInterface)
 			{
@@ -188,30 +188,30 @@ namespace Cameronism.Json
 			switch (Type.GetTypeCode(effective))
 			{
 				case TypeCode.Boolean:
-					primitive = (PrimitiveWriter<bool>)Convert.WriteBoolean;
+					primitive = (PrimitiveWriter<bool>)Serializer.WriteBoolean;
 					break;
 				case TypeCode.Byte:
 				case TypeCode.UInt16:
 				case TypeCode.UInt32:
-					primitive = (PrimitiveWriter<uint>)Convert.WriteUInt32;
+					primitive = (PrimitiveWriter<uint>)Serializer.WriteUInt32;
 					break;
 				case TypeCode.SByte:
 				case TypeCode.Int16:
 				case TypeCode.Int32:
-					primitive = (PrimitiveWriter<int>)Convert.WriteInt32;
+					primitive = (PrimitiveWriter<int>)Serializer.WriteInt32;
 					break;
 				case TypeCode.Int64:
-					primitive = (PrimitiveWriter<long>)Convert.WriteInt64; break;
+					primitive = (PrimitiveWriter<long>)Serializer.WriteInt64; break;
 				case TypeCode.UInt64:
-					primitive = (PrimitiveWriter<ulong>)Convert.WriteUInt64; break;
+					primitive = (PrimitiveWriter<ulong>)Serializer.WriteUInt64; break;
 				case TypeCode.DateTime:
-					primitive = (PrimitiveWriter<DateTime>)Convert.WriteDateTime8601; break;
+					primitive = (PrimitiveWriter<DateTime>)Serializer.WriteDateTime8601; break;
 				case TypeCode.Decimal:
-					primitive = (PrimitiveWriter<Decimal>)Convert.WriteDecimal; break;
+					primitive = (PrimitiveWriter<Decimal>)Serializer.WriteDecimal; break;
 				case TypeCode.Double:
-					primitive = (PrimitiveWriter<double>)Convert.WriteDouble; break;
+					primitive = (PrimitiveWriter<double>)Serializer.WriteDouble; break;
 				case TypeCode.Single:
-					primitive = (PrimitiveWriter<float>)Convert.WriteSingle; break;
+					primitive = (PrimitiveWriter<float>)Serializer.WriteSingle; break;
 				case TypeCode.Char:
 					primitive = (PrimitiveWriter<char>)ConvertUTF.WriteCharUtf8; break;
 				case TypeCode.String:
@@ -219,7 +219,7 @@ namespace Cameronism.Json
 				default:
 					if (effective == typeof(Guid))
 					{
-						primitive = (PrimitiveWriter<Guid>)Convert.WriteGuidFormatD;
+						primitive = (PrimitiveWriter<Guid>)Serializer.WriteGuidFormatD;
 						break;
 					}
 					if (effective == typeof(System.Net.IPAddress))
@@ -235,9 +235,9 @@ namespace Cameronism.Json
 			return true;
 		}
 
-		static MethodInfo WriteNull = typeof(Cameronism.Json.Convert).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
+		static MethodInfo WriteNull = typeof(Cameronism.Json.Serializer).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
-		static void EmitSimpleComplete<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer)
+		static void EmitSimpleComplete<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, MethodInfo writer)
 		{
 			var effective = schema.NetType;
 
@@ -268,7 +268,7 @@ namespace Cameronism.Json
 		}
 
 		// never pushes result
-		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer, int depth)
+		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, MethodInfo writer, int depth)
 		{
 			var effective = schema.NetType;
 			Sigil.Label ifNull = null;
@@ -333,7 +333,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void CallWriter<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo writer, Type effective, bool useLocals)
+		static void CallWriter<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, MethodInfo writer, Type effective, bool useLocals)
 		{
 			if (writer == null)
 			{
@@ -365,7 +365,7 @@ namespace Cameronism.Json
 			emit.Call(writer);
 		}
 
-		static void EmitIPAddress<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, bool useLocals)
+		static void EmitIPAddress<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, bool useLocals)
 		{
 			Action pushAvailable = () =>
 			{
@@ -395,7 +395,7 @@ namespace Cameronism.Json
 				emit.Pop(); // discard null
 
 				pushAvailable();
-				emit.Call(typeof(Convert).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
+				emit.Call(typeof(Serializer).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
 
 				emit.Branch(done);
 			}
@@ -415,7 +415,7 @@ namespace Cameronism.Json
 				{
 					emit.LoadField(ip.GetField("m_Address", BindingFlags.Instance | BindingFlags.NonPublic));
 					pushAvailable();
-					emit.Call(typeof(Convert).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
+					emit.Call(typeof(Serializer).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
 
 					emit.Branch(done);
 				}
@@ -425,14 +425,14 @@ namespace Cameronism.Json
 				{
 					emit.LoadField(ip.GetField("m_Numbers", BindingFlags.Instance | BindingFlags.NonPublic));
 					pushAvailable();
-					emit.Call(typeof(Convert).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
+					emit.Call(typeof(Serializer).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
 				}
 			}
 
 			emit.MarkLabel(done);
 		}
 
-		static void EmitArray<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitArray<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 
 			var ifNotNull = emit.DefineLabel();
@@ -522,12 +522,12 @@ namespace Cameronism.Json
 				emit.MarkLabel(ifNull);
 			}
 		}
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			EmitEnumerable(schema, emit, depth, pushResult, isArray: true);
 		}
 
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth, bool pushResult, bool isArray)
+		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth, bool pushResult, bool isArray)
 		{
 			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
 			MethodInfo getKey = null;
@@ -667,7 +667,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void CallCorrectly<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, MethodInfo mi, Type instanceType)
+		static void CallCorrectly<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, MethodInfo mi, Type instanceType)
 		{
 			if (mi.IsVirtual)
 			{
@@ -679,7 +679,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void EmitObject<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitObject<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
@@ -794,14 +794,14 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void EmitDictionary<T>(Schema schema, Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitDictionary<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth = 0, bool pushResult = false)
 		{
 			if (schema.Keys.JsonType != JsonType.String) throw new NotImplementedException();
 
 			EmitEnumerable(schema, emit, depth, pushResult, isArray: false);
 		}
 
-		static void PushAddress<T>(Sigil.Emit<Convert.LowWriter<T>> emit, Type type)
+		static void PushAddress<T>(Sigil.Emit<Serializer.LowWriter<T>> emit, Type type)
 		{
 			using (var copy = emit.DeclareLocal(type))
 			{
@@ -811,7 +811,7 @@ namespace Cameronism.Json
 		}
 
 		/// <param name="push">Push the written byte count on success</param>
-		static int WriteConstant<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
+		static int WriteConstant<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
 		{
 			// ASSUMPTION: the string does not require JSON escaping
 			var bytes = Encoding.UTF8.GetBytes(s);
@@ -866,7 +866,7 @@ namespace Cameronism.Json
 		}
 
 
-		static void ReturnFailed<T>(Sigil.Emit<Cameronism.Json.Convert.LowWriter<T>> emit, int depth)
+		static void ReturnFailed<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, int depth)
 		{
 			for (int i = 0; i < depth; i++) emit.Pop();
 

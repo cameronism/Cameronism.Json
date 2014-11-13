@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Cameronism.Json;
 using Cameronism.Json.Tests.Util;
-using Convert = Cameronism.Json.Convert;
+using Convert = Cameronism.Json.Serializer;
 
 namespace Cameronism.Json.Tests
 {
@@ -15,12 +15,12 @@ namespace Cameronism.Json.Tests
 		[Fact]
 		public unsafe void Approve()
 		{
-			var bs = new byte[Convert.SIZEOF_STATIC_LOOKUPS];
+			var bs = new byte[Serializer.SIZEOF_STATIC_LOOKUPS];
 			fixed (byte* b = bs)
 			{
 				ushort* digitPairs, hexPairs;
 				byte* jsonEscapes;
-				Convert.CreateStaticLookups(b, out digitPairs, out jsonEscapes, out hexPairs);
+				Serializer.CreateStaticLookups(b, out digitPairs, out jsonEscapes, out hexPairs);
 			}
 
 			var sb = Hex.Dump(bs);

@@ -114,7 +114,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteDouble,
+				Cameronism.Json.Serializer.WriteDouble,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -154,7 +154,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteSingle,
+				Cameronism.Json.Serializer.WriteSingle,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -202,7 +202,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteDecimal,
+				Cameronism.Json.Serializer.WriteDecimal,
 				(sb, g) => sb.AppendLine("# " + g),
 				64);
 		}
@@ -235,7 +235,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteUInt32,
+				Cameronism.Json.Serializer.WriteUInt32,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -270,7 +270,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteUInt64,
+				Cameronism.Json.Serializer.WriteUInt64,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -323,7 +323,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteInt64,
+				Cameronism.Json.Serializer.WriteInt64,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -356,7 +356,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				numbers,
-				Cameronism.Json.Convert.WriteInt32,
+				Cameronism.Json.Serializer.WriteInt32,
 				(sb, g) => sb.AppendLine("# " + g.ToString("n0")));
 		}
 
@@ -378,7 +378,7 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				guids,
-				Cameronism.Json.Convert.WriteGuidFormatD,
+				Cameronism.Json.Serializer.WriteGuidFormatD,
 				(sb, g) => sb.AppendLine("# " + g));
 		}
 
@@ -387,7 +387,7 @@ namespace Cameronism.Json.Tests
 		{
 			Approve(
 				new[] { true, false },
-				Cameronism.Json.Convert.WriteBoolean,
+				Cameronism.Json.Serializer.WriteBoolean,
 				(sb, b) => sb.Append("# " + b),
 				5);
 		}
@@ -425,9 +425,9 @@ namespace Cameronism.Json.Tests
 
 			Approve(
 				dts,
-				Cameronism.Json.Convert.WriteDateTime8601,
+				Cameronism.Json.Serializer.WriteDateTime8601,
 				(sb, g) => sb.AppendLine("# " + g),
-				Cameronism.Json.Convert.SIZEOF_DATETIME_8601);
+				Cameronism.Json.Serializer.SIZEOF_DATETIME_8601);
 		}
 
 		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)

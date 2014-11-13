@@ -65,7 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Convert.cs" />
+    <Compile Include="Serializer.cs" />
     <Compile Include="ConvertUTF.cs" />
     <Compile Include="EnumerableInfo.cs" />
     <Compile Include="JsonType.cs" />

@@ -10,7 +10,7 @@ Deserialization is not currently supported, I recommend JIL for your deserializa
 
 ## Benchmarks
 
-** Array with integers 0 through 1024, 1024 times **
+### Array with integers 0 through 1024, 1024 times
 
 | Serializer      | Average Milliseconds |
 | --------------  | --------------------:|
@@ -20,7 +20,7 @@ Deserialization is not currently supported, I recommend JIL for your deserializa
 | Newtonsoft      |                  179 |
 
 
-** Array with integers 0 through 1024 as strings, 1024 times **
+### Array with integers 0 through 1024 as strings, 1024 times
 
 | Serializer      | Average Milliseconds |
 | --------------  | --------------------:|
@@ -30,7 +30,7 @@ Deserialization is not currently supported, I recommend JIL for your deserializa
 | Newtonsoft      |                  134 |
 
 
-** Dictionary with 1 million small objects **
+### Dictionary with 1 million small objects
 
 | Serializer      | Average Milliseconds |
 | --------------  | --------------------:|
