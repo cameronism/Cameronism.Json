@@ -468,7 +468,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<System.Int32>
+# Cameronism.Json.Tests.CompositesTest+B<System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -639,7 +639,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<System.Int32, System.Int32>
+# Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -892,7 +892,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>
+# Cameronism.Json.Tests.CompositesTest+B<System.Int32, Cameronism.Json.Tests.CompositesTest+B<System.Int32>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -1277,7 +1277,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32>, System.Int32>
+# Cameronism.Json.Tests.CompositesTest+B<Cameronism.Json.Tests.CompositesTest+B<System.Int32>, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -1665,7 +1665,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>, System.Int32>
+# Cameronism.Json.Tests.CompositesTest+B<Cameronism.Json.Tests.CompositesTest+B<System.Int32, Cameronism.Json.Tests.CompositesTest+B<System.Int32>>, System.Int32>
 ldarg.1
 stloc.0
 ldarg.2
@@ -2272,7 +2272,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32>>>>
+# Cameronism.Json.Tests.CompositesTest+B<System.Int32, Cameronism.Json.Tests.CompositesTest+B<Cameronism.Json.Tests.CompositesTest+B<System.Int32, Cameronism.Json.Tests.CompositesTest+B<System.Int32>>>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -3003,7 +3003,7 @@ ret
 
 
 
-# Tests.CompositesTest+B<System.Guid, Tests.CompositesTest+B<Tests.CompositesTest+B<System.Int32, Tests.CompositesTest+B<System.Int32, System.Nullable<System.Guid>>>>>
+# Cameronism.Json.Tests.CompositesTest+B<System.Guid, Cameronism.Json.Tests.CompositesTest+B<Cameronism.Json.Tests.CompositesTest+B<System.Int32, Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Nullable<System.Guid>>>>>
 ldarg.1
 stloc.0
 ldarg.2
@@ -4430,14 +4430,14 @@ ret
 
 
 
-# Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>
+# Cameronism.Json.Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>
 ldarg.1
 stloc.0
 ldarg.2
 stloc.1
 ldarg.2
 ldarg.0
-ldobj Tests.CompositesTest+MyStructWithFields`3[System.Int32,System.Nullable`1[System.Int32],System.String]
+ldobj Cameronism.Json.Tests.CompositesTest+MyStructWithFields`3[System.Int32,System.Nullable`1[System.Int32],System.String]
 ldloc.1
 ldc.i4.s 20
 bge.s _label0
@@ -4770,7 +4770,7 @@ ret
 
 
 
-# System.Nullable<Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>>
+# System.Nullable<Cameronism.Json.Tests.CompositesTest+MyStructWithFields<System.Int32, System.Nullable<System.Int32>, System.String>>
 ldarg.1
 stloc.0
 ldarg.2

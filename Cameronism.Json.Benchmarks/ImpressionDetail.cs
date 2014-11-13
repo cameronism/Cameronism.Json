@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Json.Benchmarks
+namespace Cameronism.Json.Benchmarks
 {
 	[DataContract]
 	internal class ImpressionDetail

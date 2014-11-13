@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using NewtonsoftJson = Newtonsoft.Json;
 using JilJson = Jil.JSON;
 using ProtoBufSerializer = ProtoBuf.Serializer;
-using BrianarySerializer = FP.IO.Serialization.Serializer;
 using SimpleSpeedTester.Core;
 using System.Runtime.InteropServices;
+#if FPBENCH
+using BrianarySerializer = FP.IO.Serialization.Serializer;
+#endif
 
-namespace Json.Benchmarks
+namespace Cameronism.Json.Benchmarks
 {
 	class Program
 	{
@@ -49,12 +51,14 @@ namespace Json.Benchmarks
 			ProtoBufSerializer.Serialize(ms, item);
 		}
 
+#if FPBENCH
 		void Brianary<T>(T item, UnmanagedMemoryStream ms)
 		{
 			BrianarySerializer.Serialize(ms, item);
 		}
+#endif
 
-		unsafe void Cameronism<T>(T item, UnmanagedMemoryStream ms)
+		unsafe void CameronismJson<T>(T item, UnmanagedMemoryStream ms)
 		{
 			int resul = Cameronism.Json.Convert.Serialize(item, ms);
 			if (resul <= 0) throw new InsufficientMemoryException();
@@ -81,8 +85,10 @@ namespace Json.Benchmarks
 				Newtonsoft,
 				Jil,
 				ProtoBuf,
+#if FPBENCH
 				Brianary,
-				Cameronism,
+#endif
+				CameronismJson,
 			};
 
 			var testGroup = new TestGroup(name);

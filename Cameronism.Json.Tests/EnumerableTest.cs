@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Cameronism.Json;
 using Xunit;
 
-namespace Tests
+namespace Cameronism.Json.Tests
 {
 	public class EnumerableTest
 	{

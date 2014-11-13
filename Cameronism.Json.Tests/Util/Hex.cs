@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests.Util
+namespace Cameronism.Json.Tests.Util
 {
 	public static class Hex
 	{

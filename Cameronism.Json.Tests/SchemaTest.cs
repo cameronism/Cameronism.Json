@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Tests
+namespace Cameronism.Json.Tests
 {
 	public class SchemaTest
 	{

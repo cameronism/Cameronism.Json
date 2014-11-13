@@ -50,7 +50,7 @@ IsVirtual: True
 Declaring Type: System.IDisposable
 
 
-# Tests.EnumerableTest+ExplicitEnumerableBadCount
+# Cameronism.Json.Tests.EnumerableTest+ExplicitEnumerableBadCount
 ## GetEnumerator
 Return Type: System.Collections.Generic.IEnumerator<System.Boolean>
 IsVirtual: True
@@ -75,7 +75,7 @@ IsVirtual: True
 Declaring Type: System.IDisposable
 
 
-# Tests.EnumerableTest+ExplicitReadOnlyCollection
+# Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollection
 ## GetEnumerator
 Return Type: System.Collections.Generic.IEnumerator<System.Guid>
 IsVirtual: True
@@ -102,7 +102,7 @@ IsVirtual: True
 Declaring Type: System.IDisposable
 
 
-# Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
+# Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
 ## GetEnumerator
 Return Type: System.Collections.Generic.IEnumerator<System.Byte>
 IsVirtual: True
@@ -121,7 +121,7 @@ Declaring Type: System.Collections.Generic.IEnumerator<System.Byte>
 ## get_Count
 Return Type: System.Int32
 IsVirtual: True
-Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
+Declaring Type: Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionImplicitCount
 
 ## Dispose
 Return Type: System.Void
@@ -129,21 +129,21 @@ IsVirtual: True
 Declaring Type: System.IDisposable
 
 
-# Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
+# Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
 ## GetEnumerator
-Return Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+Return Type: Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
 IsVirtual: False
-Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
+Declaring Type: Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator
 
 ## MoveNext
 Return Type: System.Boolean
 IsVirtual: False
-Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+Declaring Type: Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
 
 ## get_Current
 Return Type: System.SByte
 IsVirtual: False
-Declaring Type: Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
+Declaring Type: Cameronism.Json.Tests.EnumerableTest+ExplicitReadOnlyCollectionPublicEnumerator+Enumerator
 
 ## get_Count
 Return Type: System.Int32

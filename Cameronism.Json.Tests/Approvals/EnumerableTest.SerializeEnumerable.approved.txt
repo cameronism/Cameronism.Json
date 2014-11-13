@@ -1214,7 +1214,7 @@ ret
 
 ### Equal: True
 
-# Tests.EnumerableTest+MyReadOnlyDictionary<System.String, System.Int32>
+# Cameronism.Json.Tests.EnumerableTest+MyReadOnlyDictionary<System.String, System.Int32>
 
 
 ## Newtonsoft 0

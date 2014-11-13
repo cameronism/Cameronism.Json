@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tests
+namespace Cameronism.Json.Tests
 {
 	static class NewtonsoftConverters
 	{

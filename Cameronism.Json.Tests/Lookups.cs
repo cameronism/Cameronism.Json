@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Cameronism.Json;
-using Tests.Util;
+using Cameronism.Json.Tests.Util;
 using Convert = Cameronism.Json.Convert;
 
-namespace Tests
+namespace Cameronism.Json.Tests
 {
 	public class Lookups
 	{

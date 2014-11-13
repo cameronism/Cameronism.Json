@@ -5,11 +5,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Tests.Util;
+using Cameronism.Json.Tests.Util;
 using Xunit;
 using Xunit.Extensions;
 
-namespace Tests
+namespace Cameronism.Json.Tests
 {
 	public class CompareNewtonsoft
 	{

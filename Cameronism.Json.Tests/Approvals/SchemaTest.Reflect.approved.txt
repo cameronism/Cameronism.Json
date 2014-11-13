@@ -731,9 +731,9 @@
 }
 
 
-# Tests.SchemaTest+ExplicitDataMemberOrder
+# Cameronism.Json.Tests.SchemaTest+ExplicitDataMemberOrder
 {
-  "NetType": "Tests.SchemaTest+ExplicitDataMemberOrder",
+  "NetType": "Cameronism.Json.Tests.SchemaTest+ExplicitDataMemberOrder",
   "JsonType": "Object",
   "Nullable": true,
   "Items": null,
