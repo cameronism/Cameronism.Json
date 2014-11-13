@@ -1,21 +1,57 @@
-# Unsafe JSON ;)
+# Cameronism.Json
 
-Serialization only (no deserialization). Entirely built around `byte*`
+*Very* fast JSON serializer for .NET
 
-## Misc TODO
+This serializer gains much of its speed by writing directly to byte pointers `byte*`.
+By avoiding the overhead of TextWriter and Stream this JSON serializer is the speed of
+binary serializers.
 
-- Console app for demo / benchmark
-- Add unit test for (enumerable of) memberless object
-- Better return value when insufficient space
-  + object serializer
-    * currently just doubles original avail param
-    * `member result - minLength` might be sufficient
-    * should decrease available before serializing member, save some room for following members
-- Minimum length (and maybe reserved length) per schema  
-  DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
-- Inline constant properties (see optimizations)
-- Call Dispose on enumerators
-- Performance test array with unrolled first iteration
+Deserialization is not currently supported, I recommend JIL for your deserialization needs.
+
+## Benchmarks
+
+** Array with integers 0 through 1024, 1024 times **
+
+| Serializer      | Average Milliseconds |
+| --------------  | --------------------:|
+| Cameronism.Json |                    9 |
+| Jil             |                   41 |
+| ProtoBuf        |                  170 |
+| Newtonsoft      |                  179 |
+
+
+** Array with integers 0 through 1024 as strings, 1024 times **
+
+| Serializer      | Average Milliseconds |
+| --------------  | --------------------:|
+| Cameronism.Json |                   24 |
+| Jil             |                   85 |
+| ProtoBuf        |                  107 |
+| Newtonsoft      |                  134 |
+
+
+** Dictionary with 1 million small objects **
+
+| Serializer      | Average Milliseconds |
+| --------------  | --------------------:|
+| Cameronism.Json |                  415 |
+| ProtoBuf        |                  889 |
+| Jil             |                 1230 |
+| Newtonsoft      |                 3195 |
+
+Small object:
+
+```csharp
+new
+{
+	SessionId = Guid.NewGuid(),
+	Timestamp = DateTime.UtcNow,
+	UserAgent = i + "/" + i,
+	PageId = (uint)i,
+	Options = new Dictionary<string,string>(),
+	Groups = new List<GroupInfo>(),
+}
+```
 
 
 ### JSON types from .NET types
@@ -103,4 +139,18 @@ No deserialization (use JIL or Newtonsoft)
   TODO
   Properties that return a constant will not be called, the serialized value
   will be calculated when generating serialization method
+
+## TODO
+
+- Add unit test for (enumerable of) memberless object
+- Better return value when insufficient space
+  + object serializer
+    * currently just doubles original avail param
+    * `member result - minLength` might be sufficient
+    * should decrease available before serializing member, save some room for following members
+- Minimum length (and maybe reserved length) per schema  
+  DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
+- Inline constant properties (see optimizations)
+- Call Dispose on enumerators
+- Performance test array with unrolled first iteration
 
