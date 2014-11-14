@@ -27,10 +27,12 @@ namespace Cameronism.Json.Benchmarks
 
 		delegate void Benchy<T>(T item, UnmanagedMemoryStream stream);
 
+		static Encoding _Utf8 = new UTF8Encoding(false);
+
 		static NewtonsoftJson.JsonSerializer NewtonsoftSerializer = new NewtonsoftJson.JsonSerializer();
 		void Newtonsoft<T>(T item, UnmanagedMemoryStream ms)
 		{
-			using (var tw = new StreamWriter(ms, Encoding.UTF8, DefaultStreamWriterBufferSize, true))
+			using (var tw = new StreamWriter(ms, _Utf8, DefaultStreamWriterBufferSize, true))
 			{
 				NewtonsoftSerializer.Serialize(tw, item, typeof(T));
 			}
@@ -40,7 +42,7 @@ namespace Cameronism.Json.Benchmarks
 
 		void Jil<T>(T item, UnmanagedMemoryStream ms)
 		{
-			using (var tw = new StreamWriter(ms, Encoding.UTF8, DefaultStreamWriterBufferSize, true))
+			using (var tw = new StreamWriter(ms, _Utf8, DefaultStreamWriterBufferSize, true))
 			{
 				JilJson.Serialize(item, tw);
 			}
