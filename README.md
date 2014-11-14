@@ -55,6 +55,45 @@ new
 }
 ```
 
+## Usage
+
+```csharp
+var stuffToSerialize = GetSomeStuff();
+var buffer = new byte[4096]; // for performance buffers like this should be reused
+int position;
+unsafe
+{
+	fixed (byte* ptr = buffer)
+	{
+		position = Serializer.Serialize(stuffToSerialize, ptr, buffer.Length);
+	}
+}
+
+if (position < 0) return; // buffer was too small
+
+/* buffer now has the JSON */
+
+// copy it elsewhere
+otherStream.Write(buffer, 0, position);
+
+// or create a stream of your own
+var myStream = new MemoryStream(buffer, 0, position);
+
+// or get the string version of the JSON 
+string debug = Encoding.UTF8.GetString(buffer, 0, position);
+// if you need a string for more than debugging, use a TextWriter based serializer like Jil
+```
+
+---
+
+Serialize may be also be called with an [UnmanagedMemoryStream](http://msdn.microsoft.com/en-us/library/system.io.unmanagedmemorystream%28v=vs.110%29.aspx).
+[MemoryMappedFile](http://msdn.microsoft.com/en-us/library/system.io.memorymappedfiles.memorymappedfile%28v=vs.110%29.aspx) can be used to get an unmanaged
+stream for a file on disk (or not on disk at all).
+
+## Install Cameronism.Json
+
+	PM> Install-Package Cameronism.Json
+
 
 ### JSON types from .NET types
 
