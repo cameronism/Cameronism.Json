@@ -12,6 +12,10 @@ namespace Cameronism.Json.Tests
 {
 	public class CompositesTest
 	{
+		class NoMembers
+		{
+		}
+
 		class B<T>
 		{
 			public T i { get; set; }
@@ -140,6 +144,8 @@ namespace Cameronism.Json.Tests
 			failed += SerializeValues<Guid?>(sb, buffer, Guid.Empty, Guid.Parse("41d091ba-d6bb-4795-969a-28d1509de6b6"), null);
 			failed += SerializeValues<DayOfWeek?>(sb, buffer, DayOfWeek.Monday, DayOfWeek.Friday, null);
 			failed += SerializeValues(sb, buffer, new { }, null);
+			failed += SerializeValues<NoMembers[]>(sb, buffer, new[] { new NoMembers() }, new[] { new NoMembers(), null, new NoMembers() }, new NoMembers[0], null);
+			failed += SerializeValues<IEnumerable<NoMembers>>(sb, buffer, new[] { new NoMembers() }, new[] { new NoMembers() }.ToList(), null);
 			failed += SerializeValues(sb, buffer, A(1), null);
 			failed += SerializeValues(sb, buffer, A(1,2), null);
 			failed += SerializeValues(sb, buffer, A((int?)1,2),  A((int?)null,2));

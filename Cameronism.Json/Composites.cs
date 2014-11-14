@@ -716,7 +716,7 @@ namespace Cameronism.Json
 
 			if (schema.Members.Count == 0)
 			{
-				WriteConstant(emit, "{}", depth: depth + 1);
+				WriteConstant(emit, "{}", depth: depth + (pushResult ? 1 : 0));
 			}
 			else
 			{

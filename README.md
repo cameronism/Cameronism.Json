@@ -183,7 +183,6 @@ No deserialization (use JIL or Newtonsoft)
 
 ## TODO
 
-- Add unit test for (enumerable of) memberless object
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
