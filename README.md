@@ -183,6 +183,11 @@ No deserialization (use JIL or Newtonsoft)
 
 ## TODO
 
+- Support serializing to Stream
+  + It won't be as fast but will be much more accessible
+  + So far, looks like it will be slower by less than 10%
+  + Caller will be responsible for providing `byte[]` buffer  
+    `Serializer.Serialize<T>(T value, Stream destination, byte[] buffer)`
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param

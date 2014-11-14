@@ -29,7 +29,7 @@ namespace Cameronism.Json
 		/// <returns>Logger instance</returns>
 		public static Logger<T> Create<T>(Action<FileStream> send, long maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null, Func<DateTime, string> logNamer = null)
 		{
-			var writer = Serializer.GetDelegate<T>();
+			var writer = Serializer.GetPointerDelegate<T>();
 			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer);
 		}
 
@@ -321,9 +321,9 @@ namespace Cameronism.Json
 	/// <typeparam name="T">Record type</typeparam>
 	public unsafe sealed class Logger<T> : Logger
 	{
-		readonly Serializer.LowWriter<T> _Writer;
+		readonly Serializer.WriteToPointer<T> _Writer;
 
-		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, long maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
+		internal Logger(Action<FileStream> sender, Serializer.WriteToPointer<T> writer, long maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
 			: base(sender, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer)
 		{
 			_Writer = writer;

@@ -14,9 +14,11 @@ namespace Cameronism.Json
 	public unsafe static class Serializer
 	{
 		/// <summary>
-		/// Basic serializer interface
+		/// Common pointer serializer interface
 		/// </summary>
-		public delegate int LowWriter<T>(ref T value, byte* dst, int avail);
+		public delegate int WriteToPointer<T>(ref T value, byte* dst, int avail);
+
+		internal delegate void WriteToStream<T>(ref T value, System.IO.Stream destination, byte[] buffer, byte* bufferPointer);
 
 		#region static lookups
 		internal const int SIZEOF_DIGIT_PAIRS = 100 * 2;
@@ -773,42 +775,70 @@ namespace Cameronism.Json
 		#endregion
 		#endregion
 
-		static Dictionary<Type, Delegate> _Cached = new Dictionary<Type, Delegate>();
+		static Dictionary<Type, Delegate> _PointerCached = new Dictionary<Type, Delegate>();
+		static Dictionary<Type, Delegate> _StreamCached = new Dictionary<Type, Delegate>();
 
-		internal static LowWriter<T> GetDelegate<T>()
+		/// <summary>
+		/// Get delegate
+		/// </summary>
+		/// <typeparam name="T">item type</typeparam>
+		/// <returns>delegate</returns>
+		public static WriteToPointer<T> GetPointerDelegate<T>()
 		{
-			LowWriter<T> lw = null;
-			lock (_Cached)
+			WriteToPointer<T> lw = null;
+			lock (_PointerCached)
 			{
 				Delegate untyped;
-				if (_Cached.TryGetValue(typeof(T), out untyped))
+				if (_PointerCached.TryGetValue(typeof(T), out untyped))
 				{
-					lw = (LowWriter<T>)untyped;
+					lw = (WriteToPointer<T>)untyped;
 				}
 			}
 
-			return lw ?? CacheDelegate<T>();
+			return lw ?? CachePointerDelegate<T>();
 		}
 
-		/// <summary>
-		/// Get serialization delegate
-		/// </summary>
-		/// <typeparam name="T">item type</typeparam>
-		/// <returns>a serialization delegate</returns>
-		public static LowWriter<T> CacheDelegate<T>()
+		static WriteToStream<T> GetStreamDelegate<T>()
+		{
+			WriteToStream<T> lw = null;
+			lock (_StreamCached)
+			{
+				Delegate untyped;
+				if (_StreamCached.TryGetValue(typeof(T), out untyped))
+				{
+					lw = (WriteToStream<T>)untyped;
+				}
+			}
+
+			return lw ?? CacheStreamDelegate<T>();
+		}
+
+		internal static WriteToPointer<T> CachePointerDelegate<T>()
 		{
 			var schema = Schema.Reflect(typeof(T));
-			var emit = Composites.Create<T>(schema);
+			var emit = Composites.CreatePointer<T>(schema);
 			var del = emit.CreateDelegate();
-			lock (_Cached)
+			lock (_PointerCached)
 			{
-				_Cached[typeof(T)] = del;
+				_PointerCached[typeof(T)] = del;
+			}
+			return del;
+		}
+		internal static WriteToStream<T> CacheStreamDelegate<T>()
+		{
+			var schema = Schema.Reflect(typeof(T));
+			var emit = Composites.CreateStream<T>(schema);
+			var del = emit.CreateDelegate();
+			lock (_StreamCached)
+			{
+				_StreamCached[typeof(T)] = del;
 			}
 			return del;
 		}
 
+
 		/// <summary>
-		/// 
+		/// Serialize item to destination
 		/// </summary>
 		/// <typeparam name="T">item type</typeparam>
 		/// <param name="item">item</param>
@@ -817,7 +847,7 @@ namespace Cameronism.Json
 		/// <returns>The number of bytes written or negative if insufficient space</returns>
 		public static int Serialize<T>(T item, byte* dst, int avail)
 		{
-			return GetDelegate<T>().Invoke(ref item, dst, avail);
+			return GetPointerDelegate<T>().Invoke(ref item, dst, avail);
 		}
 
 		/// <summary>
@@ -838,6 +868,27 @@ namespace Cameronism.Json
 				ms.PositionPointer = dst + result;
 			}
 			return result;
+		}
+
+		internal const int MIN_BUFFER_LENGTH = 1024;
+
+		/// <summary>
+		/// Serialize item to destination
+		/// </summary>
+		/// <typeparam name="T">item type</typeparam>
+		/// <param name="item">item</param>
+		/// <param name="destination">destination</param>
+		/// <param name="buffer">Byte array for temporary storage.  It will be pinned during serialization</param>
+		public static void Serialize<T>(T item, System.IO.Stream destination, byte[] buffer)
+		{
+			if (buffer == null) throw new ArgumentNullException("buffer");
+			if (buffer.Length < MIN_BUFFER_LENGTH) throw new ArgumentOutOfRangeException("buffer", "Please provide buffer of at least " + MIN_BUFFER_LENGTH + " bytes");
+
+			var streamWriter = GetStreamDelegate<T>();
+			fixed (byte* ptr = buffer)
+			{
+				streamWriter.Invoke(ref item, destination, buffer, ptr);
+			}
 		}
 	}
 }

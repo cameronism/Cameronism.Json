@@ -185,11 +185,11 @@ namespace Cameronism.Json.Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			Cameronism.Json.Serializer.LowWriter<T> writer;
+			Cameronism.Json.Serializer.WriteToPointer<T> writer;
 			string instructions;
 			try
 			{
-				var emit = Cameronism.Json.Composites.Create<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
+				var emit = Cameronism.Json.Composites.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 				writer = emit.CreateDelegate(out instructions);
 			}
 			catch (Sigil.SigilVerificationException sve)
@@ -258,7 +258,7 @@ namespace Cameronism.Json.Tests
 			return failed;
 		}
 
-		unsafe static IEnumerable<byte> GetBytes<T>(T value, Cameronism.Json.Serializer.LowWriter<T> writer, byte[] buffer, out int result)
+		unsafe static IEnumerable<byte> GetBytes<T>(T value, Cameronism.Json.Serializer.WriteToPointer<T> writer, byte[] buffer, out int result)
 		{
 			fixed (byte* bs = buffer)
 			{
@@ -289,7 +289,7 @@ namespace Cameronism.Json.Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			var emit = Cameronism.Json.Composites.Create<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
+			var emit = Cameronism.Json.Composites.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 
 			string instructions;
 			try

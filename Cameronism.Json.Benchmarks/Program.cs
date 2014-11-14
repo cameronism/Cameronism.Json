@@ -66,6 +66,26 @@ namespace Cameronism.Json.Benchmarks
 			if (resul <= 0) throw new InsufficientMemoryException();
 		}
 
+		static byte[] _Buffer;
+		unsafe void CameronismStream<T>(T item, UnmanagedMemoryStream ms)
+		{
+			var buffer = _Buffer;
+			fixed (byte* ptr = _Buffer)
+			{
+				int result = Cameronism.Json.Serializer.Serialize(item, ptr, buffer.Length);
+				if (result <= 0) throw new InsufficientMemoryException();
+
+				ms.Write(buffer, 0, result);
+
+				//// slow this down on purpose because it's freaking fast right now
+				//for (int i = 0; i < 15; i++)
+				//{
+				//	ms.Position = 0;
+				//	ms.Write(buffer, 0, result);
+				//}
+			}
+		}
+
 		unsafe void BenchAll<T>(T item, IntPtr ptr, int length, Random random, int testRuns = 16, string name = null)
 		{
 			name = name ?? typeof(T).Name;
@@ -91,6 +111,7 @@ namespace Cameronism.Json.Benchmarks
 				Brianary,
 #endif
 				CameronismJson,
+				CameronismStream,
 			};
 
 			var testGroup = new TestGroup(name);
@@ -152,6 +173,7 @@ namespace Cameronism.Json.Benchmarks
 			var rand = new Random(42);
 			int length = 256 * 1024 * 1024;
 			var instance = new Program();
+			_Buffer = new byte[length];
 
 			IntPtr ptr = IntPtr.Zero;
 			try
