@@ -817,7 +817,7 @@ namespace Cameronism.Json
 		{
 			var schema = Schema.Reflect(typeof(T));
 			var emit = Composites.CreatePointer<T>(schema);
-			var del = emit.CreateDelegate();
+			var del = emit.CreateDelegate<WriteToPointer<T>>();
 			lock (_PointerCached)
 			{
 				_PointerCached[typeof(T)] = del;
@@ -828,7 +828,7 @@ namespace Cameronism.Json
 		{
 			var schema = Schema.Reflect(typeof(T));
 			var emit = Composites.CreateStream<T>(schema);
-			var del = emit.CreateDelegate();
+			var del = emit.CreateDelegate<WriteToStream<T>>();
 			lock (_StreamCached)
 			{
 				_StreamCached[typeof(T)] = del;

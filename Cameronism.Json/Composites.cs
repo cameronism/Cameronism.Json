@@ -18,12 +18,12 @@ namespace Cameronism.Json
 		const string LOCAL_DST = "destination";
 		const string LOCAL_AVAIL = "available";
 
-		public static Sigil.Emit<Cameronism.Json.Serializer.WriteToStream<T>> CreateStream<T>(Schema schema)
+		public static Sigil.NonGeneric.Emit CreateStream<T>(Schema schema)
 		{
 			throw new NotImplementedException();
 		}
 
-		public static Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> CreatePointer<T>(Schema schema)
+		public static Sigil.NonGeneric.Emit CreatePointer<T>(Schema schema)
 		{
 			MethodInfo simpleWriter = null;
 			bool isSimple = false;
@@ -48,7 +48,7 @@ namespace Cameronism.Json
 					throw new ArgumentException("Unknown JsonType " + schema.JsonType);
 			}
 
-			var emit = Sigil.Emit<Serializer.WriteToPointer<T>>.NewDynamicMethod(schema.NetType.Name + "_toJSON");
+			var emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(int), new[] { typeof(T).MakeByRefType(), typeof(byte).MakePointerType(), typeof(int) }, schema.NetType.Name + "_toJSON");
 
 			if (isSimple)
 			{
@@ -104,7 +104,7 @@ namespace Cameronism.Json
 		}
 
 		/// <summary>Must be called with value on top of the stack</summary>
-		static void EmitInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth)
+		static void EmitInline(Schema schema, Sigil.NonGeneric.Emit emit, int depth)
 		{
 			if (Nullable.GetUnderlyingType(schema.NetType) != null)
 			{
@@ -149,7 +149,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void LoadIndirect<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, Type effective)
+		static void LoadIndirect(Sigil.NonGeneric.Emit emit, Type effective)
 		{
 			if (effective.IsClass || effective.IsInterface)
 			{
@@ -242,7 +242,7 @@ namespace Cameronism.Json
 
 		static MethodInfo WriteNull = typeof(Cameronism.Json.Serializer).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
-		static void EmitSimpleComplete<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, MethodInfo writer)
+		static void EmitSimpleComplete(Schema schema, Sigil.NonGeneric.Emit emit, MethodInfo writer)
 		{
 			var effective = schema.NetType;
 
@@ -273,7 +273,7 @@ namespace Cameronism.Json
 		}
 
 		// never pushes result
-		static void EmitSimpleInline<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, MethodInfo writer, int depth)
+		static void EmitSimpleInline(Schema schema, Sigil.NonGeneric.Emit emit, MethodInfo writer, int depth)
 		{
 			var effective = schema.NetType;
 			Sigil.Label ifNull = null;
@@ -338,7 +338,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void CallWriter<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, MethodInfo writer, Type effective, bool useLocals)
+		static void CallWriter(Sigil.NonGeneric.Emit emit, MethodInfo writer, Type effective, bool useLocals)
 		{
 			if (writer == null)
 			{
@@ -370,7 +370,7 @@ namespace Cameronism.Json
 			emit.Call(writer);
 		}
 
-		static void EmitIPAddress<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, bool useLocals)
+		static void EmitIPAddress(Sigil.NonGeneric.Emit emit, bool useLocals)
 		{
 			Action pushAvailable = () =>
 			{
@@ -437,7 +437,7 @@ namespace Cameronism.Json
 			emit.MarkLabel(done);
 		}
 
-		static void EmitArray<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitArray(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
 		{
 
 			var ifNotNull = emit.DefineLabel();
@@ -527,12 +527,12 @@ namespace Cameronism.Json
 				emit.MarkLabel(ifNull);
 			}
 		}
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitEnumerable(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
 		{
 			EmitEnumerable(schema, emit, depth, pushResult, isArray: true);
 		}
 
-		static void EmitEnumerable<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth, bool pushResult, bool isArray)
+		static void EmitEnumerable(Schema schema, Sigil.NonGeneric.Emit emit, int depth, bool pushResult, bool isArray)
 		{
 			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
 			MethodInfo getKey = null;
@@ -672,7 +672,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void CallCorrectly<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, MethodInfo mi, Type instanceType)
+		static void CallCorrectly(Sigil.NonGeneric.Emit emit, MethodInfo mi, Type instanceType)
 		{
 			if (mi.IsVirtual)
 			{
@@ -684,7 +684,7 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void EmitObject<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitObject(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
 		{
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
@@ -799,14 +799,14 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void EmitDictionary<T>(Schema schema, Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth = 0, bool pushResult = false)
+		static void EmitDictionary(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
 		{
 			if (schema.Keys.JsonType != JsonType.String) throw new NotImplementedException();
 
 			EmitEnumerable(schema, emit, depth, pushResult, isArray: false);
 		}
 
-		static void PushAddress<T>(Sigil.Emit<Serializer.WriteToPointer<T>> emit, Type type)
+		static void PushAddress(Sigil.NonGeneric.Emit emit, Type type)
 		{
 			using (var copy = emit.DeclareLocal(type))
 			{
@@ -825,7 +825,7 @@ namespace Cameronism.Json
 		/// <param name="push">Push the written byte count on success</param>
 		/// <param name="depth"></param>
 		/// <returns></returns>
-		static int WriteConstant<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
+		static int WriteConstant(Sigil.NonGeneric.Emit emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
 		{
 			// ASSUMPTION: the string does not require JSON escaping
 			var bytes = Encoding.UTF8.GetBytes(s);
@@ -880,7 +880,7 @@ namespace Cameronism.Json
 		}
 
 
-		static void ReturnFailed<T>(Sigil.Emit<Cameronism.Json.Serializer.WriteToPointer<T>> emit, int depth)
+		static void ReturnFailed(Sigil.NonGeneric.Emit emit, int depth)
 		{
 			for (int i = 0; i < depth; i++) emit.Pop();
 

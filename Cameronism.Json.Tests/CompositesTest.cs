@@ -190,7 +190,7 @@ namespace Cameronism.Json.Tests
 			try
 			{
 				var emit = Cameronism.Json.Composites.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
-				writer = emit.CreateDelegate(out instructions);
+				writer = emit.CreateDelegate<Serializer.WriteToPointer<T>>(out instructions);
 			}
 			catch (Sigil.SigilVerificationException sve)
 			{
@@ -294,7 +294,7 @@ namespace Cameronism.Json.Tests
 			string instructions;
 			try
 			{
-				var writer = emit.CreateDelegate(out instructions);
+				var writer = emit.CreateDelegate<Serializer.WriteToPointer<T>>(out instructions);
 				sb.AppendLine(instructions);
 				return true;
 			}
