@@ -14,7 +14,7 @@ namespace Cameronism.Json
 	/// <summary>
 	/// Logs to json files
 	/// </summary>
-	public static class Logger
+	public abstract unsafe class Logger : IDisposable
 	{
 		/// <summary>
 		/// Create a logger instance
@@ -32,14 +32,7 @@ namespace Cameronism.Json
 			var writer = Serializer.GetDelegate<T>();
 			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer);
 		}
-	}
 
-	/// <summary>
-	/// Logs to json files
-	/// </summary>
-	/// <typeparam name="T">Record type</typeparam>
-	public unsafe sealed class Logger<T> : IDisposable
-	{
 		#region properties
 		/// <summary>Maximum log file size in bytes</summary>
 		public int MaximumFileSize { get; set; }
@@ -79,24 +72,22 @@ namespace Cameronism.Json
 		#endregion
 		
 		#region fields
-		readonly object _Gate = new object();
-		readonly Serializer.LowWriter<T> _Writer;
-		Action<FileStream> _Sender;
-		FileStream _Stream;
-		MemoryMappedFile _Mapped;
-		MemoryMappedViewAccessor _Accessor;
-		int _RecordCount;
-		bool _Disposed;
-		long _Position;
-		long _Length;
-		Timer _Timer;
-		int _TimerDelay;
+		protected readonly object _Gate = new object();
+		protected Action<FileStream> _Sender;
+		protected FileStream _Stream;
+		protected MemoryMappedFile _Mapped;
+		protected MemoryMappedViewAccessor _Accessor;
+		protected int _RecordCount;
+		protected bool _Disposed;
+		protected long _Position;
+		protected long _Length;
+		protected Timer _Timer;
+		protected int _TimerDelay;
 		#endregion fields
 		
-		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
+		internal Logger(Action<FileStream> sender, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
 		{
 			_Sender = sender;
-			_Writer = writer;
 			MaximumFileSize = maxFileSize;
 			FlushRecordCount = flushRecordCount;
 			LogNameFormat = logNameFormat ?? "{0:yyyy'-'MM'-'dd'T'HH'-'mm'-'ss'.'fff}.log.json";
@@ -107,37 +98,6 @@ namespace Cameronism.Json
 			_Timer = new Timer(TimedSend);
 			
 			InitFile();
-		}
-
-		/// <summary>Queue a record</summary>
-		public void Write(ref T value)
-		{
-			lock (_Gate)
-			{
-				if (_Disposed) throw new ObjectDisposedException("Logger");
-		
-				int attempt = 0;
-				
-				do
-				{
-					var position = _Position;
-					byte* destination = (byte*)_Accessor.SafeMemoryMappedViewHandle.DangerousGetHandle() + position;
-					var result = _Writer(ref value, destination, (int)(_Length - (position + 1))); // + 1 for trailing comma (or ']')
-						
-					if (result > 0)
-					{
-						*(destination + result) = (byte)',';
-						_Position += result + 1;
-						_RecordCount++;
-						TrySend();
-						return;
-					}
-					
-					if (!Rollover(-1 * result)) throw new Exception("Failed to serialize to new file");
-				} while (++attempt < 4);
-				
-				throw new Exception("Failed to serialize.  Attempts: " + attempt);
-			}
 		}
 		
 		void InitFile()
@@ -176,7 +136,7 @@ namespace Cameronism.Json
 		}
 		
 		// send if appropriate
-		void TrySend()
+		protected void TrySend()
 		{
 			if (_RecordCount >= FlushRecordCount || _Position + ReservedRecordSize >= _Length)
 			{
@@ -185,7 +145,7 @@ namespace Cameronism.Json
 			}
 		}
 		
-		bool Rollover(int minimumRequired)
+		protected bool Rollover(int minimumRequired)
 		{
 			if (_RecordCount == 0) return false;
 			
@@ -345,6 +305,52 @@ namespace Cameronism.Json
 				{
 					LogError(ex);
 				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Logs to json files
+	/// </summary>
+	/// <typeparam name="T">Record type</typeparam>
+	public unsafe sealed class Logger<T> : Logger
+	{
+		readonly Serializer.LowWriter<T> _Writer;
+
+		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
+			: base(sender, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer)
+		{
+			_Writer = writer;
+		}
+
+		/// <summary>Queue a record</summary>
+		public void Write(ref T value)
+		{
+			lock (_Gate)
+			{
+				if (_Disposed) throw new ObjectDisposedException("Logger");
+		
+				int attempt = 0;
+				
+				do
+				{
+					var position = _Position;
+					byte* destination = (byte*)_Accessor.SafeMemoryMappedViewHandle.DangerousGetHandle() + position;
+					var result = _Writer(ref value, destination, (int)(_Length - (position + 1))); // + 1 for trailing comma (or ']')
+						
+					if (result > 0)
+					{
+						*(destination + result) = (byte)',';
+						_Position += result + 1;
+						_RecordCount++;
+						TrySend();
+						return;
+					}
+					
+					if (!Rollover(-1 * result)) throw new Exception("Failed to serialize to new file");
+				} while (++attempt < 4);
+				
+				throw new Exception("Failed to serialize.  Attempts: " + attempt);
 			}
 		}
 	}
