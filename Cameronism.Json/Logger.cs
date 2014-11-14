@@ -11,8 +11,22 @@ using System.Threading.Tasks;
 
 namespace Cameronism.Json
 {
+	/// <summary>
+	/// Logs to json files
+	/// </summary>
 	public static class Logger
 	{
+		/// <summary>
+		/// Create a logger instance
+		/// </summary>
+		/// <typeparam name="T">Record type</typeparam>
+		/// <param name="send">Handler for completed log files</param>
+		/// <param name="maxFileSize">Maximum log file size in bytes</param>
+		/// <param name="flushRecordCount">Maximum records to store before sending</param>
+		/// <param name="logNameFormat">String format for log files</param>
+		/// <param name="logDirectory">Directory for log files</param>
+		/// <param name="logNamer">Delegate for naming log files</param>
+		/// <returns>Logger instance</returns>
 		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null, Func<DateTime, string> logNamer = null)
 		{
 			var writer = Serializer.GetDelegate<T>();
@@ -20,17 +34,31 @@ namespace Cameronism.Json
 		}
 	}
 
+	/// <summary>
+	/// Logs to json files
+	/// </summary>
+	/// <typeparam name="T">Record type</typeparam>
 	public unsafe sealed class Logger<T> : IDisposable
 	{
 		#region properties
+		/// <summary>Maximum log file size in bytes</summary>
 		public int MaximumFileSize { get; set; }
+		/// <summary>Reserved record size in bytes</summary>
+		/// <remarks>Current log will be sent if there are less than this many bytes available in the current file</remarks>
 		public int ReservedRecordSize { get; set; }
+		/// <summary>Maximum records to store before sending</summary>
 		public int? FlushRecordCount { get; set; }
+		/// <summary>Directory for log files</summary>
 		public string LogDirectory { get; set; }
+		/// <summary>String format for log files</summary>
 		public string LogNameFormat { get; set; }
+		/// <summary>Call send on a thread pool thread, not synchronously.  True by default.</summary>
 		public bool SendOnWorkerThread { get; set; }
+		/// <summary>Delegate for logging errors</summary>
 		public Action<Exception, string> ErrorLogger { get; set; }
+		/// <summary>Delegate for naming log files</summary>
 		public Func<DateTime, string> LogNamer { get; set; }
+		/// <summary>Logs will be sent on this interval</summary>
 		public TimeSpan? Interval 
 		{
 			get

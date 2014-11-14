@@ -810,7 +810,16 @@ namespace Cameronism.Json
 			}
 		}
 
+		/// <summary>
+		/// Write a constant value
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="emit"></param>
+		/// <param name="s"></param>
+		/// <param name="assertAvailable"></param>
 		/// <param name="push">Push the written byte count on success</param>
+		/// <param name="depth"></param>
+		/// <returns></returns>
 		static int WriteConstant<T>(Sigil.Emit<Cameronism.Json.Serializer.LowWriter<T>> emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
 		{
 			// ASSUMPTION: the string does not require JSON escaping

@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Cameronism.Json
 {
+	/// <summary>
+	/// Json serializer
+	/// </summary>
 	public unsafe static class Serializer
 	{
+		/// <summary>
+		/// Basic serializer interface
+		/// </summary>
 		public delegate int LowWriter<T>(ref T value, byte* dst, int avail);
 
 		#region static lookups
@@ -784,6 +790,11 @@ namespace Cameronism.Json
 			return lw ?? CacheDelegate<T>();
 		}
 
+		/// <summary>
+		/// Get serialization delegate
+		/// </summary>
+		/// <typeparam name="T">item type</typeparam>
+		/// <returns>a serialization delegate</returns>
 		public static LowWriter<T> CacheDelegate<T>()
 		{
 			var schema = Schema.Reflect(typeof(T));
@@ -796,11 +807,26 @@ namespace Cameronism.Json
 			return del;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T">item type</typeparam>
+		/// <param name="item">item</param>
+		/// <param name="dst">destination</param>
+		/// <param name="avail">available bytes</param>
+		/// <returns>The number of bytes written or negative if insufficient space</returns>
 		public static int Serialize<T>(T item, byte* dst, int avail)
 		{
 			return GetDelegate<T>().Invoke(ref item, dst, avail);
 		}
 
+		/// <summary>
+		/// Serialize item to destination
+		/// </summary>
+		/// <typeparam name="T">item type</typeparam>
+		/// <param name="item">item</param>
+		/// <param name="ms">memory stream</param>
+		/// <returns>The number of bytes written or negative if insufficient space</returns>
 		public static int Serialize<T>(T item, System.IO.UnmanagedMemoryStream ms)
 		{
 			byte* dst = ms.PositionPointer;
