@@ -27,7 +27,7 @@ namespace Cameronism.Json
 		/// <param name="logDirectory">Directory for log files</param>
 		/// <param name="logNamer">Delegate for naming log files</param>
 		/// <returns>Logger instance</returns>
-		public static Logger<T> Create<T>(Action<FileStream> send, int maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null, Func<DateTime, string> logNamer = null)
+		public static Logger<T> Create<T>(Action<FileStream> send, long maxFileSize, int? flushRecordCount = null, string logNameFormat = null, string logDirectory = null, Func<DateTime, string> logNamer = null)
 		{
 			var writer = Serializer.GetDelegate<T>();
 			return new Logger<T>(send, writer, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer);
@@ -35,7 +35,7 @@ namespace Cameronism.Json
 
 		#region properties
 		/// <summary>Maximum log file size in bytes</summary>
-		public int MaximumFileSize { get; set; }
+		public long MaximumFileSize { get; set; }
 		/// <summary>Reserved record size in bytes</summary>
 		/// <remarks>Current log will be sent if there are less than this many bytes available in the current file</remarks>
 		public int ReservedRecordSize { get; set; }
@@ -69,6 +69,12 @@ namespace Cameronism.Json
 			}
 		}
 
+		/// <summary>Offset in the current log file</summary>
+		public long Position { get { return _Length; } }
+		/// <summary>Number of records written to the current log file</summary>
+		public int RecordCount { get { return _RecordCount; } }
+		/// <summary>Has Dispose been called</summary>
+		public bool Disposed { get { return _Disposed; } }
 		#endregion
 		
 		#region fields
@@ -85,7 +91,7 @@ namespace Cameronism.Json
 		protected int _TimerDelay;
 		#endregion fields
 		
-		internal Logger(Action<FileStream> sender, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
+		internal Logger(Action<FileStream> sender, long maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
 		{
 			_Sender = sender;
 			MaximumFileSize = maxFileSize;
@@ -317,7 +323,7 @@ namespace Cameronism.Json
 	{
 		readonly Serializer.LowWriter<T> _Writer;
 
-		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, int maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
+		internal Logger(Action<FileStream> sender, Serializer.LowWriter<T> writer, long maxFileSize, int? flushRecordCount, string logNameFormat, string logDirectory, Func<DateTime, string> logNamer)
 			: base(sender, maxFileSize, flushRecordCount, logNameFormat, logDirectory, logNamer)
 		{
 			_Writer = writer;
