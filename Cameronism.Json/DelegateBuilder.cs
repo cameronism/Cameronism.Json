@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cameronism.Json
 {
-	internal unsafe class Composites
+	internal unsafe class DelegateBuilder
 	{
 		internal static bool CompletelyIgnoringDipose = true; // FIXME
 

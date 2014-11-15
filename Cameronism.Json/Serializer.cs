@@ -816,7 +816,7 @@ namespace Cameronism.Json
 		internal static WriteToPointer<T> CachePointerDelegate<T>()
 		{
 			var schema = Schema.Reflect(typeof(T));
-			var emit = Composites.CreatePointer<T>(schema);
+			var emit = DelegateBuilder.CreatePointer<T>(schema);
 			var del = emit.CreateDelegate<WriteToPointer<T>>();
 			lock (_PointerCached)
 			{
@@ -827,7 +827,7 @@ namespace Cameronism.Json
 		internal static WriteToStream<T> CacheStreamDelegate<T>()
 		{
 			var schema = Schema.Reflect(typeof(T));
-			var emit = Composites.CreateStream<T>(schema);
+			var emit = DelegateBuilder.CreateStream<T>(schema);
 			var del = emit.CreateDelegate<WriteToStream<T>>();
 			lock (_StreamCached)
 			{

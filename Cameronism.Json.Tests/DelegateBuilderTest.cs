@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Cameronism.Json.Tests
 {
-	public class CompositesTest
+	public class DelegateBuilderTest
 	{
 		class NoMembers
 		{
@@ -189,7 +189,7 @@ namespace Cameronism.Json.Tests
 			string instructions;
 			try
 			{
-				var emit = Cameronism.Json.Composites.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
+				var emit = Cameronism.Json.DelegateBuilder.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 				writer = emit.CreateDelegate<Serializer.WriteToPointer<T>>(out instructions);
 			}
 			catch (Sigil.SigilVerificationException sve)
@@ -281,7 +281,7 @@ namespace Cameronism.Json.Tests
 			return ms.GetBuffer().Take(len);
 		}
 
-		static readonly MethodInfo DescribeMethod = typeof(CompositesTest).GetMethod("Describe", BindingFlags.Static | BindingFlags.NonPublic);
+		static readonly MethodInfo DescribeMethod = typeof(DelegateBuilderTest).GetMethod("Describe", BindingFlags.Static | BindingFlags.NonPublic);
 
 		static bool Describe<T>(StringBuilder sb)
 		{
@@ -289,7 +289,7 @@ namespace Cameronism.Json.Tests
 			sb.AppendLine();
 			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
 
-			var emit = Cameronism.Json.Composites.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
+			var emit = Cameronism.Json.DelegateBuilder.CreatePointer<T>(Cameronism.Json.Schema.Reflect(typeof(T)));
 
 			string instructions;
 			try

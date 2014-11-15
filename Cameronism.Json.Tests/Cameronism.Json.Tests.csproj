@@ -83,7 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompareNewtonsoft.cs" />
-    <Compile Include="CompositesTest.cs" />
+    <Compile Include="DelegateBuilderTest.cs" />
     <Compile Include="EnumerableTest.cs" />
     <Compile Include="LoggerTest.cs" />
     <Compile Include="Lookups.cs" />

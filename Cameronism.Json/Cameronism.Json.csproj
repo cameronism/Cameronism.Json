@@ -79,7 +79,7 @@
     <Compile Include="JsonType.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Schema.cs" />
-    <Compile Include="Composites.cs" />
+    <Compile Include="DelegateBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

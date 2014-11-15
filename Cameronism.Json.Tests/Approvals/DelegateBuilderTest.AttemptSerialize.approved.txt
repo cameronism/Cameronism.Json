@@ -203,7 +203,7 @@
 
 ### Equal: True
 
-# System.Collections.Generic.IEnumerable<Cameronism.Json.Tests.CompositesTest+NoMembers>
+# System.Collections.Generic.IEnumerable<Cameronism.Json.Tests.DelegateBuilderTest+NoMembers>
 
 
 ## Newtonsoft 0
@@ -242,7 +242,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Int32>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32>
 
 
 ## Newtonsoft 0
@@ -269,7 +269,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Int32>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32, System.Int32>
 
 
 ## Newtonsoft 0
@@ -296,7 +296,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Nullable<System.Int32>, System.Int32>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Nullable<System.Int32>, System.Int32>
 
 
 ## Newtonsoft 0
@@ -323,7 +323,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Nullable<System.Int32>>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -350,7 +350,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Nullable<System.Int32>>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -431,7 +431,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Int32>, System.Nullable<System.Int32>>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32, System.Int32>, System.Nullable<System.Int32>>
 
 
 ## Newtonsoft 0
@@ -476,7 +476,7 @@
 
 ### Equal: True
 
-# Cameronism.Json.Tests.CompositesTest+B<System.Nullable<System.Int32>, Cameronism.Json.Tests.CompositesTest+B<System.Int32, System.Int32>>
+# Cameronism.Json.Tests.DelegateBuilderTest+B<System.Nullable<System.Int32>, Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32, System.Int32>>
 
 
 ## Newtonsoft 0

@@ -257,7 +257,7 @@ namespace Cameronism.Json.Tests
 
 		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, bool approveIL, params T[] values)
 		{
-			return CompositesTest.SerializeValues(sb, buffer, values, approveIL);
+			return DelegateBuilderTest.SerializeValues(sb, buffer, values, approveIL);
 		}
 
 	}
