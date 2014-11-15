@@ -9,14 +9,25 @@ namespace Cameronism.Json
 {
 	internal unsafe class DelegateBuilder
 	{
-		internal static bool CompletelyIgnoringDipose = true; // FIXME
-
-		// public delegate int LowWriter<T>(ref T value, byte* dst, int avail);
+		enum DestinationType
+		{
+			Pointer,
+			Stream,
+		}
 
 		delegate int PrimitiveWriter<T>(T value, byte* dst, int avail);
 
-		const string LOCAL_DST = "destination";
-		const string LOCAL_AVAIL = "available";
+		internal static bool CompletelyIgnoringDipose = true; // FIXME
+
+		// call one of the static create methods
+		private DelegateBuilder () { }
+
+		DestinationType Destination;
+		int Depth;
+
+		Sigil.Local LocalDestination;
+		Sigil.Local LocalAvailable;
+		Sigil.NonGeneric.Emit Emit;
 
 		public static Sigil.NonGeneric.Emit CreateStream<T>(Schema schema)
 		{
@@ -48,25 +59,30 @@ namespace Cameronism.Json
 					throw new ArgumentException("Unknown JsonType " + schema.JsonType);
 			}
 
-			var emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(int), new[] { typeof(T).MakeByRefType(), typeof(byte).MakePointerType(), typeof(int) }, schema.NetType.Name + "_toJSON");
+			var builder = new DelegateBuilder
+			{
+				Destination = DestinationType.Pointer,
+			};
+
+			var emit = builder.Emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(int), new[] { typeof(T).MakeByRefType(), typeof(byte).MakePointerType(), typeof(int) }, schema.NetType.Name + "_toJSON");
 
 			if (isSimple)
 			{
 				emit.LoadArgument(0);
-				LoadIndirect(emit, schema.NetType); // deref argument 0
+				builder.LoadIndirect(schema.NetType); // deref argument 0
 
-				EmitSimpleComplete(schema, emit, simpleWriter);
+				builder.EmitSimpleComplete(schema, simpleWriter);
 				return emit;
 			}
 
 			Sigil.Local local;
 			// local for dst
-			local = emit.DeclareLocal(typeof(byte*), LOCAL_DST);
+			builder.LocalDestination = local = emit.DeclareLocal(typeof(byte*), "destination");
 			emit.LoadArgument(1);
 			emit.StoreLocal(local);
 
 			// local for avail
-			local = emit.DeclareLocal(typeof(int), LOCAL_AVAIL);
+			builder.LocalAvailable = local = emit.DeclareLocal(typeof(int), "available");
 			emit.LoadArgument(2);
 			emit.StoreLocal(local);
 
@@ -74,28 +90,28 @@ namespace Cameronism.Json
 			emit.LoadArgument(2);
 
 			emit.LoadArgument(0);
-			LoadIndirect(emit, schema.NetType); // deref argument 0
+			builder.LoadIndirect(schema.NetType); // deref argument 0
 
 			if (schema.JsonType == JsonType.Array)
 			{
 				if (schema.NetType.IsArray)
 				{
-					EmitArray(schema, emit, pushResult: true);
+					builder.EmitArray(schema, pushResult: true);
 				}
 				else
 				{
-					EmitEnumerable(schema, emit, pushResult: true);
+					builder.EmitEnumerable(schema, pushResult: true);
 				}
 			}
 			else if (schema.JsonType == JsonType.Object)
 			{
 				if (schema.Keys != null)
 				{
-					EmitDictionary(schema, emit, pushResult: true);
+					builder.EmitDictionary(schema, pushResult: true);
 				}
 				else
 				{
-					EmitObject(schema, emit, pushResult: true);
+					builder.EmitObject(schema, pushResult: true);
 				}
 			}
 
@@ -104,11 +120,11 @@ namespace Cameronism.Json
 		}
 
 		/// <summary>Must be called with value on top of the stack</summary>
-		static void EmitInline(Schema schema, Sigil.NonGeneric.Emit emit, int depth)
+		void EmitInline(Schema schema)
 		{
 			if (Nullable.GetUnderlyingType(schema.NetType) != null)
 			{
-				PushAddress(emit, schema.NetType);
+				PushAddress(schema.NetType);
 			}
 
 			switch (schema.JsonType)
@@ -116,21 +132,21 @@ namespace Cameronism.Json
 				case JsonType.Array:
 					if (schema.NetType.IsArray)
 					{
-						EmitArray(schema, emit, depth, pushResult: false);
+						EmitArray(schema, pushResult: false);
 					}
 					else
 					{
-						EmitEnumerable(schema, emit, depth, pushResult: false);
+						EmitEnumerable(schema, pushResult: false);
 					}
 					break;
 				case JsonType.Object:
 					if (schema.Keys != null)
 					{
-						EmitDictionary(schema, emit, depth, pushResult: false);
+						EmitDictionary(schema, pushResult: false);
 					}
 					else
 					{
-						EmitObject(schema, emit, depth, pushResult: false);
+						EmitObject(schema, pushResult: false);
 					}
 					break;
 				case JsonType.String:
@@ -140,7 +156,7 @@ namespace Cameronism.Json
 					MethodInfo simpleWriter;
 					if (TryGetSimpleWriter(schema.NetType, out simpleWriter))
 					{
-						EmitSimpleInline(schema, emit, simpleWriter, depth);
+						EmitSimpleInline(schema, simpleWriter);
 						return;
 					}
 					throw new ArgumentException("JSON primitive writer not found for " + schema.NetType.Name);
@@ -149,11 +165,11 @@ namespace Cameronism.Json
 			}
 		}
 
-		static void LoadIndirect(Sigil.NonGeneric.Emit emit, Type effective)
+		void LoadIndirect(Type effective)
 		{
 			if (effective.IsClass || effective.IsInterface)
 			{
-				emit.LoadIndirect(effective);
+				Emit.LoadIndirect(effective);
 			}
 			else if (Nullable.GetUnderlyingType(effective) != null)
 			{
@@ -166,7 +182,7 @@ namespace Cameronism.Json
 					case TypeCode.DateTime:
 					case TypeCode.Decimal:
 					default:
-						emit.LoadObject(effective);
+						Emit.LoadObject(effective);
 						break;
 					case TypeCode.Byte:
 					case TypeCode.Double:
@@ -180,7 +196,7 @@ namespace Cameronism.Json
 					case TypeCode.UInt64:
 					case TypeCode.Char:
 					case TypeCode.Boolean:
-						emit.LoadIndirect(effective);
+						Emit.LoadIndirect(effective);
 						break;
 				}
 			}
@@ -242,38 +258,38 @@ namespace Cameronism.Json
 
 		static MethodInfo WriteNull = typeof(Cameronism.Json.Serializer).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
-		static void EmitSimpleComplete(Schema schema, Sigil.NonGeneric.Emit emit, MethodInfo writer)
+		void EmitSimpleComplete(Schema schema, MethodInfo writer)
 		{
 			var effective = schema.NetType;
 
 			if (Nullable.GetUnderlyingType(effective) != null)
 			{
-				emit.Duplicate(); // prepare argument 0 for GetValueOrDefault call
+				Emit.Duplicate(); // prepare argument 0 for GetValueOrDefault call
 
-				emit.Call(effective.GetProperty("HasValue").GetGetMethod());
+				Emit.Call(effective.GetProperty("HasValue").GetGetMethod());
 
-				var hasValueTrue = emit.DefineLabel("HasValue_true");
-				emit.BranchIfTrue(hasValueTrue);
-				emit.Pop(); // discard argument 0
-				emit.LoadArgument(1);
-				emit.LoadArgument(2);
-				emit.Call(WriteNull);
-				emit.Return();
+				var hasValueTrue = Emit.DefineLabel("HasValue_true");
+				Emit.BranchIfTrue(hasValueTrue);
+				Emit.Pop(); // discard argument 0
+				Emit.LoadArgument(1);
+				Emit.LoadArgument(2);
+				Emit.Call(WriteNull);
+				Emit.Return();
 
-				emit.MarkLabel(hasValueTrue);
+				Emit.MarkLabel(hasValueTrue);
 
-				emit.Call(effective.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+				Emit.Call(effective.GetMethod("GetValueOrDefault", Type.EmptyTypes));
 
 				effective = Nullable.GetUnderlyingType(effective);
 			}
 
-			CallWriter(emit, writer, effective, false);
+			CallWriter(writer, effective, false);
 
-			emit.Return();
+			Emit.Return();
 		}
 
 		// never pushes result
-		static void EmitSimpleInline(Schema schema, Sigil.NonGeneric.Emit emit, MethodInfo writer, int depth)
+		void EmitSimpleInline(Schema schema, MethodInfo writer)
 		{
 			var effective = schema.NetType;
 			Sigil.Label ifNull = null;
@@ -281,70 +297,72 @@ namespace Cameronism.Json
 			var underlying = Nullable.GetUnderlyingType(effective);
 			if (underlying != null)
 			{
-				ifNull = emit.DefineLabel();
-				var hasValueTrue = emit.DefineLabel();
+				ifNull = Emit.DefineLabel();
+				var hasValueTrue = Emit.DefineLabel();
 
-				emit.Duplicate(); // preserve value
+				Emit.Duplicate(); // preserve value
 
-				emit.Call(effective.GetProperty("HasValue").GetGetMethod());
+				Emit.Call(effective.GetProperty("HasValue").GetGetMethod());
 
-				emit.BranchIfTrue(hasValueTrue);
-				emit.Pop(); // discard value
-				WriteConstant(emit, "null", push: false, depth: depth);
-				emit.Branch(ifNull);
+				Emit.BranchIfTrue(hasValueTrue);
+				Emit.Pop(); // discard value
+				WriteConstant("null", push: false);
+				Emit.Branch(ifNull);
 
-				emit.MarkLabel(hasValueTrue);
+				Emit.MarkLabel(hasValueTrue);
 
-				emit.Call(effective.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+				Emit.Call(effective.GetMethod("GetValueOrDefault", Type.EmptyTypes));
 
 				effective = underlying;
 			}
 
-			CallWriter(emit, writer, effective, true);
+			CallWriter(writer, effective, true);
 
-			emit.Duplicate(); // preserve the written count
+			Emit.Duplicate(); // preserve the written count
 
 			// check if the write succeeded
-			var success = emit.DefineLabel();
-			emit.LoadConstant(0);
-			emit.BranchIfGreater(success);
+			var success = Emit.DefineLabel();
+			Emit.LoadConstant(0);
+			Emit.BranchIfGreater(success);
 			{
-				ReturnFailed(emit, depth + 1);
+				Depth++;
+				ReturnFailed();
+				Depth--;
 			}
 
-			emit.MarkLabel(success);
-			emit.Duplicate(); // preserve written count
+			Emit.MarkLabel(success);
+			Emit.Duplicate(); // preserve written count
 
-			// advance LOCAL_DST
-			emit.Convert<IntPtr>();
-			emit.LoadLocal(LOCAL_DST);
-			emit.Add();
-			emit.StoreLocal(LOCAL_DST);
+			// advance LocalDestination
+			Emit.Convert<IntPtr>();
+			Emit.LoadLocal(LocalDestination);
+			Emit.Add();
+			Emit.StoreLocal(LocalDestination);
 
 
-			// emit.Duplicate(); // preserve written count
+			// Emit.Duplicate(); // preserve written count
 
-			// decrement LOCAL_AVAIL
-			emit.LoadConstant(-1);
-			emit.Multiply();
-			emit.LoadLocal(LOCAL_AVAIL);
-			emit.Add();
-			emit.StoreLocal(LOCAL_AVAIL);
+			// decrement LocalAvailable
+			Emit.LoadConstant(-1);
+			Emit.Multiply();
+			Emit.LoadLocal(LocalAvailable);
+			Emit.Add();
+			Emit.StoreLocal(LocalAvailable);
 
 
 			if (underlying != null)
 			{
-				emit.MarkLabel(ifNull);
+				Emit.MarkLabel(ifNull);
 			}
 		}
 
-		static void CallWriter(Sigil.NonGeneric.Emit emit, MethodInfo writer, Type effective, bool useLocals)
+		void CallWriter(MethodInfo writer, Type effective, bool useLocals)
 		{
 			if (writer == null)
 			{
 				if (effective == typeof(System.Net.IPAddress))
 				{
-					EmitIPAddress(emit, useLocals);
+					EmitIPAddress(useLocals);
 					return;
 				}
 				throw new NotImplementedException();
@@ -353,186 +371,189 @@ namespace Cameronism.Json
 			var firstArg = writer.GetParameters()[0].ParameterType;
 			if (firstArg != effective)
 			{
-				emit.Convert(firstArg);
+				Emit.Convert(firstArg);
 			}
 
 			if (useLocals)
 			{
-				emit.LoadLocal(LOCAL_DST);
-				emit.LoadLocal(LOCAL_AVAIL);
+				Emit.LoadLocal(LocalDestination);
+				Emit.LoadLocal(LocalAvailable);
 			}
 			else
 			{
-				emit.LoadArgument(1);
-				emit.LoadArgument(2);
+				Emit.LoadArgument(1);
+				Emit.LoadArgument(2);
 			}
 
-			emit.Call(writer);
+			Emit.Call(writer);
 		}
 
-		static void EmitIPAddress(Sigil.NonGeneric.Emit emit, bool useLocals)
+		void PushAvailable(bool useLocals)
 		{
-			Action pushAvailable = () =>
+			if (useLocals)
 			{
-				if (useLocals)
-				{
-					emit.LoadLocal(LOCAL_DST);
-					emit.LoadLocal(LOCAL_AVAIL);
-				}
-				else
-				{
-					emit.LoadArgument(1);
-					emit.LoadArgument(2);
-				}
-			};
+				Emit.LoadLocal(LocalDestination);
+				Emit.LoadLocal(LocalAvailable);
+			}
+			else
+			{
+				Emit.LoadArgument(1);
+				Emit.LoadArgument(2);
+			}
+		}
 
+		void EmitIPAddress(bool useLocals)
+		{
 			var ip = typeof(System.Net.IPAddress);
 
-			var notNull = emit.DefineLabel();
-			var done = emit.DefineLabel();
+			var notNull = Emit.DefineLabel();
+			var done = Emit.DefineLabel();
 
 			// preserve ip
-			emit.Duplicate();
-			emit.BranchIfTrue(notNull);
+			Emit.Duplicate();
+			Emit.BranchIfTrue(notNull);
 
 			// value is null
 			{
-				emit.Pop(); // discard null
+				Emit.Pop(); // discard null
 
-				pushAvailable();
-				emit.Call(typeof(Serializer).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
+				PushAvailable(useLocals);
+				Emit.Call(typeof(Serializer).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
 
-				emit.Branch(done);
+				Emit.Branch(done);
 			}
 
-			emit.MarkLabel(notNull);
+			Emit.MarkLabel(notNull);
 
 			// value is not null
 			{
-				var v6 = emit.DefineLabel();
+				var v6 = Emit.DefineLabel();
 
-				emit.Duplicate();
-				emit.CallVirtual(ip.GetProperty("AddressFamily").GetMethod);
-				emit.LoadConstant((int)System.Net.Sockets.AddressFamily.InterNetwork);
-				emit.UnsignedBranchIfNotEqual(v6);
+				Emit.Duplicate();
+				Emit.CallVirtual(ip.GetProperty("AddressFamily").GetMethod);
+				Emit.LoadConstant((int)System.Net.Sockets.AddressFamily.InterNetwork);
+				Emit.UnsignedBranchIfNotEqual(v6);
 
 				// if v4
 				{
-					emit.LoadField(ip.GetField("m_Address", BindingFlags.Instance | BindingFlags.NonPublic));
-					pushAvailable();
-					emit.Call(typeof(Serializer).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
+					Emit.LoadField(ip.GetField("m_Address", BindingFlags.Instance | BindingFlags.NonPublic));
+					PushAvailable(useLocals);
+					Emit.Call(typeof(Serializer).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
 
-					emit.Branch(done);
+					Emit.Branch(done);
 				}
 				
 				// if not v4 (assume v6)
-				emit.MarkLabel(v6);
+				Emit.MarkLabel(v6);
 				{
-					emit.LoadField(ip.GetField("m_Numbers", BindingFlags.Instance | BindingFlags.NonPublic));
-					pushAvailable();
-					emit.Call(typeof(Serializer).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
+					Emit.LoadField(ip.GetField("m_Numbers", BindingFlags.Instance | BindingFlags.NonPublic));
+					PushAvailable(useLocals);
+					Emit.Call(typeof(Serializer).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
 				}
 			}
 
-			emit.MarkLabel(done);
+			Emit.MarkLabel(done);
 		}
 
-		static void EmitArray(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
+		void EmitArray(Schema schema, bool pushResult = false)
 		{
+			var ifNotNull = Emit.DefineLabel();
+			var ifNull = Emit.DefineLabel();
 
-			var ifNotNull = emit.DefineLabel();
-			var ifNull = emit.DefineLabel();
+			Emit.Duplicate(); // preserve the value
+			Emit.BranchIfTrue(ifNotNull);
+			Emit.Pop(); // discard value
+			if (pushResult) Emit.Pop(); // discard avail
+			WriteConstant("null", push: pushResult);
+			Emit.Branch(ifNull);
 
-			emit.Duplicate(); // preserve the value
-			emit.BranchIfTrue(ifNotNull);
-			emit.Pop(); // discard value
-			if (pushResult) emit.Pop(); // discard avail
-			WriteConstant(emit, "null", push: pushResult, depth: depth);
-			emit.Branch(ifNull);
-
-			emit.MarkLabel(ifNotNull);
+			Emit.MarkLabel(ifNotNull);
 
 			int localDepth = pushResult ? 2 : 1;
+			Depth += localDepth;
 
 			// begin array
-			WriteConstant(emit, "[", depth: depth + localDepth);
+			WriteConstant("[");
 
-			var endLoop = emit.DefineLabel();
-			var beginLoop = emit.DefineLabel();
+			var endLoop = Emit.DefineLabel();
+			var beginLoop = Emit.DefineLabel();
 
 			/* var ix = 0; */
-			using (var ix = emit.DeclareLocal<int>())
+			using (var ix = Emit.DeclareLocal<int>())
 			{
-				emit.LoadConstant(0);
-				emit.StoreLocal(ix);
+				Emit.LoadConstant(0);
+				Emit.StoreLocal(ix);
 
 				/* goto endLoop; */
-				emit.Branch(endLoop);
+				Emit.Branch(endLoop);
 
 				/* beginLoop: */
-				emit.MarkLabel(beginLoop);
+				Emit.MarkLabel(beginLoop);
 
 				// write ','
-				var afterComma = emit.DefineLabel();
-				emit.LoadLocal(ix);
-				emit.BranchIfFalse(afterComma);
-				WriteConstant(emit, ",", depth: depth + localDepth);
+				var afterComma = Emit.DefineLabel();
+				Emit.LoadLocal(ix);
+				Emit.BranchIfFalse(afterComma);
+				WriteConstant(",");
 
-				emit.MarkLabel(afterComma);
+				Emit.MarkLabel(afterComma);
 
 				/* `push` theArray[ix] */
-				emit.Duplicate(); // preserve array value
-				emit.LoadLocal(ix);
-				emit.LoadElement(schema.Items.NetType);
+				Emit.Duplicate(); // preserve array value
+				Emit.LoadLocal(ix);
+				Emit.LoadElement(schema.Items.NetType);
 
 				// write the element
-				EmitInline(schema.Items, emit, depth + localDepth);
+				EmitInline(schema.Items);
 
 				/* ix += 1; */
-				emit.LoadLocal(ix);
-				emit.LoadConstant(1);
-				emit.Add();
-				emit.StoreLocal(ix);
+				Emit.LoadLocal(ix);
+				Emit.LoadConstant(1);
+				Emit.Add();
+				Emit.StoreLocal(ix);
 
 
 				/* endLoop: */
-				emit.MarkLabel(endLoop);
+				Emit.MarkLabel(endLoop);
 
 
 				/* if (theArray.Length > ix) goto beginLoop; */
-				emit.Duplicate(); // preserve array value
-				emit.LoadLength(schema.Items.NetType);
-				emit.Convert<int>();
-				emit.LoadLocal(ix);
-				emit.BranchIfGreater(beginLoop);
+				Emit.Duplicate(); // preserve array value
+				Emit.LoadLength(schema.Items.NetType);
+				Emit.Convert<int>();
+				Emit.LoadLocal(ix);
+				Emit.BranchIfGreater(beginLoop);
 			}
 
 			// discard array value
-			emit.Pop();
+			Emit.Pop();
 
 			// end array
-			WriteConstant(emit, "]", depth: depth + localDepth - 1);
-
+			Depth--;
+			WriteConstant("]");
+			Depth++;
 
 
 			if (pushResult)
 			{
 				// push bytes written
-				emit.LoadLocal(LOCAL_AVAIL);
-				emit.Subtract();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.Subtract();
 			}
 
 			if (schema.Nullable)
 			{
-				emit.MarkLabel(ifNull);
+				Emit.MarkLabel(ifNull);
 			}
+
+			Depth -= localDepth;
 		}
-		static void EmitEnumerable(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
+		void EmitEnumerable(Schema schema, bool pushResult = false)
 		{
-			EmitEnumerable(schema, emit, depth, pushResult, isArray: true);
+			EmitEnumerable(schema, pushResult, isArray: true);
 		}
 
-		static void EmitEnumerable(Schema schema, Sigil.NonGeneric.Emit emit, int depth, bool pushResult, bool isArray)
+		void EmitEnumerable(Schema schema, bool pushResult, bool isArray)
 		{
 			var enumerable = EnumerableInfo.FindMethods(schema.NetType);
 			MethodInfo getKey = null;
@@ -543,148 +564,156 @@ namespace Cameronism.Json
 				getValue = enumerable.get_Current.ReturnType.GetProperty("Value").GetMethod;
 			}
 
-			var ifNotNull = emit.DefineLabel();
-			var ifNull = emit.DefineLabel();
+			var ifNotNull = Emit.DefineLabel();
+			var ifNull = Emit.DefineLabel();
 
-			emit.Duplicate(); // preserve the value
-			emit.BranchIfTrue(ifNotNull);
-			emit.Pop(); // discard value
-			if (pushResult) emit.Pop(); // discard avail
-			WriteConstant(emit, "null", push: pushResult, depth: depth);
-			emit.Branch(ifNull);
+			Emit.Duplicate(); // preserve the value
+			Emit.BranchIfTrue(ifNotNull);
+			Emit.Pop(); // discard value
+			if (pushResult) Emit.Pop(); // discard avail
+			WriteConstant("null", push: pushResult);
+			Emit.Branch(ifNull);
 
-			emit.MarkLabel(ifNotNull);
+			Emit.MarkLabel(ifNotNull);
 
 			int localDepth = pushResult ? 2 : 1;
+			Depth += localDepth;
 
 			// begin array
-			WriteConstant(emit, isArray ? "[" : "{", depth: depth + localDepth);
+			WriteConstant(isArray ? "[" : "{");
 
-			var loopBottom = emit.DefineLabel();
-			var loopTop = emit.DefineLabel();
-			var closeArray = emit.DefineLabel();
+			var loopBottom = Emit.DefineLabel();
+			var loopTop = Emit.DefineLabel();
+			var closeArray = Emit.DefineLabel();
 
 			
 			// call GetEnumerator
-			CallCorrectly(emit, enumerable.GetEnumerator, schema.NetType);
+			CallCorrectly(enumerable.GetEnumerator, schema.NetType);
 			var enumeratorType = enumerable.GetEnumerator.ReturnType;
 
 			// use the pointer for enumerator structs
 			if (enumeratorType.IsValueType)
 			{
-				PushAddress(emit, enumeratorType);
+				PushAddress(enumeratorType);
 			}
 
-			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : emit.BeginExceptionBlock();
+			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : Emit.BeginExceptionBlock();
 
 			// unroll the first iteration so the loop can always write the comma
 
 			/* if (!enumerator.MoveNext()) goto closeArray; */
-			emit.Duplicate(); // preserve enumerator
-			CallCorrectly(emit, enumerable.MoveNext, enumeratorType);
-			emit.BranchIfFalse(closeArray);
+			Emit.Duplicate(); // preserve enumerator
+			CallCorrectly(enumerable.MoveNext, enumeratorType);
+			Emit.BranchIfFalse(closeArray);
 
 			// push enumerator.Current
-			emit.Duplicate(); // preserve enumerator
-			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
+			Emit.Duplicate(); // preserve enumerator
+			CallCorrectly(enumerable.get_Current, enumeratorType);
 
 			if (!isArray)
 			{
 				// we've got a KeyValuePair<,>
-				PushAddress(emit, getValue.DeclaringType);
+				PushAddress(getValue.DeclaringType);
 
-				emit.Duplicate(); // preserve KeyValuePair<,>*
-				emit.Call(getKey);
+				Emit.Duplicate(); // preserve KeyValuePair<,>*
+				Emit.Call(getKey);
 				// write the first key
-				EmitInline(schema.Keys, emit, depth + localDepth + 1);
-				WriteConstant(emit, ":", depth: depth + localDepth + 1);
-				emit.Call(getValue);
+				Depth++;
+				EmitInline(schema.Keys);
+				WriteConstant(":");
+				Depth--;
+				Emit.Call(getValue);
 			}
 
 			// write the first element
-			EmitInline(schema.Items, emit, depth + localDepth);
+			EmitInline(schema.Items);
 
-			emit.Branch(loopBottom);
-			emit.MarkLabel(loopTop);
+			Emit.Branch(loopBottom);
+			Emit.MarkLabel(loopTop);
 
 			// write ','
-			WriteConstant(emit, ",", depth: depth + localDepth);
+			WriteConstant(",");
 
 			// push enumerator.Current
-			emit.Duplicate();// preserve enumerator
-			CallCorrectly(emit, enumerable.get_Current, enumeratorType);
+			Emit.Duplicate();// preserve enumerator
+			CallCorrectly(enumerable.get_Current, enumeratorType);
 
 			if (!isArray)
 			{
 				// we've got a KeyValuePair<,>
-				PushAddress(emit, getValue.DeclaringType);
+				PushAddress(getValue.DeclaringType);
 
-				emit.Duplicate(); // preserve KeyValuePair<,>*
-				emit.Call(getKey);
+				Emit.Duplicate(); // preserve KeyValuePair<,>*
+				Emit.Call(getKey);
 				// write the key
-				EmitInline(schema.Keys, emit, depth + localDepth + 1);
-				WriteConstant(emit, ":", depth: depth + localDepth + 1);
-				emit.Call(getValue);
+				Depth++;
+				EmitInline(schema.Keys);
+				WriteConstant(":");
+				Depth--;
+				Emit.Call(getValue);
 			}
 
 			// write the element
-			EmitInline(schema.Items, emit, depth + localDepth);
+			EmitInline(schema.Items);
 
 
 			/* endLoop: */
-			emit.MarkLabel(loopBottom);
+			Emit.MarkLabel(loopBottom);
 
 			/* if (enumerator.MoveNext()) goto beginLoop; */
-			emit.Duplicate(); // preserve enumerator
-			CallCorrectly(emit, enumerable.MoveNext, enumeratorType);
-			emit.BranchIfTrue(loopTop);
+			Emit.Duplicate(); // preserve enumerator
+			CallCorrectly(enumerable.MoveNext, enumeratorType);
+			Emit.BranchIfTrue(loopTop);
 
 
-			emit.MarkLabel(closeArray);
+			Emit.MarkLabel(closeArray);
 
 			if (exceptionBlock != null)
 			{
-				var f = emit.BeginFinallyBlock(exceptionBlock);
-				CallCorrectly(emit, enumerable.Dispose, enumeratorType);
-				emit.EndFinallyBlock(f);
-				emit.EndExceptionBlock(exceptionBlock);
+				var f = Emit.BeginFinallyBlock(exceptionBlock);
+				CallCorrectly(enumerable.Dispose, enumeratorType);
+				Emit.EndFinallyBlock(f);
+				Emit.EndExceptionBlock(exceptionBlock);
 			}
 			else
 			{
-				emit.Pop(); // discard enumerator
+				Emit.Pop(); // discard enumerator
 			}
 
 			// end array
-			WriteConstant(emit, isArray ? "]" : "}", depth: depth + localDepth - 1);
-
+			Depth--;
+			WriteConstant(isArray ? "]" : "}");
+			Depth++;
 
 
 			if (pushResult)
 			{
 				// push bytes written
-				emit.LoadLocal(LOCAL_AVAIL);
-				emit.Subtract();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.Subtract();
 			}
 
 			if (schema.Nullable)
 			{
-				emit.MarkLabel(ifNull);
+				Emit.MarkLabel(ifNull);
 			}
+
+			Depth -= localDepth;
 		}
 
-		static void CallCorrectly(Sigil.NonGeneric.Emit emit, MethodInfo mi, Type instanceType)
+		void CallCorrectly(MethodInfo mi, Type instanceType)
 		{
 			if (mi.IsVirtual)
 			{
-				emit.CallVirtual(mi, constrained: instanceType != null && instanceType.IsValueType ? instanceType : null);
+				Emit.CallVirtual(mi, constrained: instanceType != null && instanceType.IsValueType ? instanceType : null);
 			}
 			else
 			{
-				emit.Call(mi);
+				Emit.Call(mi);
 			}
 		}
 
-		static void EmitObject(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
+		void EmitObject(Schema schema, bool pushResult = false)
 		{
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
@@ -692,27 +721,27 @@ namespace Cameronism.Json
 			bool anyMembers = schema.Members.Any();
 			if (schema.Nullable)
 			{
-				var ifNotNull = emit.DefineLabel();
-				ifNull = emit.DefineLabel();
+				var ifNotNull = Emit.DefineLabel();
+				ifNull = Emit.DefineLabel();
 
 				if (anyMembers)
 				{
-					emit.Duplicate(); // preserve the value
+					Emit.Duplicate(); // preserve the value
 				}
 				if (systemNullable)
 				{
-					emit.Call(schema.NetType.GetProperty("HasValue").GetMethod);
+					Emit.Call(schema.NetType.GetProperty("HasValue").GetMethod);
 				}
-				emit.BranchIfTrue(ifNotNull);
-				if (anyMembers) emit.Pop(); // discard value
-				if (pushResult) emit.Pop(); // discard avail
-				WriteConstant(emit, "null", push: pushResult, depth: depth);
-				emit.Branch(ifNull);
+				Emit.BranchIfTrue(ifNotNull);
+				if (anyMembers) Emit.Pop(); // discard value
+				if (pushResult) Emit.Pop(); // discard avail
+				WriteConstant("null", push: pushResult);
+				Emit.Branch(ifNull);
 
-				emit.MarkLabel(ifNotNull);
+				Emit.MarkLabel(ifNotNull);
 				if (systemNullable)
 				{
-					emit.Call(schema.NetType.GetMethod("GetValueOrDefault", Type.EmptyTypes));
+					Emit.Call(schema.NetType.GetMethod("GetValueOrDefault", Type.EmptyTypes));
 				}
 			}
 
@@ -721,22 +750,27 @@ namespace Cameronism.Json
 
 			if (schema.Members.Count == 0)
 			{
-				WriteConstant(emit, "{}", depth: depth + (pushResult ? 1 : 0));
+				if (pushResult) Depth++;
+				WriteConstant("{}");
+				if (pushResult) Depth--;
 			}
 			else
 			{
 				for (int i = 0; i < schema.Members.Count; i++)
 				{
 					// assert we've got enough
-					var enoughAvailable = emit.DefineLabel();
-					emit.LoadLocal(LOCAL_AVAIL);
-					emit.LoadConstant(minLength);
-					emit.BranchIfGreaterOrEqual(enoughAvailable);
+					var enoughAvailable = Emit.DefineLabel();
+					Emit.LoadLocal(LocalAvailable);
+					Emit.LoadConstant(minLength);
+					Emit.BranchIfGreaterOrEqual(enoughAvailable);
 					{
-						ReturnFailed(emit, depth + (pushResult ? 2: 1));
+						int extra = pushResult ? 2 : 1;
+						Depth += extra;
+						ReturnFailed();
+						Depth -= extra;
 					}
 
-					emit.MarkLabel(enoughAvailable);
+					Emit.MarkLabel(enoughAvailable);
 
 					var member = schema.Members[i];
 					var lastMember = i == schema.Members.Count - 1;
@@ -745,7 +779,7 @@ namespace Cameronism.Json
 					var label =
 						(i == 0 ? "{" : ",") +
 						"\"" + member.Key + "\":";
-					minLength -= WriteConstant(emit, label, assertAvailable: false);
+					minLength -= WriteConstant(label, assertAvailable: false);
 					minLength -= member.Value.CalculateMinimumLength(considerNullSelf: true);
 
 					if (!lastMember)
@@ -758,89 +792,91 @@ namespace Cameronism.Json
 						}
 
 						// preserve value except last time through the loop
-						emit.Duplicate();
+						Emit.Duplicate();
 					}
-					int loopDepth = depth + (lastMember ? 1 : 2) - (pushResult ? 0 : 1);
+					int loopDepth = (lastMember ? 1 : 2) - (pushResult ? 0 : 1);
+					Depth += loopDepth;
 
 					// get the member value
 					if (member.Value.FieldInfo != null)
 					{
-						emit.LoadField(member.Value.FieldInfo);
+						Emit.LoadField(member.Value.FieldInfo);
 					}
 					else
 					{
 						if (schema.NetType.IsValueType)
 						{
-							PushAddress(emit, systemNullable ? underlying : schema.NetType);
+							PushAddress(systemNullable ? underlying : schema.NetType);
 						}
-						emit.Call(member.Value.PropertyInfo.GetMethod);
+						Emit.Call(member.Value.PropertyInfo.GetMethod);
 					}
 
 					// write the member value
-					EmitInline(member.Value, emit, loopDepth);
+					EmitInline(member.Value);
+
+					Depth -= loopDepth;
 
 					// if we ran out of room inner writer will have bailed completely rather than push negative (currently)
 
 					// we probably won't care about result until we create more fine grained estimates when out of room
 				}
-				WriteConstant(emit, "}", depth: depth + (pushResult ? 1 : 0));
+				if (pushResult) Depth++;
+				WriteConstant("}");
+				if (pushResult) Depth--;
 			}
 
 			if (pushResult)
 			{
 				// push bytes written
-				emit.LoadLocal(LOCAL_AVAIL);
-				emit.Subtract();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.Subtract();
 			}
 
 			if (schema.Nullable)
 			{
-				emit.MarkLabel(ifNull);
+				Emit.MarkLabel(ifNull);
 			}
 		}
 
-		static void EmitDictionary(Schema schema, Sigil.NonGeneric.Emit emit, int depth = 0, bool pushResult = false)
+		void EmitDictionary(Schema schema, bool pushResult = false)
 		{
 			if (schema.Keys.JsonType != JsonType.String) throw new NotImplementedException();
 
-			EmitEnumerable(schema, emit, depth, pushResult, isArray: false);
+			EmitEnumerable(schema, pushResult, isArray: false);
 		}
 
-		static void PushAddress(Sigil.NonGeneric.Emit emit, Type type)
+		void PushAddress(Type type)
 		{
-			using (var copy = emit.DeclareLocal(type))
+			using (var copy = Emit.DeclareLocal(type))
 			{
-				emit.StoreLocal(copy);
-				emit.LoadLocalAddress(copy);
+				Emit.StoreLocal(copy);
+				Emit.LoadLocalAddress(copy);
 			}
 		}
 
 		/// <summary>
 		/// Write a constant value
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="emit"></param>
 		/// <param name="s"></param>
 		/// <param name="assertAvailable"></param>
 		/// <param name="push">Push the written byte count on success</param>
-		/// <param name="depth"></param>
 		/// <returns></returns>
-		static int WriteConstant(Sigil.NonGeneric.Emit emit, string s, bool assertAvailable = true, bool push = false, int depth = 0)
+		int WriteConstant(string s, bool assertAvailable = true, bool push = false)
 		{
 			// ASSUMPTION: the string does not require JSON escaping
 			var bytes = Encoding.UTF8.GetBytes(s);
 
 			if (assertAvailable)
 			{
-				var enoughAvailable = emit.DefineLabel();
-				emit.LoadLocal(LOCAL_AVAIL);
-				emit.LoadConstant(bytes.Length);
-				emit.BranchIfGreaterOrEqual(enoughAvailable);
+				var enoughAvailable = Emit.DefineLabel();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.LoadConstant(bytes.Length);
+				Emit.BranchIfGreaterOrEqual(enoughAvailable);
 				{
-					ReturnFailed(emit, depth);
+					ReturnFailed();
 				}
 
-				emit.MarkLabel(enoughAvailable);
+				Emit.MarkLabel(enoughAvailable);
 			}
 
 
@@ -855,40 +891,39 @@ namespace Cameronism.Json
 				//IL_0011:  ldc.i4.s    21 
 				//IL_0013:  stind.i1    
 
-				emit.LoadLocal(LOCAL_DST);
-				emit.Duplicate();
-				emit.LoadConstant(1);
-				emit.Convert<IntPtr>();
-				emit.Add();
-				emit.StoreLocal(LOCAL_DST);
-				emit.LoadConstant(b);
-				emit.StoreIndirect<byte>();
+				Emit.LoadLocal(LocalDestination);
+				Emit.Duplicate();
+				Emit.LoadConstant(1);
+				Emit.Convert<IntPtr>();
+				Emit.Add();
+				Emit.StoreLocal(LocalDestination);
+				Emit.LoadConstant(b);
+				Emit.StoreIndirect<byte>();
 			}
 
 			// avail -= bytes.Length
-			emit.LoadLocal(LOCAL_AVAIL);
-			emit.LoadConstant(bytes.Length);
-			emit.Subtract();
-			emit.StoreLocal(LOCAL_AVAIL);
+			Emit.LoadLocal(LocalAvailable);
+			Emit.LoadConstant(bytes.Length);
+			Emit.Subtract();
+			Emit.StoreLocal(LocalAvailable);
 
 			if (push)
 			{
-				emit.LoadConstant(bytes.Length);
+				Emit.LoadConstant(bytes.Length);
 			}
 
 			return bytes.Length;
 		}
 
-
-		static void ReturnFailed(Sigil.NonGeneric.Emit emit, int depth)
+		void ReturnFailed()
 		{
-			for (int i = 0; i < depth; i++) emit.Pop();
+			for (int i = 0; i < Depth; i++) Emit.Pop();
 
 			// ask for double
-			emit.LoadArgument(2); // avail
-			emit.LoadConstant(-2);
-			emit.Multiply();
-			emit.Return();
+			Emit.LoadArgument(2); // avail
+			Emit.LoadConstant(-2);
+			Emit.Multiply();
+			Emit.Return();
 		}
 	}
 }
