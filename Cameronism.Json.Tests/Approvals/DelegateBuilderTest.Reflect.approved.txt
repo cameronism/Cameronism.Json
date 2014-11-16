@@ -473,7 +473,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -644,7 +644,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -897,7 +897,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -1282,7 +1282,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -1670,7 +1670,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -2277,7 +2277,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -3008,7 +3008,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -3879,7 +3879,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldobj System.Collections.Generic.KeyValuePair`2[System.Int32,System.Int32]
 ldloc.1
@@ -4129,7 +4129,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 dup
 call Boolean get_HasValue()
@@ -4435,7 +4435,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldobj Cameronism.Json.Tests.DelegateBuilderTest+MyStructWithFields`3[System.Int32,System.Nullable`1[System.Int32],System.String]
 ldloc.1
@@ -4775,7 +4775,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 dup
 call Boolean get_HasValue()
@@ -5171,7 +5171,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 brtrue.s _label0
@@ -5268,7 +5268,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -5454,7 +5454,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup

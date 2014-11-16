@@ -16,12 +16,12 @@ namespace Cameronism.Json.Tests
 		{
 		}
 
-		class B<T>
+		internal class B<T>
 		{
 			public T i { get; set; }
 		}
 
-		class B<T1, T2>
+		internal class B<T1, T2>
 		{
 			public T1 i { get; set; }
 			public T2 j { get; set; }

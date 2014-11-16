@@ -102,9 +102,7 @@ namespace Cameronism.Json
 				{
 					builder.LocalAvailable = emit.DeclareLocal(typeof(int), "available");
 
-					emit.LoadArgument(ARG_BUFFER);
-					emit.LoadLength(typeof(byte));
-					emit.Convert<int>();
+					builder.PushTotalAvailable();
 					emit.StoreLocal(builder.LocalAvailable);
 				}
 
@@ -123,11 +121,11 @@ namespace Cameronism.Json
 
 			// local for avail
 			builder.LocalAvailable = local = emit.DeclareLocal(typeof(int), "available");
-			emit.LoadArgument(2);
+			builder.PushTotalAvailable();
 			emit.StoreLocal(local);
 
 			// CRITICAL before calling any composite methods top of stack must be `value` followed by `available` when pushResult is true
-			emit.LoadArgument(2);
+			emit.LoadLocal(local);
 
 			emit.LoadArgument(0);
 			builder.LoadIndirect(schema.NetType); // deref argument 0
@@ -155,6 +153,7 @@ namespace Cameronism.Json
 				}
 			}
 
+			if (destination == DestinationType.Stream) builder.Flush();
 			emit.Return();
 			return emit;
 		}
@@ -202,6 +201,20 @@ namespace Cameronism.Json
 					throw new ArgumentException("JSON primitive writer not found for " + schema.NetType.Name);
 				default:
 					throw new ArgumentException("Unknown JsonType " + schema.JsonType);
+			}
+		}
+
+		void PushTotalAvailable()
+		{
+			if (Destination == DestinationType.Stream)
+			{
+				Emit.LoadArgument(ARG_BUFFER);
+				Emit.LoadLength(typeof(byte));
+				Emit.Convert<int>();
+			}
+			else
+			{
+				Emit.LoadArgument(2);
 			}
 		}
 
@@ -490,7 +503,7 @@ namespace Cameronism.Json
 			Emit.Call(writer);
 		}
 
-		void PushAvailable(bool useLocals)
+		void PushDestinationAvailable(bool useLocals)
 		{
 			if (useLocals)
 			{
@@ -526,7 +539,7 @@ namespace Cameronism.Json
 			{
 				Emit.Pop(); // discard null
 
-				PushAvailable(useLocals);
+				PushDestinationAvailable(useLocals);
 				Emit.Call(typeof(Serializer).GetMethod("WriteNull", BindingFlags.Static | BindingFlags.NonPublic));
 
 				Emit.Branch(done);
@@ -546,7 +559,7 @@ namespace Cameronism.Json
 				// if v4
 				{
 					Emit.LoadField(ip.GetField("m_Address", BindingFlags.Instance | BindingFlags.NonPublic));
-					PushAvailable(useLocals);
+					PushDestinationAvailable(useLocals);
 					Emit.Call(typeof(Serializer).GetMethod("WriteIPv4", BindingFlags.Static | BindingFlags.NonPublic));
 
 					Emit.Branch(done);
@@ -556,7 +569,7 @@ namespace Cameronism.Json
 				Emit.MarkLabel(v6);
 				{
 					Emit.LoadField(ip.GetField("m_Numbers", BindingFlags.Instance | BindingFlags.NonPublic));
-					PushAvailable(useLocals);
+					PushDestinationAvailable(useLocals);
 					Emit.Call(typeof(Serializer).GetMethod("WriteIPv6", BindingFlags.Static | BindingFlags.NonPublic));
 				}
 			}

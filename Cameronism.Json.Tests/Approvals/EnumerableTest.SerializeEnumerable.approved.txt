@@ -7,7 +7,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -372,7 +372,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup
@@ -848,7 +848,7 @@ ldarg.1
 stloc.0
 ldarg.2
 stloc.1
-ldarg.2
+ldloc.1
 ldarg.0
 ldind.ref
 dup

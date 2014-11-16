@@ -13,17 +13,48 @@ namespace Cameronism.Json.Tests
 	{
 		byte[] _Buffer = new byte[4096];
 
+		static DelegateBuilderTest.B<T> A<T>(T i)
+		{
+			return new DelegateBuilderTest.B<T> { i = i };
+		}
+
+		static DelegateBuilderTest.B<T1, T2> A<T1, T2>(T1 i, T2 j)
+		{
+			return new DelegateBuilderTest.B<T1, T2> { i = i, j = j };
+		}
+
 		[Fact]
 		public void SimpleValues()
 		{
 			var ms = new MemoryStream();
 
-			Assert.Equal("1", ToJson(1, ms));
+			AssertValue(1, "1", ms);
+			AssertValue(true, "true", ms);
+			AssertValue(false, "false", ms);
+
+			var g = Guid.NewGuid();
+			AssertValue(g, "\"" + g + "\"", ms);
+
+			var d = DateTime.UtcNow;
+			AssertValue(d, Newtonsoft.Json.JsonConvert.SerializeObject(d), ms);
+		}
+
+		[Fact(Skip="In progress")]
+		public void EnumerableValues()
+		{
+			var ms = new MemoryStream();
+
+			Assert.Equal("[1]", ToJson(new List<int> { 1 }, ms));
+		}
+
+		void AssertValue<T>(T value, string json, MemoryStream ms) where T : struct
+		{
+			Assert.Equal(json, ToJson(value, ms));
 
 			// FIXME submit a sigil bug with testcase for this
 			DelegateBuilder.UseSigilVerify = false;
-			Assert.Equal("1", ToJson((int?)1, ms));
-			Assert.Equal("null", ToJson((int?)null, ms));
+			Assert.Equal(json, ToJson((T?)value, ms));
+			Assert.Equal("null", ToJson((T?)null, ms));
 			DelegateBuilder.UseSigilVerify = true;
 		}
 
