@@ -183,6 +183,60 @@ No deserialization (use JIL or Newtonsoft)
 
 ## TODO
 
+- Submit Sigil bug (and hopefully test + fix) for incorrect SigilVerificationException : MarkLabel expects a value on the stack, but it was empty
+
+  The following fails with doVerify: true, it seems to work fine with doVerify: false
+
+		ldarg.3
+		ldlen
+		conv.i4
+		stloc.0 // System.Int32 available
+		ldarg.0
+		dup
+		call Boolean get_HasValue()
+
+		brtrue HasValue_true
+		pop
+		ldarg.1
+		ldloc.0 // System.Int32 available
+		call Int32 WriteNull(Byte*, Int32)
+		ldc.i4.m1
+		mul
+		ldloc.0 // System.Int32 available
+		add
+		stloc.0 // System.Int32 available
+		ldarg.2
+		ldarg.3
+		ldc.i4.0
+		ldarg.3
+		ldlen
+		conv.i4
+		ldloc.0 // System.Int32 available
+		sub
+		callvirt Void Write(Byte[], Int32, Int32)
+		ret
+
+		HasValue_true:
+		call Int32 GetValueOrDefault()
+		ldarg.1
+		ldloc.0 // System.Int32 available
+		call Int32 WriteInt32(Int32, Byte*, Int32)
+		ldc.i4.m1
+		mul
+		ldloc.0 // System.Int32 available
+		add
+		stloc.0 // System.Int32 available
+		ldarg.2
+		ldarg.3
+		ldc.i4.0
+		ldarg.3
+		ldlen
+		conv.i4
+		ldloc.0 // System.Int32 available
+		sub
+		callvirt Void Write(Byte[], Int32, Int32)
+		ret
+
 - Support serializing to Stream
   + It won't be as fast but will be much more accessible
   + So far, looks like it will be slower by less than 10%

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -18,6 +19,7 @@ namespace Cameronism.Json
 		delegate int PrimitiveWriter<T>(T value, byte* dst, int avail);
 
 		internal static bool CompletelyIgnoringDipose = true; // FIXME
+		internal static bool UseSigilVerify = true;
 
 		// call one of the static create methods
 		private DelegateBuilder () { }
@@ -31,10 +33,15 @@ namespace Cameronism.Json
 
 		public static Sigil.NonGeneric.Emit CreateStream<T>(Schema schema)
 		{
-			throw new NotImplementedException();
+			return Create<T>(schema, DestinationType.Stream);
 		}
 
 		public static Sigil.NonGeneric.Emit CreatePointer<T>(Schema schema)
+		{
+			return Create<T>(schema, DestinationType.Pointer);
+		}
+
+		static Sigil.NonGeneric.Emit Create<T>(Schema schema, DestinationType destination)
 		{
 			MethodInfo simpleWriter = null;
 			bool isSimple = false;
@@ -61,13 +68,46 @@ namespace Cameronism.Json
 
 			var builder = new DelegateBuilder
 			{
-				Destination = DestinationType.Pointer,
+				Destination = destination,
 			};
 
-			var emit = builder.Emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(int), new[] { typeof(T).MakeByRefType(), typeof(byte).MakePointerType(), typeof(int) }, schema.NetType.Name + "_toJSON");
+			Sigil.NonGeneric.Emit emit;
+			string methodName = schema.NetType.Name + "_toJSON";
+			if (destination == DestinationType.Pointer)
+			{
+				emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(int), new[] { 
+					typeof(T).MakeByRefType(),      // value
+					typeof(byte).MakePointerType(), // destination
+					typeof(int),                    // available
+				}, methodName, doVerify: UseSigilVerify);
+			}
+			else if (destination == DestinationType.Stream)
+			{
+				emit = Sigil.NonGeneric.Emit.NewDynamicMethod(typeof(void), new[] { 
+					typeof(T).MakeByRefType(),      // value
+					typeof(byte).MakePointerType(), // buffer
+					typeof(System.IO.Stream),       // destination
+					typeof(byte).MakeArrayType(),   // buffer
+				}, methodName, doVerify: UseSigilVerify);
+			}
+			else
+			{
+				throw new ArgumentException();
+			}
+			builder.Emit = emit;
 
 			if (isSimple)
 			{
+				if (destination == DestinationType.Stream)
+				{
+					builder.LocalAvailable = emit.DeclareLocal(typeof(int), "available");
+
+					emit.LoadArgument(ARG_BUFFER);
+					emit.LoadLength(typeof(byte));
+					emit.Convert<int>();
+					emit.StoreLocal(builder.LocalAvailable);
+				}
+
 				emit.LoadArgument(0);
 				builder.LoadIndirect(schema.NetType); // deref argument 0
 
@@ -256,6 +296,52 @@ namespace Cameronism.Json
 			return true;
 		}
 
+		const ushort ARG_POINTER = 1;
+		const ushort ARG_STREAM = 2;
+		const ushort ARG_BUFFER = 3;
+
+		void Flush(bool resetAvailable = false, bool writtenTop = true)
+		{
+			if (writtenTop)
+			{
+				// available -= pop()
+				Emit.LoadConstant(-1);
+				Emit.Multiply();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.Add();
+				Emit.StoreLocal(LocalAvailable);
+			}
+
+
+			//stream.Write(buffer, 0, buffer.Length - available);
+
+			Emit.LoadArgument(ARG_STREAM);
+			Emit.LoadArgument(ARG_BUFFER);
+			Emit.LoadConstant(0);
+
+			// buffer.Length - available
+			Emit.LoadArgument(ARG_BUFFER);
+			Emit.LoadLength(typeof(byte));
+			Emit.Convert<int>();
+			Emit.LoadLocal(LocalAvailable);
+			Emit.Subtract();
+			// call .Write
+			Emit.CallVirtual(typeof(Stream).GetMethod("Write", BindingFlags.Public | BindingFlags.Instance));
+
+			if (resetAvailable)
+			{
+				// available = buffer.Length;
+				Emit.LoadArgument(ARG_BUFFER);
+				Emit.LoadLength(typeof(byte));
+				Emit.Convert<int>();
+				Emit.StoreLocal(LocalAvailable);
+
+				// dst = arg 1
+				Emit.LoadArgument(ARG_POINTER);
+				Emit.StoreLocal(LocalDestination);
+			}
+		}
+
 		static MethodInfo WriteNull = typeof(Cameronism.Json.Serializer).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
 		void EmitSimpleComplete(Schema schema, MethodInfo writer)
@@ -271,9 +357,16 @@ namespace Cameronism.Json
 				var hasValueTrue = Emit.DefineLabel("HasValue_true");
 				Emit.BranchIfTrue(hasValueTrue);
 				Emit.Pop(); // discard argument 0
+				// byte* destination
 				Emit.LoadArgument(1);
-				Emit.LoadArgument(2);
+				// available
+				if (Destination == DestinationType.Stream) Emit.LoadLocal(LocalAvailable);
+				else Emit.LoadArgument(2);
+				// .WriteNull
 				Emit.Call(WriteNull);
+
+				if (Destination == DestinationType.Stream) Flush();
+
 				Emit.Return();
 
 				Emit.MarkLabel(hasValueTrue);
@@ -284,6 +377,8 @@ namespace Cameronism.Json
 			}
 
 			CallWriter(writer, effective, false);
+
+			if (Destination == DestinationType.Stream) Flush();
 
 			Emit.Return();
 		}
@@ -382,7 +477,14 @@ namespace Cameronism.Json
 			else
 			{
 				Emit.LoadArgument(1);
-				Emit.LoadArgument(2);
+				if (Destination == DestinationType.Pointer)
+				{
+					Emit.LoadArgument(2);
+				}
+				else
+				{
+					Emit.LoadLocal(LocalAvailable);
+				}
 			}
 
 			Emit.Call(writer);
@@ -398,7 +500,14 @@ namespace Cameronism.Json
 			else
 			{
 				Emit.LoadArgument(1);
-				Emit.LoadArgument(2);
+				if (Destination == DestinationType.Pointer)
+				{
+					Emit.LoadArgument(2);
+				}
+				else
+				{
+					Emit.LoadLocal(LocalAvailable);
+				}
 			}
 		}
 

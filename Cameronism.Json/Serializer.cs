@@ -18,7 +18,7 @@ namespace Cameronism.Json
 		/// </summary>
 		public delegate int WriteToPointer<T>(ref T value, byte* dst, int avail);
 
-		internal delegate void WriteToStream<T>(ref T value, System.IO.Stream destination, byte[] buffer, byte* bufferPointer);
+		internal delegate void WriteToStream<T>(ref T value, byte* bufferPointer, System.IO.Stream destination, byte[] buffer);
 
 		#region static lookups
 		internal const int SIZEOF_DIGIT_PAIRS = 100 * 2;
@@ -887,7 +887,7 @@ namespace Cameronism.Json
 			var streamWriter = GetStreamDelegate<T>();
 			fixed (byte* ptr = buffer)
 			{
-				streamWriter.Invoke(ref item, destination, buffer, ptr);
+				streamWriter.Invoke(ref item, ptr, destination, buffer);
 			}
 		}
 	}
