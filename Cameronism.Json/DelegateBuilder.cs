@@ -10,26 +10,20 @@ namespace Cameronism.Json
 {
 	internal unsafe class DelegateBuilder
 	{
-		enum DestinationType
-		{
-			Pointer,
-			Stream,
-		}
-
-		delegate int PrimitiveWriter<T>(T value, byte* dst, int avail);
-
 		internal static bool CompletelyIgnoringDipose = true; // FIXME
 		internal static bool UseSigilVerify = true;
 
 		// call one of the static create methods
 		private DelegateBuilder () { }
 
+		#region instance state
 		DestinationType Destination;
 		int Depth;
 
 		Sigil.Local LocalDestination;
 		Sigil.Local LocalAvailable;
 		Sigil.NonGeneric.Emit Emit;
+		#endregion
 
 		public static Sigil.NonGeneric.Emit CreateStream<T>(Schema schema)
 		{
@@ -43,8 +37,7 @@ namespace Cameronism.Json
 
 		static Sigil.NonGeneric.Emit Create<T>(Schema schema, DestinationType destination)
 		{
-			MethodInfo simpleWriter = null;
-			bool isSimple = false;
+			ValueWriter simpleWriter = null;
 
 			switch (schema.JsonType)
 			{
@@ -56,8 +49,7 @@ namespace Cameronism.Json
 				case JsonType.Number:
 				case JsonType.Integer:
 				case JsonType.Boolean:
-					isSimple = TryGetSimpleWriter(schema.NetType, out simpleWriter);
-					if (isSimple)
+					if (ValueWriter.TryGetWriter(schema.NetType, destination, out simpleWriter))
 					{
 						break;
 					}
@@ -96,7 +88,7 @@ namespace Cameronism.Json
 			}
 			builder.Emit = emit;
 
-			if (isSimple)
+			if (simpleWriter != null)
 			{
 				if (destination == DestinationType.Stream)
 				{
@@ -192,8 +184,8 @@ namespace Cameronism.Json
 				case JsonType.Number:
 				case JsonType.Integer:
 				case JsonType.Boolean:
-					MethodInfo simpleWriter;
-					if (TryGetSimpleWriter(schema.NetType, out simpleWriter))
+					ValueWriter simpleWriter;
+					if (ValueWriter.TryGetWriter(schema.NetType, Destination, out simpleWriter))
 					{
 						EmitSimpleInline(schema, simpleWriter);
 						return;
@@ -255,59 +247,6 @@ namespace Cameronism.Json
 			}
 		}
 
-		static bool TryGetSimpleWriter(Type type, out MethodInfo method)
-		{
-			var effective = Nullable.GetUnderlyingType(type) ?? type;
-			Delegate primitive;
-			switch (Type.GetTypeCode(effective))
-			{
-				case TypeCode.Boolean:
-					primitive = (PrimitiveWriter<bool>)Serializer.WriteBoolean;
-					break;
-				case TypeCode.Byte:
-				case TypeCode.UInt16:
-				case TypeCode.UInt32:
-					primitive = (PrimitiveWriter<uint>)Serializer.WriteUInt32;
-					break;
-				case TypeCode.SByte:
-				case TypeCode.Int16:
-				case TypeCode.Int32:
-					primitive = (PrimitiveWriter<int>)Serializer.WriteInt32;
-					break;
-				case TypeCode.Int64:
-					primitive = (PrimitiveWriter<long>)Serializer.WriteInt64; break;
-				case TypeCode.UInt64:
-					primitive = (PrimitiveWriter<ulong>)Serializer.WriteUInt64; break;
-				case TypeCode.DateTime:
-					primitive = (PrimitiveWriter<DateTime>)Serializer.WriteDateTime8601; break;
-				case TypeCode.Decimal:
-					primitive = (PrimitiveWriter<Decimal>)Serializer.WriteDecimal; break;
-				case TypeCode.Double:
-					primitive = (PrimitiveWriter<double>)Serializer.WriteDouble; break;
-				case TypeCode.Single:
-					primitive = (PrimitiveWriter<float>)Serializer.WriteSingle; break;
-				case TypeCode.Char:
-					primitive = (PrimitiveWriter<char>)ConvertUTF.WriteCharUtf8; break;
-				case TypeCode.String:
-					primitive = (PrimitiveWriter<string>)ConvertUTF.WriteStringUtf8; break;
-				default:
-					if (effective == typeof(Guid))
-					{
-						primitive = (PrimitiveWriter<Guid>)Serializer.WriteGuidFormatD;
-						break;
-					}
-					if (effective == typeof(System.Net.IPAddress))
-					{
-						method = null;
-						return true;
-					}
-					method = null;
-					return false;
-			}
-
-			method = primitive.Method;
-			return true;
-		}
 
 		const ushort ARG_POINTER = 1;
 		const ushort ARG_STREAM = 2;
@@ -357,7 +296,7 @@ namespace Cameronism.Json
 
 		static MethodInfo WriteNull = typeof(Cameronism.Json.Serializer).GetMethod("WriteNull", BindingFlags.NonPublic | BindingFlags.Static);
 
-		void EmitSimpleComplete(Schema schema, MethodInfo writer)
+		void EmitSimpleComplete(Schema schema, ValueWriter writer)
 		{
 			var effective = schema.NetType;
 
@@ -397,7 +336,7 @@ namespace Cameronism.Json
 		}
 
 		// never pushes result
-		void EmitSimpleInline(Schema schema, MethodInfo writer)
+		void EmitSimpleInline(Schema schema, ValueWriter writer)
 		{
 			var effective = schema.NetType;
 			Sigil.Label ifNull = null;
@@ -464,9 +403,9 @@ namespace Cameronism.Json
 			}
 		}
 
-		void CallWriter(MethodInfo writer, Type effective, bool useLocals)
+		void CallWriter(ValueWriter writer, Type effective, bool useLocals)
 		{
-			if (writer == null)
+			if (writer.MethodInfo == null)
 			{
 				if (effective == typeof(System.Net.IPAddress))
 				{
@@ -476,7 +415,7 @@ namespace Cameronism.Json
 				throw new NotImplementedException();
 			}
 
-			var firstArg = writer.GetParameters()[0].ParameterType;
+			var firstArg = writer.MethodInfo.GetParameters()[0].ParameterType;
 			if (firstArg != effective)
 			{
 				Emit.Convert(firstArg);
@@ -500,7 +439,7 @@ namespace Cameronism.Json
 				}
 			}
 
-			Emit.Call(writer);
+			Emit.Call(writer.MethodInfo);
 		}
 
 		void PushDestinationAvailable(bool useLocals)

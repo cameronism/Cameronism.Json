@@ -147,6 +147,7 @@ namespace Cameronism.Json
 
 		internal const int SIZEOF_GUID_D = 38; // 32 digits, 4 hyphens, 2 quotes
 
+		[ValueWriter(MinLength=38, MaxLength=38)]
 		internal static int WriteGuidFormatD(Guid g, byte* dst, int avail)
 		{
 			if (avail < SIZEOF_GUID_D) return -SIZEOF_GUID_D;
@@ -219,6 +220,7 @@ namespace Cameronism.Json
 			return SIZEOF_GUID_D;
 		}
 
+		[ValueWriter(MinLength=4, MaxLength=5)]
 		internal static int WriteBoolean(bool b, byte* dst, int avail)
 		{
 			if (avail < 5) return -5;
@@ -243,6 +245,7 @@ namespace Cameronism.Json
 		}
 
 		// from http://stackoverflow.com/a/4351484
+		[ValueWriter(MaxLength=11)]
 		internal static int WriteInt32(int n, byte* c, int avail)
 		{
 			if(n==0)
@@ -319,6 +322,7 @@ namespace Cameronism.Json
 		}
 
 		// from http://stackoverflow.com/a/4351484
+		[ValueWriter(MaxLength=10)]
 		internal static int WriteUInt32(uint val, byte* c, int avail)
 		{
 			if(val==0)
@@ -386,6 +390,8 @@ namespace Cameronism.Json
 			}
 			return size;
 		}
+
+		[ValueWriter(MaxLength=20)]
 		internal static int WriteUInt64(ulong val, byte* c, int avail)
 		{
 			if (val <= 0xFFFFFFFFul) return WriteUInt32((uint)val, c, avail);
@@ -454,6 +460,8 @@ namespace Cameronism.Json
 			}
 			return size;
 		}
+
+		[ValueWriter(MaxLength=20)]
 		internal static int WriteInt64(long n, byte* c, int avail)
 		{
 			if (n <= 2147483647 && n >= -2147483648) return WriteInt32((int)n, c, avail);
@@ -532,6 +540,7 @@ namespace Cameronism.Json
 		const int TICKS_PER_SECOND = 10000000;
 		//2014-09-28T14:58:35.8439067Z // 28
 		internal const int SIZEOF_DATETIME_8601 = 28 + 2; // 28, 2 quotes
+		[ValueWriter(MinLength=SIZEOF_DATETIME_8601 - 9, MaxLength=SIZEOF_DATETIME_8601)]
 		internal static int WriteDateTime8601(DateTime val, byte* c, int avail)
 		{
 			if (avail < SIZEOF_DATETIME_8601) return -SIZEOF_DATETIME_8601;
@@ -656,6 +665,7 @@ namespace Cameronism.Json
 			return ix;
 		}
 
+		[ValueWriter(MaxLength=32)] // 32 is very generous for .NET general floating
 		internal static int WriteDouble(double val, byte* c, int avail)
 		{
 			string s;
@@ -675,6 +685,7 @@ namespace Cameronism.Json
 			}
 		}
 
+		[ValueWriter(MaxLength=32)] // 32 is very generous for .NET general floating
 		internal static int WriteSingle(float val, byte* c, int avail)
 		{
 			string s;
@@ -694,6 +705,7 @@ namespace Cameronism.Json
 			}
 		}
 
+		[ValueWriter(MaxLength=32)]
 		internal static int WriteDecimal(decimal val, byte* c, int avail)
 		{
 			// need an allocation free alternative

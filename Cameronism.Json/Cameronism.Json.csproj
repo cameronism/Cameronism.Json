@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DestinationType.cs" />
     <Compile Include="Serializer.cs" />
     <Compile Include="ConvertUTF.cs" />
     <Compile Include="EnumerableInfo.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Schema.cs" />
     <Compile Include="DelegateBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValueWriter.cs" />
+    <Compile Include="ValueWriterAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

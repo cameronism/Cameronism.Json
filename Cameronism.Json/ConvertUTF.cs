@@ -99,7 +99,12 @@ namespace Cameronism.Json
 		const int firstByteMark_3 = 0xE0;
 		const int firstByteMark_4 = 0xF0;
 
+		public unsafe static void WriteToStreamUtf8(string value, byte[] buffer, ref int available, ref byte* bufferOffset)
+		{
+			throw new NotImplementedException();
+		}
 
+		[ValueWriter(MinLength=3, MaxLength=8)] // max "\u0000"
 		public unsafe static int WriteCharUtf8(char value, byte* dst, int avail)
 		{
 			const int required = 3; // best case is unescaped ASCII + 2 for the quotes
