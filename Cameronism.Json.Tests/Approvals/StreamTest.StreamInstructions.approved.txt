@@ -1,0 +1,274 @@
+﻿# IEnumerable<int>
+
+NEED TO FIX THIS SO WE DON'T OVERRUN
+
+ldarg.1
+stloc.0
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.0
+ldind.ref
+dup
+brtrue.s _label0
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+br _label1
+
+NEED TO FIX THIS SO WE DON'T OVERRUN
+
+_label0:
+ldloc.1
+ldc.i4.1
+bge.s _label3
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+NEED TO FIX THIS SO WE DON'T OVERRUN
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+callvirt System.Collections.Generic.IEnumerator`1[System.Int32] GetEnumerator()
+dup
+callvirt Boolean MoveNext()
+brfalse _label6
+dup
+callvirt Int32 get_Current()
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label7
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+NEED TO FIX THIS SO WE DON'T OVERRUN
+
+_label7:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+br.s _label4
+
+_label5:
+ldloc.1
+ldc.i4.1
+bge.s _label8
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label8:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+dup
+callvirt Int32 get_Current()
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+ldc.i4.0
+bgt.s _label9
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label9:
+dup
+conv.i
+ldloc.0
+add
+stloc.0
+ldc.i4.m1
+mul
+ldloc.1
+add
+stloc.1
+
+_label4:
+dup
+callvirt Boolean MoveNext()
+brtrue.s _label5
+
+_label6:
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label10
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label10:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label1:
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+tail.callvirt Void Write(Byte[], Int32, Int32)
+ret
+

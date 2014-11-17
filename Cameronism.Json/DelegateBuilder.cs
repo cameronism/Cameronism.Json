@@ -116,36 +116,39 @@ namespace Cameronism.Json
 			builder.PushTotalAvailable();
 			emit.StoreLocal(local);
 
+			bool pushResult = destination == DestinationType.Pointer;
+
 			// CRITICAL before calling any composite methods top of stack must be `value` followed by `available` when pushResult is true
-			emit.LoadLocal(local);
+			if (pushResult) emit.LoadLocal(local);
 
 			emit.LoadArgument(0);
 			builder.LoadIndirect(schema.NetType); // deref argument 0
+
 
 			if (schema.JsonType == JsonType.Array)
 			{
 				if (schema.NetType.IsArray)
 				{
-					builder.EmitArray(schema, pushResult: true);
+					builder.EmitArray(schema, pushResult: pushResult);
 				}
 				else
 				{
-					builder.EmitEnumerable(schema, pushResult: true);
+					builder.EmitEnumerable(schema, pushResult: pushResult);
 				}
 			}
 			else if (schema.JsonType == JsonType.Object)
 			{
 				if (schema.Keys != null)
 				{
-					builder.EmitDictionary(schema, pushResult: true);
+					builder.EmitDictionary(schema, pushResult: pushResult);
 				}
 				else
 				{
-					builder.EmitObject(schema, pushResult: true);
+					builder.EmitObject(schema, pushResult: pushResult);
 				}
 			}
 
-			if (destination == DestinationType.Stream) builder.Flush();
+			if (destination == DestinationType.Stream) builder.Flush(writtenTop: false);
 			emit.Return();
 			return emit;
 		}
@@ -978,13 +981,20 @@ namespace Cameronism.Json
 
 		void ReturnFailed()
 		{
-			for (int i = 0; i < Depth; i++) Emit.Pop();
+			if (Destination == DestinationType.Pointer)
+			{
+				for (int i = 0; i < Depth; i++) Emit.Pop();
 
-			// ask for double
-			Emit.LoadArgument(2); // avail
-			Emit.LoadConstant(-2);
-			Emit.Multiply();
-			Emit.Return();
+				// ask for double
+				Emit.LoadArgument(2); // avail
+				Emit.LoadConstant(-2);
+				Emit.Multiply();
+				Emit.Return();
+			}
+			else
+			{
+				Flush(resetAvailable: true, writtenTop: false);
+			}
 		}
 	}
 }
