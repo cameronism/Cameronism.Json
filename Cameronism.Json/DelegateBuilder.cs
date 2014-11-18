@@ -366,21 +366,37 @@ namespace Cameronism.Json
 				effective = underlying;
 			}
 
-			CallWriter(writer, effective, true);
-
-			Emit.Duplicate(); // preserve the written count
-
-			// check if the write succeeded
-			var success = Emit.DefineLabel();
-			Emit.LoadConstant(0);
-			Emit.BranchIfGreater(success);
+			if (writer.MaxLength.HasValue && Destination == DestinationType.Stream)
 			{
-				Depth++;
-				ReturnFailed();
-				Depth--;
+				// flush if available < writer.MaxLength
+				var afterFlush = Emit.DefineLabel();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.LoadConstant(writer.MaxLength.Value);
+				Emit.BranchIfGreaterOrEqual(afterFlush);
+				Flush(writtenTop: false, resetAvailable: true);
+				Emit.MarkLabel(afterFlush);
 			}
 
-			Emit.MarkLabel(success);
+			CallWriter(writer, effective, true);
+
+			// simple writers must flush to stream directly
+			if (Destination == DestinationType.Pointer)
+			{
+				Emit.Duplicate(); // preserve the written count
+
+				// check if the write succeeded
+				var success = Emit.DefineLabel();
+				Emit.LoadConstant(0);
+				Emit.BranchIfGreater(success);
+				{
+					Depth++;
+					ReturnFailed();
+					Depth--;
+				}
+
+				Emit.MarkLabel(success);
+			}
+
 			Emit.Duplicate(); // preserve written count
 
 			// advance LocalDestination

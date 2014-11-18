@@ -1,7 +1,5 @@
 ﻿# IEnumerable<int>
 
-NEED TO FIX THIS SO WE DON'T OVERRUN
-
 ldarg.1
 stloc.0
 ldarg.3
@@ -71,8 +69,6 @@ sub
 stloc.1
 br _label1
 
-NEED TO FIX THIS SO WE DON'T OVERRUN
-
 _label0:
 ldloc.1
 ldc.i4.1
@@ -93,8 +89,6 @@ stloc.1
 ldarg.1
 stloc.0
 
-NEED TO FIX THIS SO WE DON'T OVERRUN
-
 _label3:
 ldloc.0
 dup
@@ -114,12 +108,9 @@ callvirt Boolean MoveNext()
 brfalse _label6
 dup
 callvirt Int32 get_Current()
-ldloc.0
 ldloc.1
-call Int32 WriteInt32(Int32, Byte*, Int32)
-dup
-ldc.i4.0
-bgt.s _label7
+ldc.i4.s 11
+bge.s _label7
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -136,9 +127,10 @@ stloc.1
 ldarg.1
 stloc.0
 
-NEED TO FIX THIS SO WE DON'T OVERRUN
-
 _label7:
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 conv.i
 ldloc.0
@@ -186,12 +178,9 @@ sub
 stloc.1
 dup
 callvirt Int32 get_Current()
-ldloc.0
 ldloc.1
-call Int32 WriteInt32(Int32, Byte*, Int32)
-dup
-ldc.i4.0
-bgt.s _label9
+ldc.i4.s 11
+bge.s _label9
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -209,6 +198,9 @@ ldarg.1
 stloc.0
 
 _label9:
+ldloc.0
+ldloc.1
+call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 conv.i
 ldloc.0

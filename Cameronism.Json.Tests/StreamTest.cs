@@ -65,7 +65,7 @@ namespace Cameronism.Json.Tests
 			Assert.Equal("{\"i\":[1]}", ToJson(A(new[] { 1 }), ms, out instructions));
 		}
 
-		[Fact(Skip="causes System.ExecutionEngineException")]
+		[Fact]
 		public void CourtesyFlush()
 		{
 			var ms = new MemoryStream();
