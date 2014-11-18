@@ -1,0 +1,45 @@
+﻿# 1
+Stream.Write({ Type = byte[], Length = 64 }, 0, 1)
+
+# 1
+Stream.Write({ Type = byte[], Length = 64 }, 0, 1)
+
+# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# true
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# true
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# false
+Stream.Write({ Type = byte[], Length = 64 }, 0, 5)
+
+# false
+Stream.Write({ Type = byte[], Length = 64 }, 0, 5)
+
+# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# "171d7051-0c40-4475-9568-e8df9da1fb53"
+Stream.Write({ Type = byte[], Length = 64 }, 0, 38)
+
+# "171d7051-0c40-4475-9568-e8df9da1fb53"
+Stream.Write({ Type = byte[], Length = 64 }, 0, 38)
+
+# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# "2014-11-18T07:42:41.111Z"
+Stream.Write({ Type = byte[], Length = 64 }, 0, 26)
+
+# "2014-11-18T07:42:41.111Z"
+Stream.Write({ Type = byte[], Length = 64 }, 0, 26)
+
+# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+

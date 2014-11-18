@@ -1,0 +1,19 @@
+﻿# [ + String.Join(',', Enumerable.Repeat(1, 64)) + ]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 55)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 54)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 20)
+
+# [ + String.Join(',', Enumerable.Repeat(int.MinValue, 64)) + ]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 48)

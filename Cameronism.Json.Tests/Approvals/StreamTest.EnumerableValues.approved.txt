@@ -1,0 +1,30 @@
+﻿# [1]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 3)
+
+# [12]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# [1,null]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 8)
+
+# [1]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 3)
+
+# [1,null]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 8)
+
+# {"i":1}
+Stream.Write({ Type = byte[], Length = 64 }, 0, 7)
+
+# {"i":0.5,"j":"00000000-0000-0000-0000-000000000000"}
+Stream.Write({ Type = byte[], Length = 64 }, 0, 52)
+
+# {"i":1,"j":2}
+Stream.Write({ Type = byte[], Length = 64 }, 0, 13)
+
+# [{"i":1}]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 9)
+
+# {"i":[1]}
+Stream.Write({ Type = byte[], Length = 64 }, 0, 9)
+

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,6 +12,85 @@ namespace Cameronism.Json.Tests
 {
 	public class StreamTest : IDisposable
 	{
+		public class StreamSpy : Stream
+		{
+			readonly private Stream that;
+			readonly private TextWriter log;
+
+			public StreamSpy(Stream other, TextWriter log)
+			{
+				this.that = other;
+				this.log = log;
+			}
+
+			public Stream Underlying { get { return that; } }
+			public TextWriter Log { get { return log; } }
+
+			object[] Args(params object[] args)
+			{
+				return args;
+			}
+			void Spy([CallerMemberName]string member = null)
+			{
+				log.WriteLine("Stream." + member + "()");
+			}
+			void Spy(object[] arguments, [CallerMemberName]string member = null)
+			{
+				var args = String.Join(", ", arguments.Select(arg =>
+				{
+					var buffer = arg as byte[];
+					if (buffer != null)
+					{
+						return new { Type = "byte[]", Length = buffer.Length }.ToString();
+					}
+					if (arg == null)
+					{
+						return "`null`";
+					}
+
+					return arg.ToString();
+				}));
+
+				log.WriteLine("Stream." + member + "(" + args + ")");
+			}
+
+			public override bool CanRead { get { Spy(); return that.CanRead; } } 
+			public override bool CanSeek { get { Spy(); return that.CanSeek; } }
+			public override bool CanWrite { get { Spy(); return that.CanWrite; } }
+			public override void Flush() { Spy(); that.Flush(); }
+			public override long Length { get { Spy(); return that.Length; } }
+
+			public override long Position
+			{
+				get { Spy(); return that.Position; }
+				set { Spy(Args(value)); that.Position = value; }
+			}
+
+			public override int Read(byte[] buffer, int offset, int count)
+			{
+				Spy(Args(buffer, offset, count));
+				return that.Read(buffer, offset, count);
+			}
+
+			public override long Seek(long offset, SeekOrigin origin)
+			{
+				Spy(Args(offset, origin));
+				return that.Seek(offset, origin);
+			}
+
+			public override void SetLength(long value)
+			{
+				Spy(Args(value));
+				that.SetLength(value);
+			}
+
+			public override void Write(byte[] buffer, int offset, int count)
+			{
+				Spy(Args(buffer, offset, count));
+				that.Write(buffer, offset, count);
+			}
+		}
+
 		byte[] _Buffer = new byte[64];
 
 		static DelegateBuilderTest.B<T> A<T>(T i)
@@ -26,66 +106,91 @@ namespace Cameronism.Json.Tests
 		[Fact]
 		public void SimpleValues()
 		{
-			var ms = new MemoryStream();
+			var sw = new StringWriter();
+			var ms = new StreamSpy(new MemoryStream(), sw);
 
 			AssertValue(1, "1", ms);
 			AssertValue(true, "true", ms);
 			AssertValue(false, "false", ms);
 
-			var g = Guid.NewGuid();
+			var g = Guid.Parse("171d7051-0c40-4475-9568-e8df9da1fb53");
 			AssertValue(g, "\"" + g + "\"", ms);
 
-			var d = DateTime.UtcNow;
+			var d = new DateTime(2014, 11, 18, 7, 42, 41, 111, DateTimeKind.Utc);
 			AssertValue(d, Newtonsoft.Json.JsonConvert.SerializeObject(d), ms);
+
+			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
 
 		[Fact]
 		public void EnumerableValues()
 		{
-			var ms = new MemoryStream();
+			var sw = new StringWriter();
+			var ss = new StreamSpy(new MemoryStream(), sw);
 
-			string instructions;
-			Assert.Equal("[1]", ToJson(new List<int> { 1 }, ms, out instructions));
-			Assert.Equal("[12]", ToJson(new List<int> { 12 }, ms, out instructions));
+			AssertEqual("[1]", new List<int> { 1 }, ss);
+			AssertEqual("[12]", new List<int> { 12 }, ss);
 
-			Assert.Equal("[1,null]", ToJson(new List<int?> { 1, null }, ms, out instructions));
+			AssertEqual("[1,null]", new List<int?> { 1, null }, ss);
 
-			Assert.Equal("[1]", ToJson(new[] { 1 }, ms, out instructions));
-			Assert.Equal("[1,null]", ToJson(new int?[] { 1, null }, ms, out instructions));
+			AssertEqual("[1]", new[] { 1 }, ss);
+			AssertEqual("[1,null]", new int?[] { 1, null }, ss);
 
-			Assert.Equal("{\"i\":1}", ToJson(A(1), ms, out instructions));
-			Assert.Equal("{\"i\":0.5,\"j\":\"00000000-0000-0000-0000-000000000000\"}", ToJson(A(0.5, Guid.Empty), ms, out instructions));
+			AssertEqual("{\"i\":1}", A(1), ss);
+			AssertEqual("{\"i\":0.5,\"j\":\"00000000-0000-0000-0000-000000000000\"}", A(0.5, Guid.Empty), ss);
 
-			Assert.Equal("{\"i\":1,\"j\":2}", ToJson(new Dictionary<char, int> { 
+			AssertEqual("{\"i\":1,\"j\":2}", new Dictionary<char, int> { 
 				{ 'i', 1 },
 				{ 'j', 2 },
-			}, ms, out instructions));
+			}, ss);
 
-			Assert.Equal("[{\"i\":1}]", ToJson(new[] { A(1) }, ms, out instructions));
-			Assert.Equal("{\"i\":[1]}", ToJson(A(new[] { 1 }), ms, out instructions));
+			AssertEqual("[{\"i\":1}]", new[] { A(1) }, ss);
+			AssertEqual("{\"i\":[1]}", A(new[] { 1 }), ss);
+
+			ApprovalTests.Approvals.Verify(sw.ToString());
+		}
+
+		void AssertEqual<T>(string expected, T value, StreamSpy ss)
+		{
+			ss.Log.WriteLine("# " + expected);
+
+			string instructions;
+			Assert.Equal(expected, ToJson(value, ss, out instructions));
+
+			ss.Log.WriteLine();
 		}
 
 		[Fact]
 		public void CourtesyFlush()
 		{
-			var ms = new MemoryStream();
+			var sw = new StringWriter();
+			var ss = new StreamSpy(new MemoryStream(), sw);
 
 			string instructions;
 
 			var xs = Enumerable.Repeat(1, 64);
 			var json = "[" + String.Join(",", xs) + "]";
-			Assert.Equal(json, ToJson(xs, ms, out instructions));
+			sw.WriteLine("# " + @"[ + String.Join(',', Enumerable.Repeat(1, 64)) + ]");
+			Assert.Equal(json, ToJson(xs, ss, out instructions));
+
+			sw.WriteLine();
 
 			xs = Enumerable.Repeat(int.MinValue, 64);
 			json = "[" + String.Join(",", xs) + "]";
-			Assert.Equal(json, ToJson(xs, ms, out instructions));
+			sw.WriteLine("# " + @"[ + String.Join(',', Enumerable.Repeat(int.MinValue, 64)) + ]");
+			Assert.Equal(json, ToJson(xs, ss, out instructions));
+
+			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
 
 		[Fact]
 		public void StreamInstructions()
 		{
-			var ms = new MemoryStream();
 			var sb = new StringBuilder();
+
+			// not trying to approve the result of this stream spy since we're only interested in IL here
+			var sw = new StringWriter();
+			var ms = new StreamSpy(new MemoryStream(), sw);
 
 			string instructions;
 
@@ -97,25 +202,35 @@ namespace Cameronism.Json.Tests
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
-		void AssertValue<T>(T value, string json, MemoryStream ms) where T : struct
+		void AssertValue<T>(T value, string expected, StreamSpy ms) where T : struct
 		{
-			Assert.Equal(json, ToJson(value, ms));
+			ms.Log.WriteLine("# " + expected);
+			Assert.Equal(expected, ToJson(value, ms));
 
 			// FIXME submit a sigil bug with testcase for this
 			DelegateBuilder.UseSigilVerify = false;
-			Assert.Equal(json, ToJson((T?)value, ms));
+
+			ms.Log.WriteLine();
+			ms.Log.WriteLine("# " + expected);
+			Assert.Equal(expected, ToJson((T?)value, ms));
+
+			ms.Log.WriteLine();
+			ms.Log.WriteLine("# null");
 			Assert.Equal("null", ToJson((T?)null, ms));
 			DelegateBuilder.UseSigilVerify = true;
+
+			ms.Log.WriteLine();
 		}
 
-		unsafe string ToJson<T>(T value, MemoryStream ms)
+		unsafe string ToJson<T>(T value, StreamSpy ms)
 		{
 			string instructions;
 			return ToJson(value, ms, out instructions);
 		}
 
-		unsafe string ToJson<T>(T value, MemoryStream ms, out string instructions)
+		unsafe string ToJson<T>(T value, StreamSpy ss, out string instructions)
 		{
+			var ms = ss.Underlying as MemoryStream;
 			ms.Position = 0;
 			try
 			{
@@ -124,7 +239,7 @@ namespace Cameronism.Json.Tests
 				var del = emit.CreateDelegate<Serializer.WriteToStream<T>>(out instructions);
 				fixed (byte* ptr = _Buffer)
 				{
-					del.Invoke(ref value, ptr, ms, _Buffer);
+					del.Invoke(ref value, ptr, ss, _Buffer);
 				}
 			}
 			catch (Sigil.SigilVerificationException sve)
