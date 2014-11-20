@@ -49,6 +49,7 @@
 ------------------------------------------------------------------------ */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -99,7 +100,33 @@ namespace Cameronism.Json
 		const int firstByteMark_3 = 0xE0;
 		const int firstByteMark_4 = 0xF0;
 
-		public unsafe static void WriteToStreamUtf8(string value, byte[] buffer, ref int available, ref byte* bufferOffset)
+		public unsafe static void WriteToStreamUtf8(string value, Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
+		{
+			if (value == null)
+			{
+				NullToStreamUtf8(stream, buffer, ref available, ref bufferOffset);
+				return;
+			}
+
+			throw new NotImplementedException();
+		}
+
+		unsafe static void NullToStreamUtf8(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
+		{
+			if (available < 4) Flush(stream, buffer, ref available, ref bufferOffset);
+
+			var ptr = bufferOffset;
+
+			*(ptr + 0) = (byte)'n';
+			*(ptr + 1) = (byte)'u';
+			*(ptr + 2) = (byte)'l';
+			*(ptr + 3) = (byte)'l';
+
+			bufferOffset = ptr + 4;
+			available -= 4;
+		}
+
+		static void Flush(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
 		{
 			throw new NotImplementedException();
 		}

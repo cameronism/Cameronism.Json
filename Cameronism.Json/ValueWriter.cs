@@ -119,7 +119,7 @@ namespace Cameronism.Json
 			_Writers[new Lookup(typeof(string), DestinationType.Stream)] = new ValueWriter
 			{
 				Type = typeof(string),
-				MethodInfo = typeof(ConvertUTF).GetMethod("WriteToStreamUtf8", BindingFlags.Static | BindingFlags.NonPublic),
+				MethodInfo = typeof(ConvertUTF).GetMethod("WriteToStreamUtf8", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public),
 			};
 		}
 

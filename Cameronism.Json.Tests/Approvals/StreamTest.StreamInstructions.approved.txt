@@ -264,3 +264,29 @@ sub
 tail.callvirt Void Write(Byte[], Int32, Int32)
 ret
 
+
+# string
+
+ldarg.3
+ldlen
+conv.i4
+stloc.0
+ldarg.0
+ldind.ref
+ldarg.2
+ldarg.3
+ldloca.s 0
+ldarga.s 1
+call Void WriteToStreamUtf8(System.String, System.IO.Stream, Byte[], Int32 ByRef, Byte* ByRef)
+ldarg.2
+ldarg.3
+ldc.i4.0 -- this is wrong
+we should add a special case for simple string since it's so different from the other simple writers
+ldarg.3
+ldlen
+conv.i4
+ldloc.0
+sub
+tail.callvirt Void Write(Byte[], Int32, Int32)
+ret
+

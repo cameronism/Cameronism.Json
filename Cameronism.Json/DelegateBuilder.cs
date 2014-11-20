@@ -333,7 +333,7 @@ namespace Cameronism.Json
 
 			CallWriter(writer, effective, false);
 
-			if (Destination == DestinationType.Stream) Flush();
+			if (Destination == DestinationType.Stream) Flush(writtenTop: effective != typeof(string));
 
 			Emit.Return();
 		}
@@ -434,6 +434,12 @@ namespace Cameronism.Json
 				throw new NotImplementedException();
 			}
 
+			if (effective == typeof(string) && Destination == DestinationType.Stream)
+			{
+				CallStringStreamWriter(writer, effective, useLocals);
+				return;
+			}
+
 			var firstArg = writer.MethodInfo.GetParameters()[0].ParameterType;
 			if (firstArg != effective)
 			{
@@ -456,6 +462,24 @@ namespace Cameronism.Json
 				{
 					Emit.LoadLocal(LocalAvailable);
 				}
+			}
+
+			Emit.Call(writer.MethodInfo);
+		}
+
+		void CallStringStreamWriter(ValueWriter writer, Type effective, bool useLocals)
+		{
+			Emit.LoadArgument(ARG_STREAM);
+			Emit.LoadArgument(ARG_BUFFER);
+			Emit.LoadLocalAddress(LocalAvailable);
+
+			if (LocalDestination != null)
+			{
+				Emit.LoadLocalAddress(LocalDestination);
+			}
+			else
+			{
+				Emit.LoadArgumentAddress(ARG_POINTER);
 			}
 
 			Emit.Call(writer.MethodInfo);

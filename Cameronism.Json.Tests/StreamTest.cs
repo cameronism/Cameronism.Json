@@ -199,6 +199,12 @@ namespace Cameronism.Json.Tests
 			ToJson<IEnumerable<int>>(null, ms, out instructions);
 			sb.AppendLine(instructions);
 
+			sb.AppendLine();
+			sb.AppendLine("# string");
+			sb.AppendLine();
+			ToJson<string>(null, ms, out instructions);
+			sb.AppendLine(instructions);
+
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
