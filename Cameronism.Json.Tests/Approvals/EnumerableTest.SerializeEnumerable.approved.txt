@@ -11,18 +11,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -60,12 +60,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -73,7 +73,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -89,7 +89,7 @@ stloc.1
 callvirt System.Collections.Generic.IEnumerator`1[System.Int32] GetEnumerator()
 dup
 callvirt Boolean MoveNext()
-brfalse.s _label6
+brfalse.s closeArray_6
 dup
 callvirt Int32 get_Current()
 ldloc.0
@@ -97,7 +97,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label7
+bgt.s success_7
 pop
 pop
 pop
@@ -106,7 +106,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+success_7:
 dup
 conv.i
 ldloc.0
@@ -117,12 +117,12 @@ mul
 ldloc.1
 add
 stloc.1
-br.s _label4
+br.s loopBottom_4
 
-_label5:
+loopTop_5:
 ldloc.1
 ldc.i4.1
-bge.s _label8
+bge.s enoughAvailable_8
 pop
 pop
 ldarg.2
@@ -130,7 +130,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -150,7 +150,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label9
+bgt.s success_9
 pop
 pop
 pop
@@ -159,7 +159,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+success_9:
 dup
 conv.i
 ldloc.0
@@ -171,23 +171,23 @@ ldloc.1
 add
 stloc.1
 
-_label4:
+loopBottom_4:
 dup
 callvirt Boolean MoveNext()
-brtrue.s _label5
+brtrue.s loopTop_5
 
-_label6:
+closeArray_6:
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label10
+bge.s enoughAvailable_10
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_10:
 ldloc.0
 dup
 ldc.i4.1
@@ -203,7 +203,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -376,18 +376,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -425,12 +425,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -438,7 +438,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -457,7 +457,7 @@ ldloca.s 2
 dup
 constrained. System.Collections.Generic.List`1+Enumerator[System.Int32]
 callvirt Boolean MoveNext()
-brfalse _label6
+brfalse closeArray_6
 dup
 constrained. System.Collections.Generic.List`1+Enumerator[System.Int32]
 callvirt Int32 get_Current()
@@ -466,7 +466,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label7
+bgt.s success_8
 pop
 pop
 pop
@@ -475,7 +475,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+success_8:
 dup
 conv.i
 ldloc.0
@@ -486,12 +486,12 @@ mul
 ldloc.1
 add
 stloc.1
-br.s _label4
+br.s loopBottom_4
 
-_label5:
+loopTop_5:
 ldloc.1
 ldc.i4.1
-bge.s _label8
+bge.s enoughAvailable_9
 pop
 pop
 ldarg.2
@@ -499,7 +499,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -520,7 +520,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label9
+bgt.s success_10
 pop
 pop
 pop
@@ -529,7 +529,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+success_10:
 dup
 conv.i
 ldloc.0
@@ -541,24 +541,24 @@ ldloc.1
 add
 stloc.1
 
-_label4:
+loopBottom_4:
 dup
 constrained. System.Collections.Generic.List`1+Enumerator[System.Int32]
 callvirt Boolean MoveNext()
-brtrue.s _label5
+brtrue.s loopTop_5
 
-_label6:
+closeArray_6:
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label10
+bge.s enoughAvailable_11
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -574,7 +574,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -852,18 +852,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -901,12 +901,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -914,7 +914,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -933,7 +933,7 @@ ldloca.s 2
 dup
 constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
 callvirt Boolean MoveNext()
-brfalse _label6
+brfalse closeArray_6
 dup
 constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
 callvirt System.Collections.Generic.KeyValuePair`2[System.String,System.Int32] get_Current()
@@ -946,7 +946,7 @@ ldloc.1
 call Int32 WriteStringUtf8(System.String, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label7
+bgt.s success_9
 pop
 pop
 pop
@@ -956,7 +956,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+success_9:
 dup
 conv.i
 ldloc.0
@@ -969,7 +969,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label8
+bge.s enoughAvailable_10
 pop
 pop
 pop
@@ -978,7 +978,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_10:
 ldloc.0
 dup
 ldc.i4.1
@@ -997,7 +997,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label9
+bgt.s success_11
 pop
 pop
 pop
@@ -1006,7 +1006,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+success_11:
 dup
 conv.i
 ldloc.0
@@ -1017,12 +1017,12 @@ mul
 ldloc.1
 add
 stloc.1
-br _label4
+br loopBottom_4
 
-_label5:
+loopTop_5:
 ldloc.1
 ldc.i4.1
-bge.s _label10
+bge.s enoughAvailable_12
 pop
 pop
 ldarg.2
@@ -1030,7 +1030,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -1055,7 +1055,7 @@ ldloc.1
 call Int32 WriteStringUtf8(System.String, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label11
+bgt.s success_14
 pop
 pop
 pop
@@ -1065,7 +1065,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label11:
+success_14:
 dup
 conv.i
 ldloc.0
@@ -1078,7 +1078,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label12
+bge.s enoughAvailable_15
 pop
 pop
 pop
@@ -1087,7 +1087,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -1106,7 +1106,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label13
+bgt.s success_16
 pop
 pop
 pop
@@ -1115,7 +1115,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label13:
+success_16:
 dup
 conv.i
 ldloc.0
@@ -1127,24 +1127,24 @@ ldloc.1
 add
 stloc.1
 
-_label4:
+loopBottom_4:
 dup
 constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
 callvirt Boolean MoveNext()
-brtrue _label5
+brtrue loopTop_5
 
-_label6:
+closeArray_6:
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label14
+bge.s enoughAvailable_17
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label14:
+enoughAvailable_17:
 ldloc.0
 dup
 ldc.i4.1
@@ -1160,7 +1160,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 

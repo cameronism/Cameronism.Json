@@ -9,11 +9,11 @@ stloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -30,7 +30,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -67,12 +67,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -89,7 +89,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -105,12 +105,12 @@ stloc.1
 callvirt System.Collections.Generic.IEnumerator`1[System.Int32] GetEnumerator()
 dup
 callvirt Boolean MoveNext()
-brfalse _label6
+brfalse closeArray_6
 dup
 callvirt Int32 get_Current()
 ldloc.1
 ldc.i4.s 11
-bge.s _label7
+bge.s afterFlush_7
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -127,7 +127,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label7:
+afterFlush_7:
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
@@ -141,12 +141,12 @@ mul
 ldloc.1
 add
 stloc.1
-br.s _label4
+br.s loopBottom_4
 
-_label5:
+loopTop_5:
 ldloc.1
 ldc.i4.1
-bge.s _label8
+bge.s enoughAvailable_8
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -163,7 +163,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label8:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -180,7 +180,7 @@ dup
 callvirt Int32 get_Current()
 ldloc.1
 ldc.i4.s 11
-bge.s _label9
+bge.s afterFlush_9
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -197,7 +197,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label9:
+afterFlush_9:
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
@@ -212,16 +212,16 @@ ldloc.1
 add
 stloc.1
 
-_label4:
+loopBottom_4:
 dup
 callvirt Boolean MoveNext()
-brtrue.s _label5
+brtrue.s loopTop_5
 
-_label6:
+closeArray_6:
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label10
+bge.s enoughAvailable_10
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -238,7 +238,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label10:
+enoughAvailable_10:
 ldloc.0
 dup
 ldc.i4.1
@@ -252,7 +252,7 @@ ldc.i4.1
 sub
 stloc.1
 
-_label1:
+ifNull_1:
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -301,11 +301,11 @@ stloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -322,7 +322,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -359,12 +359,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -381,7 +381,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -396,14 +396,14 @@ sub
 stloc.1
 ldc.i4.0
 stloc.2
-br.s _label4
+br.s endLoop_4
 
-_label5:
+beginLoop_5:
 ldloc.2
-brfalse.s _label6
+brfalse.s afterComma_7
 ldloc.1
 ldc.i4.1
-bge.s _label7
+bge.s enoughAvailable_8
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -420,7 +420,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label7:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -434,7 +434,7 @@ ldc.i4.1
 sub
 stloc.1
 
-_label6:
+afterComma_7:
 dup
 ldloc.2
 ldelem.ref
@@ -448,16 +448,16 @@ ldc.i4.1
 add
 stloc.2
 
-_label4:
+endLoop_4:
 dup
 ldlen
 conv.i4
 ldloc.2
-bgt.s _label5
+bgt.s beginLoop_5
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label8
+bge.s enoughAvailable_9
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -474,7 +474,7 @@ stloc.1
 ldarg.1
 stloc.0
 
-_label8:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -488,7 +488,7 @@ ldc.i4.1
 sub
 stloc.1
 
-_label1:
+ifNull_1:
 ldarg.2
 ldarg.3
 ldc.i4.0

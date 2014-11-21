@@ -19,6 +19,7 @@ namespace Cameronism.Json
 		#region instance state
 		DestinationType Destination;
 		int Depth;
+		int NameCount;
 
 		Sigil.Local LocalDestination;
 		Sigil.Local LocalAvailable;
@@ -352,8 +353,8 @@ namespace Cameronism.Json
 			var underlying = Nullable.GetUnderlyingType(effective);
 			if (underlying != null)
 			{
-				ifNull = Emit.DefineLabel();
-				var hasValueTrue = Emit.DefineLabel();
+				ifNull = DefineLabel("ifNull");
+				var hasValueTrue = DefineLabel("hasValueTrue");
 
 				Emit.Duplicate(); // preserve value
 
@@ -374,7 +375,7 @@ namespace Cameronism.Json
 			if (writer.MaxLength.HasValue && Destination == DestinationType.Stream)
 			{
 				// flush if available < writer.MaxLength
-				var afterFlush = Emit.DefineLabel();
+				var afterFlush = DefineLabel("afterFlush");
 				Emit.LoadLocal(LocalAvailable);
 				Emit.LoadConstant(writer.MaxLength.Value);
 				Emit.BranchIfGreaterOrEqual(afterFlush);
@@ -390,7 +391,7 @@ namespace Cameronism.Json
 				Emit.Duplicate(); // preserve the written count
 
 				// check if the write succeeded
-				var success = Emit.DefineLabel();
+				var success = DefineLabel("success");
 				Emit.LoadConstant(0);
 				Emit.BranchIfGreater(success);
 				{
@@ -533,8 +534,8 @@ namespace Cameronism.Json
 		{
 			var ip = typeof(System.Net.IPAddress);
 
-			var notNull = Emit.DefineLabel();
-			var done = Emit.DefineLabel();
+			var notNull = DefineLabel("notNull");
+			var done = DefineLabel("done");
 
 			// preserve ip
 			Emit.Duplicate();
@@ -554,7 +555,7 @@ namespace Cameronism.Json
 
 			// value is not null
 			{
-				var v6 = Emit.DefineLabel();
+				var v6 = DefineLabel("ipv6");
 
 				Emit.Duplicate();
 				Emit.CallVirtual(ip.GetProperty("AddressFamily").GetMethod);
@@ -584,8 +585,8 @@ namespace Cameronism.Json
 
 		void EmitArray(Schema schema, bool pushResult = false)
 		{
-			var ifNotNull = Emit.DefineLabel();
-			var ifNull = Emit.DefineLabel();
+			var ifNotNull = DefineLabel("ifNotNull");
+			var ifNull = DefineLabel("ifNull");
 
 			Emit.Duplicate(); // preserve the value
 			Emit.BranchIfTrue(ifNotNull);
@@ -602,11 +603,11 @@ namespace Cameronism.Json
 			// begin array
 			WriteConstant("[");
 
-			var endLoop = Emit.DefineLabel();
-			var beginLoop = Emit.DefineLabel();
+			var endLoop = DefineLabel("endLoop");
+			var beginLoop = DefineLabel("beginLoop");
 
 			/* var ix = 0; */
-			using (var ix = Emit.DeclareLocal<int>())
+			using (var ix = Emit.DeclareLocal<int>(GetName("ix")))
 			{
 				Emit.LoadConstant(0);
 				Emit.StoreLocal(ix);
@@ -618,7 +619,7 @@ namespace Cameronism.Json
 				Emit.MarkLabel(beginLoop);
 
 				// write ','
-				var afterComma = Emit.DefineLabel();
+				var afterComma = DefineLabel("afterComma");
 				Emit.LoadLocal(ix);
 				Emit.BranchIfFalse(afterComma);
 				WriteConstant(",");
@@ -691,8 +692,8 @@ namespace Cameronism.Json
 				getValue = enumerable.get_Current.ReturnType.GetProperty("Value").GetMethod;
 			}
 
-			var ifNotNull = Emit.DefineLabel();
-			var ifNull = Emit.DefineLabel();
+			var ifNotNull = DefineLabel("ifNotNull");
+			var ifNull = DefineLabel("ifNull");
 
 			Emit.Duplicate(); // preserve the value
 			Emit.BranchIfTrue(ifNotNull);
@@ -709,9 +710,9 @@ namespace Cameronism.Json
 			// begin array
 			WriteConstant(isArray ? "[" : "{");
 
-			var loopBottom = Emit.DefineLabel();
-			var loopTop = Emit.DefineLabel();
-			var closeArray = Emit.DefineLabel();
+			var loopBottom = DefineLabel("loopBottom");
+			var loopTop = DefineLabel("loopTop");
+			var closeArray = DefineLabel("closeArray");
 
 			
 			// call GetEnumerator
@@ -848,8 +849,8 @@ namespace Cameronism.Json
 			bool anyMembers = schema.Members.Any();
 			if (schema.Nullable)
 			{
-				var ifNotNull = Emit.DefineLabel();
-				ifNull = Emit.DefineLabel();
+				var ifNotNull = DefineLabel("IfNotNull");
+				ifNull = DefineLabel("ifNull");
 
 				if (anyMembers)
 				{
@@ -886,7 +887,7 @@ namespace Cameronism.Json
 				for (int i = 0; i < schema.Members.Count; i++)
 				{
 					// assert we've got enough
-					var enoughAvailable = Emit.DefineLabel();
+					var enoughAvailable = DefineLabel("enoughAvailable");
 					Emit.LoadLocal(LocalAvailable);
 					Emit.LoadConstant(minLength);
 					Emit.BranchIfGreaterOrEqual(enoughAvailable);
@@ -974,7 +975,7 @@ namespace Cameronism.Json
 
 		void PushAddress(Type type)
 		{
-			using (var copy = Emit.DeclareLocal(type))
+			using (var copy = Emit.DeclareLocal(type, GetName("tmp")))
 			{
 				Emit.StoreLocal(copy);
 				Emit.LoadLocalAddress(copy);
@@ -995,7 +996,7 @@ namespace Cameronism.Json
 
 			if (assertAvailable)
 			{
-				var enoughAvailable = Emit.DefineLabel();
+				var enoughAvailable = DefineLabel("enoughAvailable");
 				Emit.LoadLocal(LocalAvailable);
 				Emit.LoadConstant(bytes.Length);
 				Emit.BranchIfGreaterOrEqual(enoughAvailable);
@@ -1058,6 +1059,16 @@ namespace Cameronism.Json
 			{
 				Flush(resetAvailable: true, writtenTop: false);
 			}
+		}
+
+		string GetName(string prefix)
+		{
+			return prefix + "_" + (NameCount++);
+		}
+
+		Sigil.Label DefineLabel(string prefix)
+		{
+			return Emit.DefineLabel(GetName(prefix));
 		}
 	}
 }

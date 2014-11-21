@@ -477,18 +477,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -526,12 +526,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br.s _label1
+br.s ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.7
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -539,7 +539,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -590,7 +590,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 ldarg.2
@@ -598,7 +598,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -611,14 +611,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -634,7 +634,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -648,18 +648,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -697,12 +697,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 13
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -710,7 +710,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -762,7 +762,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 pop
@@ -771,7 +771,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -784,7 +784,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.7
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 pop
 ldarg.2
@@ -792,7 +792,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -843,7 +843,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label6
+bgt.s success_6
 pop
 pop
 ldarg.2
@@ -851,7 +851,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label6:
+success_6:
 dup
 conv.i
 ldloc.0
@@ -864,14 +864,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label7
+bge.s enoughAvailable_7
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_7:
 ldloc.0
 dup
 ldc.i4.1
@@ -887,7 +887,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -901,18 +901,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -950,12 +950,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 16
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -963,7 +963,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -1015,7 +1015,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 pop
@@ -1024,7 +1024,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -1037,7 +1037,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 pop
 ldarg.2
@@ -1045,7 +1045,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -1092,18 +1092,18 @@ sub
 stloc.1
 call B`1 get_j()
 dup
-brtrue.s _label6
+brtrue.s IfNotNull_6
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label8
+bge.s enoughAvailable_8
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -1140,12 +1140,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s _label7
+br.s ifNull_7
 
-_label6:
+IfNotNull_6:
 ldloc.1
 ldc.i4.7
-bge.s _label9
+bge.s enoughAvailable_9
 pop
 pop
 ldarg.2
@@ -1153,7 +1153,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -1204,7 +1204,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label10
+bgt.s success_10
 pop
 pop
 ldarg.2
@@ -1212,7 +1212,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label10:
+success_10:
 dup
 conv.i
 ldloc.0
@@ -1225,14 +1225,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label11
+bge.s enoughAvailable_11
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label11:
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -1246,17 +1246,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label7:
+ifNull_7:
 ldloc.1
 ldc.i4.1
-bge.s _label12
+bge.s enoughAvailable_12
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -1272,7 +1272,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -1286,18 +1286,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -1335,12 +1335,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 16
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -1348,7 +1348,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -1396,11 +1396,11 @@ stloc.1
 dup
 call B`1 get_i()
 dup
-brtrue.s _label4
+brtrue.s IfNotNull_4
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label6
+bge.s enoughAvailable_6
 pop
 pop
 ldarg.2
@@ -1408,7 +1408,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label6:
+enoughAvailable_6:
 ldloc.0
 dup
 ldc.i4.1
@@ -1445,12 +1445,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label5
+br ifNull_5
 
-_label4:
+IfNotNull_4:
 ldloc.1
 ldc.i4.7
-bge.s _label7
+bge.s enoughAvailable_7
 pop
 pop
 pop
@@ -1459,7 +1459,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_7:
 ldloc.0
 dup
 ldc.i4.1
@@ -1510,7 +1510,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label8
+bgt.s success_8
 pop
 pop
 pop
@@ -1519,7 +1519,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+success_8:
 dup
 conv.i
 ldloc.0
@@ -1532,7 +1532,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label9
+bge.s enoughAvailable_9
 pop
 pop
 ldarg.2
@@ -1540,7 +1540,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -1554,10 +1554,10 @@ ldc.i4.1
 sub
 stloc.1
 
-_label5:
+ifNull_5:
 ldloc.1
 ldc.i4.7
-bge.s _label10
+bge.s enoughAvailable_10
 pop
 pop
 ldarg.2
@@ -1565,7 +1565,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_10:
 ldloc.0
 dup
 ldc.i4.1
@@ -1616,7 +1616,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label11
+bgt.s success_11
 pop
 pop
 ldarg.2
@@ -1624,7 +1624,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label11:
+success_11:
 dup
 conv.i
 ldloc.0
@@ -1637,14 +1637,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label12
+bge.s enoughAvailable_12
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -1660,7 +1660,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -1674,18 +1674,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -1723,12 +1723,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 16
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -1736,7 +1736,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -1784,11 +1784,11 @@ stloc.1
 dup
 call B`2 get_i()
 dup
-brtrue.s _label4
+brtrue.s IfNotNull_4
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label6
+bge.s enoughAvailable_6
 pop
 pop
 ldarg.2
@@ -1796,7 +1796,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label6:
+enoughAvailable_6:
 ldloc.0
 dup
 ldc.i4.1
@@ -1833,12 +1833,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label5
+br ifNull_5
 
-_label4:
+IfNotNull_4:
 ldloc.1
 ldc.i4.s 16
-bge.s _label7
+bge.s enoughAvailable_7
 pop
 pop
 pop
@@ -1847,7 +1847,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_7:
 ldloc.0
 dup
 ldc.i4.1
@@ -1899,7 +1899,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label8
+bgt.s success_8
 pop
 pop
 pop
@@ -1909,7 +1909,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+success_8:
 dup
 conv.i
 ldloc.0
@@ -1922,7 +1922,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label9
+bge.s enoughAvailable_9
 pop
 pop
 pop
@@ -1931,7 +1931,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -1978,11 +1978,11 @@ sub
 stloc.1
 call B`1 get_j()
 dup
-brtrue.s _label10
+brtrue.s IfNotNull_10
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label12
+bge.s enoughAvailable_12
 pop
 pop
 ldarg.2
@@ -1990,7 +1990,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -2027,12 +2027,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label11
+br ifNull_11
 
-_label10:
+IfNotNull_10:
 ldloc.1
 ldc.i4.7
-bge.s _label13
+bge.s enoughAvailable_13
 pop
 pop
 pop
@@ -2041,7 +2041,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label13:
+enoughAvailable_13:
 ldloc.0
 dup
 ldc.i4.1
@@ -2092,7 +2092,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label14
+bgt.s success_14
 pop
 pop
 pop
@@ -2101,7 +2101,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label14:
+success_14:
 dup
 conv.i
 ldloc.0
@@ -2114,7 +2114,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label15
+bge.s enoughAvailable_15
 pop
 pop
 ldarg.2
@@ -2122,7 +2122,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label15:
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -2136,10 +2136,10 @@ ldc.i4.1
 sub
 stloc.1
 
-_label11:
+ifNull_11:
 ldloc.1
 ldc.i4.1
-bge.s _label16
+bge.s enoughAvailable_16
 pop
 pop
 ldarg.2
@@ -2147,7 +2147,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label16:
+enoughAvailable_16:
 ldloc.0
 dup
 ldc.i4.1
@@ -2161,10 +2161,10 @@ ldc.i4.1
 sub
 stloc.1
 
-_label5:
+ifNull_5:
 ldloc.1
 ldc.i4.7
-bge.s _label17
+bge.s enoughAvailable_17
 pop
 pop
 ldarg.2
@@ -2172,7 +2172,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label17:
+enoughAvailable_17:
 ldloc.0
 dup
 ldc.i4.1
@@ -2223,7 +2223,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label18
+bgt.s success_18
 pop
 pop
 ldarg.2
@@ -2231,7 +2231,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label18:
+success_18:
 dup
 conv.i
 ldloc.0
@@ -2244,14 +2244,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label19
+bge.s enoughAvailable_19
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label19:
+enoughAvailable_19:
 ldloc.0
 dup
 ldc.i4.1
@@ -2267,7 +2267,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -2281,18 +2281,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -2330,12 +2330,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 16
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -2343,7 +2343,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -2395,7 +2395,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 pop
@@ -2404,7 +2404,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -2417,7 +2417,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 pop
 ldarg.2
@@ -2425,7 +2425,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -2472,18 +2472,18 @@ sub
 stloc.1
 call B`1 get_j()
 dup
-brtrue.s _label6
+brtrue.s IfNotNull_6
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label8
+bge.s enoughAvailable_8
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -2520,12 +2520,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label7
+br ifNull_7
 
-_label6:
+IfNotNull_6:
 ldloc.1
 ldc.i4.s 10
-bge.s _label9
+bge.s enoughAvailable_9
 pop
 pop
 ldarg.2
@@ -2533,7 +2533,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -2580,18 +2580,18 @@ sub
 stloc.1
 call B`2 get_i()
 dup
-brtrue.s _label10
+brtrue.s IfNotNull_10
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label12
+bge.s enoughAvailable_12
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -2628,12 +2628,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label11
+br ifNull_11
 
-_label10:
+IfNotNull_10:
 ldloc.1
 ldc.i4.s 16
-bge.s _label13
+bge.s enoughAvailable_13
 pop
 pop
 ldarg.2
@@ -2641,7 +2641,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label13:
+enoughAvailable_13:
 ldloc.0
 dup
 ldc.i4.1
@@ -2693,7 +2693,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label14
+bgt.s success_14
 pop
 pop
 pop
@@ -2702,7 +2702,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label14:
+success_14:
 dup
 conv.i
 ldloc.0
@@ -2715,7 +2715,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label15
+bge.s enoughAvailable_15
 pop
 pop
 ldarg.2
@@ -2723,7 +2723,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label15:
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -2770,18 +2770,18 @@ sub
 stloc.1
 call B`1 get_j()
 dup
-brtrue.s _label16
+brtrue.s IfNotNull_16
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label18
+bge.s enoughAvailable_18
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label18:
+enoughAvailable_18:
 ldloc.0
 dup
 ldc.i4.1
@@ -2818,12 +2818,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s _label17
+br.s ifNull_17
 
-_label16:
+IfNotNull_16:
 ldloc.1
 ldc.i4.7
-bge.s _label19
+bge.s enoughAvailable_19
 pop
 pop
 ldarg.2
@@ -2831,7 +2831,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label19:
+enoughAvailable_19:
 ldloc.0
 dup
 ldc.i4.1
@@ -2882,7 +2882,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label20
+bgt.s success_20
 pop
 pop
 ldarg.2
@@ -2890,7 +2890,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label20:
+success_20:
 dup
 conv.i
 ldloc.0
@@ -2903,14 +2903,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label21
+bge.s enoughAvailable_21
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label21:
+enoughAvailable_21:
 ldloc.0
 dup
 ldc.i4.1
@@ -2924,17 +2924,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label17:
+ifNull_17:
 ldloc.1
 ldc.i4.1
-bge.s _label22
+bge.s enoughAvailable_22
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label22:
+enoughAvailable_22:
 ldloc.0
 dup
 ldc.i4.1
@@ -2948,17 +2948,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label11:
+ifNull_11:
 ldloc.1
 ldc.i4.1
-bge.s _label23
+bge.s enoughAvailable_23
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label23:
+enoughAvailable_23:
 ldloc.0
 dup
 ldc.i4.1
@@ -2972,17 +2972,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label7:
+ifNull_7:
 ldloc.1
 ldc.i4.1
-bge.s _label24
+bge.s enoughAvailable_24
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label24:
+enoughAvailable_24:
 ldloc.0
 dup
 ldc.i4.1
@@ -2998,7 +2998,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -3012,18 +3012,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -3061,12 +3061,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.s 17
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -3074,7 +3074,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -3126,7 +3126,7 @@ ldloc.1
 call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 pop
@@ -3135,7 +3135,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -3148,7 +3148,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 pop
 ldarg.2
@@ -3156,7 +3156,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -3203,18 +3203,18 @@ sub
 stloc.1
 call B`1 get_j()
 dup
-brtrue.s _label6
+brtrue.s IfNotNull_6
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label8
+bge.s enoughAvailable_8
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label8:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -3251,12 +3251,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label7
+br ifNull_7
 
-_label6:
+IfNotNull_6:
 ldloc.1
 ldc.i4.s 10
-bge.s _label9
+bge.s enoughAvailable_9
 pop
 pop
 ldarg.2
@@ -3264,7 +3264,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -3311,18 +3311,18 @@ sub
 stloc.1
 call B`2 get_i()
 dup
-brtrue.s _label10
+brtrue.s IfNotNull_10
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label12
+bge.s enoughAvailable_12
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -3359,12 +3359,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label11
+br ifNull_11
 
-_label10:
+IfNotNull_10:
 ldloc.1
 ldc.i4.s 16
-bge.s _label13
+bge.s enoughAvailable_13
 pop
 pop
 ldarg.2
@@ -3372,7 +3372,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label13:
+enoughAvailable_13:
 ldloc.0
 dup
 ldc.i4.1
@@ -3424,7 +3424,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label14
+bgt.s success_14
 pop
 pop
 pop
@@ -3433,7 +3433,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label14:
+success_14:
 dup
 conv.i
 ldloc.0
@@ -3446,7 +3446,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 10
-bge.s _label15
+bge.s enoughAvailable_15
 pop
 pop
 ldarg.2
@@ -3454,7 +3454,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label15:
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -3501,18 +3501,18 @@ sub
 stloc.1
 call B`2 get_j()
 dup
-brtrue.s _label16
+brtrue.s IfNotNull_16
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label18
+bge.s enoughAvailable_18
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label18:
+enoughAvailable_18:
 ldloc.0
 dup
 ldc.i4.1
@@ -3549,12 +3549,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label17
+br ifNull_17
 
-_label16:
+IfNotNull_16:
 ldloc.1
 ldc.i4.s 14
-bge.s _label19
+bge.s enoughAvailable_19
 pop
 pop
 ldarg.2
@@ -3562,7 +3562,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label19:
+enoughAvailable_19:
 ldloc.0
 dup
 ldc.i4.1
@@ -3614,7 +3614,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label20
+bgt.s success_20
 pop
 pop
 pop
@@ -3623,7 +3623,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label20:
+success_20:
 dup
 conv.i
 ldloc.0
@@ -3636,7 +3636,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.8
-bge.s _label21
+bge.s enoughAvailable_21
 pop
 pop
 ldarg.2
@@ -3644,7 +3644,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label21:
+enoughAvailable_21:
 ldloc.0
 dup
 ldc.i4.1
@@ -3694,18 +3694,18 @@ stloc.2
 ldloca.s 2
 dup
 call Boolean get_HasValue()
-brtrue.s _label23
+brtrue.s hasValueTrue_24
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label24
+bge.s enoughAvailable_25
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label24:
+enoughAvailable_25:
 ldloc.0
 dup
 ldc.i4.1
@@ -3742,16 +3742,16 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s _label22
+br.s ifNull_23
 
-_label23:
+hasValueTrue_24:
 call System.Guid GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label25
+bgt.s success_26
 pop
 pop
 ldarg.2
@@ -3759,7 +3759,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label25:
+success_26:
 dup
 conv.i
 ldloc.0
@@ -3771,17 +3771,17 @@ ldloc.1
 add
 stloc.1
 
-_label22:
+ifNull_23:
 ldloc.1
 ldc.i4.1
-bge.s _label26
+bge.s enoughAvailable_27
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label26:
+enoughAvailable_27:
 ldloc.0
 dup
 ldc.i4.1
@@ -3795,17 +3795,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label17:
+ifNull_17:
 ldloc.1
 ldc.i4.1
-bge.s _label27
+bge.s enoughAvailable_28
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label27:
+enoughAvailable_28:
 ldloc.0
 dup
 ldc.i4.1
@@ -3819,17 +3819,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label11:
+ifNull_11:
 ldloc.1
 ldc.i4.1
-bge.s _label28
+bge.s enoughAvailable_29
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label28:
+enoughAvailable_29:
 ldloc.0
 dup
 ldc.i4.1
@@ -3843,17 +3843,17 @@ ldc.i4.1
 sub
 stloc.1
 
-_label7:
+ifNull_7:
 ldloc.1
 ldc.i4.1
-bge.s _label29
+bge.s enoughAvailable_30
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label29:
+enoughAvailable_30:
 ldloc.0
 dup
 ldc.i4.1
@@ -3869,7 +3869,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -3884,7 +3884,7 @@ ldarg.0
 ldobj System.Collections.Generic.KeyValuePair`2[System.Int32,System.Int32]
 ldloc.1
 ldc.i4.s 19
-bge.s _label0
+bge.s enoughAvailable_0
 pop
 pop
 ldarg.2
@@ -3892,7 +3892,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label0:
+enoughAvailable_0:
 ldloc.0
 dup
 ldc.i4.1
@@ -3962,7 +3962,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label1
+bgt.s success_2
 pop
 pop
 pop
@@ -3971,7 +3971,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label1:
+success_2:
 dup
 conv.i
 ldloc.0
@@ -3984,7 +3984,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 11
-bge.s _label2
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -3992,7 +3992,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -4077,7 +4077,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label3
+bgt.s success_5
 pop
 pop
 ldarg.2
@@ -4085,7 +4085,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+success_5:
 dup
 conv.i
 ldloc.0
@@ -4098,14 +4098,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label4
+bge.s enoughAvailable_6
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label4:
+enoughAvailable_6:
 ldloc.0
 dup
 ldc.i4.1
@@ -4133,18 +4133,18 @@ ldloc.1
 ldarg.0
 dup
 call Boolean get_HasValue()
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -4182,13 +4182,13 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 call System.Collections.Generic.KeyValuePair`2[System.Int32,System.Int32] GetValueOrDefault()
 ldloc.1
 ldc.i4.s 19
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -4196,7 +4196,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -4266,7 +4266,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_5
 pop
 pop
 pop
@@ -4275,7 +4275,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_5:
 dup
 conv.i
 ldloc.0
@@ -4288,7 +4288,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 11
-bge.s _label5
+bge.s enoughAvailable_6
 pop
 pop
 ldarg.2
@@ -4296,7 +4296,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_6:
 ldloc.0
 dup
 ldc.i4.1
@@ -4381,7 +4381,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label6
+bgt.s success_8
 pop
 pop
 ldarg.2
@@ -4389,7 +4389,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label6:
+success_8:
 dup
 conv.i
 ldloc.0
@@ -4402,14 +4402,14 @@ add
 stloc.1
 ldloc.1
 ldc.i4.1
-bge.s _label7
+bge.s enoughAvailable_9
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -4425,7 +4425,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -4440,7 +4440,7 @@ ldarg.0
 ldobj Cameronism.Json.Tests.DelegateBuilderTest+MyStructWithFields`3[System.Int32,System.Nullable`1[System.Int32],System.String]
 ldloc.1
 ldc.i4.s 20
-bge.s _label0
+bge.s enoughAvailable_0
 pop
 pop
 ldarg.2
@@ -4448,7 +4448,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label0:
+enoughAvailable_0:
 ldloc.0
 dup
 ldc.i4.1
@@ -4500,7 +4500,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label1
+bgt.s success_1
 pop
 pop
 pop
@@ -4509,7 +4509,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label1:
+success_1:
 dup
 conv.i
 ldloc.0
@@ -4522,7 +4522,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 14
-bge.s _label2
+bge.s enoughAvailable_2
 pop
 pop
 ldarg.2
@@ -4530,7 +4530,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -4582,7 +4582,7 @@ ldloc.1
 call Int32 WriteStringUtf8(System.String, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label3
+bgt.s success_3
 pop
 pop
 pop
@@ -4591,7 +4591,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+success_3:
 dup
 conv.i
 ldloc.0
@@ -4604,7 +4604,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.7
-bge.s _label4
+bge.s enoughAvailable_4
 pop
 pop
 ldarg.2
@@ -4612,7 +4612,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+enoughAvailable_4:
 ldloc.0
 dup
 ldc.i4.1
@@ -4664,18 +4664,18 @@ stloc.3
 ldloca.s 3
 dup
 call Boolean get_HasValue()
-brtrue.s _label6
+brtrue.s hasValueTrue_8
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label7
+bge.s enoughAvailable_9
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -4712,16 +4712,16 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s _label5
+br.s ifNull_7
 
-_label6:
+hasValueTrue_8:
 call Int32 GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label8
+bgt.s success_10
 pop
 pop
 ldarg.2
@@ -4729,7 +4729,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+success_10:
 dup
 conv.i
 ldloc.0
@@ -4741,17 +4741,17 @@ ldloc.1
 add
 stloc.1
 
-_label5:
+ifNull_7:
 ldloc.1
 ldc.i4.1
-bge.s _label9
+bge.s enoughAvailable_11
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -4779,18 +4779,18 @@ ldloc.1
 ldarg.0
 dup
 call Boolean get_HasValue()
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -4828,13 +4828,13 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+IfNotNull_0:
 call MyStructWithFields`3 GetValueOrDefault()
 ldloc.1
 ldc.i4.s 20
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -4842,7 +4842,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -4894,7 +4894,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label4
+bgt.s success_4
 pop
 pop
 pop
@@ -4903,7 +4903,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label4:
+success_4:
 dup
 conv.i
 ldloc.0
@@ -4916,7 +4916,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.s 14
-bge.s _label5
+bge.s enoughAvailable_5
 pop
 pop
 ldarg.2
@@ -4924,7 +4924,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label5:
+enoughAvailable_5:
 ldloc.0
 dup
 ldc.i4.1
@@ -4976,7 +4976,7 @@ ldloc.1
 call Int32 WriteStringUtf8(System.String, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label6
+bgt.s success_6
 pop
 pop
 pop
@@ -4985,7 +4985,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label6:
+success_6:
 dup
 conv.i
 ldloc.0
@@ -4998,7 +4998,7 @@ add
 stloc.1
 ldloc.1
 ldc.i4.7
-bge.s _label7
+bge.s enoughAvailable_7
 pop
 pop
 ldarg.2
@@ -5006,7 +5006,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_7:
 ldloc.0
 dup
 ldc.i4.1
@@ -5058,18 +5058,18 @@ stloc.3
 ldloca.s 3
 dup
 call Boolean get_HasValue()
-brtrue.s _label9
+brtrue.s hasValueTrue_11
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label10
+bge.s enoughAvailable_12
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -5106,16 +5106,16 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s _label8
+br.s ifNull_10
 
-_label9:
+hasValueTrue_11:
 call Int32 GetValueOrDefault()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label11
+bgt.s success_13
 pop
 pop
 ldarg.2
@@ -5123,7 +5123,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label11:
+success_13:
 dup
 conv.i
 ldloc.0
@@ -5135,17 +5135,17 @@ ldloc.1
 add
 stloc.1
 
-_label8:
+ifNull_10:
 ldloc.1
 ldc.i4.1
-bge.s _label12
+bge.s enoughAvailable_14
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label12:
+enoughAvailable_14:
 ldloc.0
 dup
 ldc.i4.1
@@ -5161,7 +5161,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -5174,17 +5174,17 @@ stloc.1
 ldloc.1
 ldarg.0
 ldind.ref
-brtrue.s _label0
+brtrue.s IfNotNull_0
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -5222,19 +5222,19 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br.s _label1
+br.s ifNull_1
 
-_label0:
+IfNotNull_0:
 ldloc.1
 ldc.i4.2
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -5258,7 +5258,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -5272,18 +5272,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -5321,12 +5321,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -5334,7 +5334,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -5349,14 +5349,14 @@ sub
 stloc.1
 ldc.i4.0
 stloc.2
-br.s _label4
+br.s endLoop_4
 
-_label5:
+beginLoop_5:
 ldloc.2
-brfalse.s _label6
+brfalse.s afterComma_7
 ldloc.1
 ldc.i4.1
-bge.s _label7
+bge.s enoughAvailable_8
 pop
 pop
 ldarg.2
@@ -5364,7 +5364,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -5378,7 +5378,7 @@ ldc.i4.1
 sub
 stloc.1
 
-_label6:
+afterComma_7:
 dup
 ldloc.2
 ldelem.i4
@@ -5387,7 +5387,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label8
+bgt.s success_9
 pop
 pop
 pop
@@ -5396,7 +5396,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label8:
+success_9:
 dup
 conv.i
 ldloc.0
@@ -5412,23 +5412,23 @@ ldc.i4.1
 add
 stloc.2
 
-_label4:
+endLoop_4:
 dup
 ldlen
 conv.i4
 ldloc.2
-bgt.s _label5
+bgt.s beginLoop_5
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label9
+bge.s enoughAvailable_10
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label9:
+enoughAvailable_10:
 ldloc.0
 dup
 ldc.i4.1
@@ -5444,7 +5444,7 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
 
@@ -5458,18 +5458,18 @@ ldloc.1
 ldarg.0
 ldind.ref
 dup
-brtrue.s _label0
+brtrue.s ifNotNull_0
 pop
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label2
+bge.s enoughAvailable_2
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label2:
+enoughAvailable_2:
 ldloc.0
 dup
 ldc.i4.1
@@ -5507,12 +5507,12 @@ ldc.i4.4
 sub
 stloc.1
 ldc.i4.4
-br _label1
+br ifNull_1
 
-_label0:
+ifNotNull_0:
 ldloc.1
 ldc.i4.1
-bge.s _label3
+bge.s enoughAvailable_3
 pop
 pop
 ldarg.2
@@ -5520,7 +5520,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label3:
+enoughAvailable_3:
 ldloc.0
 dup
 ldc.i4.1
@@ -5535,14 +5535,14 @@ sub
 stloc.1
 ldc.i4.0
 stloc.2
-br _label4
+br endLoop_4
 
-_label5:
+beginLoop_5:
 ldloc.2
-brfalse.s _label6
+brfalse.s afterComma_7
 ldloc.1
 ldc.i4.1
-bge.s _label7
+bge.s enoughAvailable_8
 pop
 pop
 ldarg.2
@@ -5550,7 +5550,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label7:
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -5564,16 +5564,16 @@ ldc.i4.1
 sub
 stloc.1
 
-_label6:
+afterComma_7:
 dup
 ldloc.2
 ldelem.ref
 dup
-brtrue.s _label8
+brtrue.s ifNotNull_9
 pop
 ldloc.1
 ldc.i4.4
-bge.s _label10
+bge.s enoughAvailable_11
 pop
 pop
 ldarg.2
@@ -5581,7 +5581,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label10:
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -5618,12 +5618,12 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br _label9
+br ifNull_10
 
-_label8:
+ifNotNull_9:
 ldloc.1
 ldc.i4.1
-bge.s _label11
+bge.s enoughAvailable_12
 pop
 pop
 pop
@@ -5632,7 +5632,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label11:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -5647,14 +5647,14 @@ sub
 stloc.1
 ldc.i4.0
 stloc.3
-br.s _label12
+br.s endLoop_13
 
-_label13:
+beginLoop_14:
 ldloc.3
-brfalse.s _label14
+brfalse.s afterComma_16
 ldloc.1
 ldc.i4.1
-bge.s _label15
+bge.s enoughAvailable_17
 pop
 pop
 pop
@@ -5663,7 +5663,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label15:
+enoughAvailable_17:
 ldloc.0
 dup
 ldc.i4.1
@@ -5677,7 +5677,7 @@ ldc.i4.1
 sub
 stloc.1
 
-_label14:
+afterComma_16:
 dup
 ldloc.3
 ldelem.i4
@@ -5686,7 +5686,7 @@ ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s _label16
+bgt.s success_18
 pop
 pop
 pop
@@ -5696,7 +5696,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label16:
+success_18:
 dup
 conv.i
 ldloc.0
@@ -5712,16 +5712,16 @@ ldc.i4.1
 add
 stloc.3
 
-_label12:
+endLoop_13:
 dup
 ldlen
 conv.i4
 ldloc.3
-bgt.s _label13
+bgt.s beginLoop_14
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label17
+bge.s enoughAvailable_19
 pop
 pop
 ldarg.2
@@ -5729,7 +5729,7 @@ ldc.i4.s 254
 mul
 ret
 
-_label17:
+enoughAvailable_19:
 ldloc.0
 dup
 ldc.i4.1
@@ -5743,29 +5743,29 @@ ldc.i4.1
 sub
 stloc.1
 
-_label9:
+ifNull_10:
 ldloc.2
 ldc.i4.1
 add
 stloc.2
 
-_label4:
+endLoop_4:
 dup
 ldlen
 conv.i4
 ldloc.2
-bgt _label5
+bgt beginLoop_5
 pop
 ldloc.1
 ldc.i4.1
-bge.s _label18
+bge.s enoughAvailable_20
 pop
 ldarg.2
 ldc.i4.s 254
 mul
 ret
 
-_label18:
+enoughAvailable_20:
 ldloc.0
 dup
 ldc.i4.1
@@ -5781,6 +5781,6 @@ stloc.1
 ldloc.1
 sub
 
-_label1:
+ifNull_1:
 ret
 
