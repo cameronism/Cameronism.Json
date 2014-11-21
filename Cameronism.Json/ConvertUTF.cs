@@ -100,6 +100,7 @@ namespace Cameronism.Json
 		const int firstByteMark_3 = 0xE0;
 		const int firstByteMark_4 = 0xF0;
 
+		#region stream
 		public unsafe static void WriteToStreamUtf8(string value, Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
 		{
 			if (value == null)
@@ -108,14 +109,59 @@ namespace Cameronism.Json
 				return;
 			}
 
-			throw new NotImplementedException();
+			var ptr = bufferOffset;
+			var bufferStart = GetStart(buffer, ptr, available);
+
+			// flush if there's not enough room for best case
+			if (available < value.Length + 2)
+			{
+				Flush(stream, buffer, (int)(ptr - bufferStart));
+				ptr = bufferStart;
+			}
+
+			*ptr++ = (byte)'"';
+
+			if (value.Length > 0)
+			{
+				fixed (char* ch = value)
+				{
+					ushort* sourceStart = (ushort*)ch;
+					ushort* sourceEnd = sourceStart + value.Length;
+					byte* targetEnd = bufferStart + buffer.Length - 1; // leave room for "
+
+					while (true)
+					{
+						byte* targetStart = ptr;
+						var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
+
+						ptr = targetStart;
+
+						if (result != ConversionResult.targetExhausted)
+						{
+							break;
+						}
+						Flush(stream, buffer, (int)(ptr - bufferStart));
+						ptr = bufferStart;
+					}
+				}
+			}
+
+			*ptr++ = (byte)'"';
+
+			bufferOffset = ptr;
+			available = buffer.Length - (int)(ptr - bufferStart);
 		}
 
 		unsafe static void NullToStreamUtf8(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
 		{
-			if (available < 4) Flush(stream, buffer, ref available, ref bufferOffset);
-
 			var ptr = bufferOffset;
+			var bufferStart = GetStart(buffer, ptr, available);
+
+			if (available < 4)
+			{
+				Flush(stream, buffer, (int)(ptr - bufferStart));
+				ptr = bufferStart;
+			}
 
 			*(ptr + 0) = (byte)'n';
 			*(ptr + 1) = (byte)'u';
@@ -123,13 +169,19 @@ namespace Cameronism.Json
 			*(ptr + 3) = (byte)'l';
 
 			bufferOffset = ptr + 4;
-			available -= 4;
+			available = buffer.Length - (int)((ptr + 4) - bufferStart);
 		}
 
-		static void Flush(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
+		static byte* GetStart(byte[] buffer, byte* offset, int available)
 		{
-			throw new NotImplementedException();
+			return offset - (buffer.Length - available);
 		}
+
+		static void Flush(Stream stream, byte[] buffer, int count)
+		{
+			if (count > 0) stream.Write(buffer, 0, count);
+		}
+		#endregion
 
 		[ValueWriter(MinLength=3, MaxLength=8)] // max "\u0000"
 		public unsafe static int WriteCharUtf8(char value, byte* dst, int avail)
@@ -182,7 +234,7 @@ namespace Cameronism.Json
 				// optimistic
 				ptr = targetStart;
 				
-				if (result == ConvertUTF.ConversionResult.targetExhausted)
+				if (result == ConversionResult.targetExhausted)
 				{
 					// pessimistic estimate: 4x the number of unconverted chars + what we started with
 					return -(avail + 4 * (int)(sourceEnd - sourceStart));

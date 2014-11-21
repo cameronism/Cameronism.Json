@@ -109,15 +109,15 @@ namespace Cameronism.Json.Tests
 			var sw = new StringWriter();
 			var ms = new StreamSpy(new MemoryStream(), sw);
 
-			AssertValue(1, "1", ms);
-			AssertValue(true, "true", ms);
-			AssertValue(false, "false", ms);
+			AssertNullableValue(1, "1", ms);
+			AssertNullableValue(true, "true", ms);
+			AssertNullableValue(false, "false", ms);
 
 			var g = Guid.Parse("171d7051-0c40-4475-9568-e8df9da1fb53");
-			AssertValue(g, "\"" + g + "\"", ms);
+			AssertNullableValue(g, "\"" + g + "\"", ms);
 
 			var d = new DateTime(2014, 11, 18, 7, 42, 41, 111, DateTimeKind.Utc);
-			AssertValue(d, Newtonsoft.Json.JsonConvert.SerializeObject(d), ms);
+			AssertNullableValue(d, Newtonsoft.Json.JsonConvert.SerializeObject(d), ms);
 
 			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
@@ -205,10 +205,92 @@ namespace Cameronism.Json.Tests
 			ToJson<string>(null, ms, out instructions);
 			sb.AppendLine(instructions);
 
+			sb.AppendLine();
+			sb.AppendLine("# string[]");
+			sb.AppendLine();
+			ToJson<string[]>(null, ms, out instructions);
+			sb.AppendLine(instructions);
+
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
-		void AssertValue<T>(T value, string expected, StreamSpy ms) where T : struct
+		[Fact]
+		public void DirectStrings()
+		{
+			var sw = new StringWriter();
+			var ss = new StreamSpy(new MemoryStream(), sw);
+
+			string theValue;
+
+			theValue = null;
+			AssertString(theValue, "null", ss);
+
+			theValue = "";
+			AssertString(theValue, "empty string", ss);
+
+			theValue = "a";
+			AssertString(theValue, "a", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("a", 62));
+			AssertString(theValue, "a * 62", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("a", 63));
+			AssertString(theValue, "a * 63", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("a", 124));
+			AssertString(theValue, "a * 124", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("a", 125));
+			AssertString(theValue, "a * 125", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("a", 126));
+			AssertString(theValue, "a * 126", ss);
+
+			theValue = ((char)0).ToString();
+			AssertString(theValue, "(char)0", ss);
+
+			theValue = String.Concat(Enumerable.Repeat(((char)0).ToString(), 10));
+			AssertString(theValue, "(char)0 * 10", ss);
+
+			theValue = String.Concat(Enumerable.Repeat(((char)0).ToString(), 11));
+			AssertString(theValue, "(char)0 * 11", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("\"", 31));
+			AssertString(theValue, "\" * 31", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("\"", 32));
+			AssertString(theValue, "\" * 32", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("\u00EE", 32));
+			AssertString(theValue, "\\u00EE * 32", ss);
+
+			theValue = String.Concat(Enumerable.Repeat("𝕡𝕣𝕚𝕫𝕖", 8));
+			AssertString(theValue, "unicode 'prize' * 8", ss);
+
+			AssertValue(new[] { "one" }, "[ one ]", ss);
+
+			ApprovalTests.Approvals.Verify(sw.ToString());
+		}
+
+		void AssertString(string value, string description, StreamSpy ss)
+		{
+			string instructions;
+			var json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+			ss.Log.WriteLine("# " + description);
+			Assert.Equal(json, ToJson(value, ss, out instructions));
+			ss.Log.WriteLine();
+		}
+
+		void AssertValue<T>(T value, string description, StreamSpy ss)
+		{
+			string instructions;
+			var json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+			ss.Log.WriteLine("# " + description);
+			Assert.Equal(json, ToJson(value, ss, out instructions));
+			ss.Log.WriteLine();
+		}
+
+		void AssertNullableValue<T>(T value, string expected, StreamSpy ms) where T : struct
 		{
 			ms.Log.WriteLine("# " + expected);
 			Assert.Equal(expected, ToJson(value, ms));

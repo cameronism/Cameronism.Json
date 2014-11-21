@@ -92,6 +92,13 @@ namespace Cameronism.Json
 			{
 				if (destination == DestinationType.Stream)
 				{
+					if (!simpleWriter.MaxLength.HasValue)
+					{
+						// special case writers that might have to Flush multiple times
+						builder.EmitSimpleStream(schema, simpleWriter);
+						return emit;
+					}
+
 					builder.LocalAvailable = emit.DeclareLocal(typeof(int), "available");
 
 					builder.PushTotalAvailable();
@@ -275,9 +282,7 @@ namespace Cameronism.Json
 			Emit.LoadConstant(0);
 
 			// buffer.Length - available
-			Emit.LoadArgument(ARG_BUFFER);
-			Emit.LoadLength(typeof(byte));
-			Emit.Convert<int>();
+			PushTotalAvailable();
 			Emit.LoadLocal(LocalAvailable);
 			Emit.Subtract();
 			// call .Write
@@ -333,7 +338,7 @@ namespace Cameronism.Json
 
 			CallWriter(writer, effective, false);
 
-			if (Destination == DestinationType.Stream) Flush(writtenTop: effective != typeof(string));
+			if (Destination == DestinationType.Stream) Flush();
 
 			Emit.Return();
 		}
@@ -397,23 +402,26 @@ namespace Cameronism.Json
 				Emit.MarkLabel(success);
 			}
 
-			Emit.Duplicate(); // preserve written count
+			if (Destination == DestinationType.Pointer || writer.MaxLength.HasValue)
+			{
+				Emit.Duplicate(); // preserve written count
 
-			// advance LocalDestination
-			Emit.Convert<IntPtr>();
-			Emit.LoadLocal(LocalDestination);
-			Emit.Add();
-			Emit.StoreLocal(LocalDestination);
+				// advance LocalDestination
+				Emit.Convert<IntPtr>();
+				Emit.LoadLocal(LocalDestination);
+				Emit.Add();
+				Emit.StoreLocal(LocalDestination);
 
 
-			// Emit.Duplicate(); // preserve written count
+				// Emit.Duplicate(); // preserve written count
 
-			// decrement LocalAvailable
-			Emit.LoadConstant(-1);
-			Emit.Multiply();
-			Emit.LoadLocal(LocalAvailable);
-			Emit.Add();
-			Emit.StoreLocal(LocalAvailable);
+				// decrement LocalAvailable
+				Emit.LoadConstant(-1);
+				Emit.Multiply();
+				Emit.LoadLocal(LocalAvailable);
+				Emit.Add();
+				Emit.StoreLocal(LocalAvailable);
+			}
 
 
 			if (underlying != null)
@@ -434,55 +442,70 @@ namespace Cameronism.Json
 				throw new NotImplementedException();
 			}
 
-			if (effective == typeof(string) && Destination == DestinationType.Stream)
+			if (Destination == DestinationType.Pointer || writer.MaxLength.HasValue)
 			{
-				CallStringStreamWriter(writer, effective, useLocals);
-				return;
-			}
-
-			var firstArg = writer.MethodInfo.GetParameters()[0].ParameterType;
-			if (firstArg != effective)
-			{
-				Emit.Convert(firstArg);
-			}
-
-			if (useLocals)
-			{
-				Emit.LoadLocal(LocalDestination);
-				Emit.LoadLocal(LocalAvailable);
-			}
-			else
-			{
-				Emit.LoadArgument(1);
-				if (Destination == DestinationType.Pointer)
+				var firstArg = writer.MethodInfo.GetParameters()[0].ParameterType;
+				if (firstArg != effective)
 				{
-					Emit.LoadArgument(2);
+					Emit.Convert(firstArg);
+				}
+
+				if (useLocals)
+				{
+					Emit.LoadLocal(LocalDestination);
+					Emit.LoadLocal(LocalAvailable);
 				}
 				else
 				{
-					Emit.LoadLocal(LocalAvailable);
+					Emit.LoadArgument(1);
+					if (Destination == DestinationType.Pointer)
+					{
+						Emit.LoadArgument(2);
+					}
+					else
+					{
+						Emit.LoadLocal(LocalAvailable);
+					}
 				}
+			}
+			else
+			{
+				Emit.LoadArgument(ARG_STREAM);
+				Emit.LoadArgument(ARG_BUFFER);
+				Emit.LoadLocalAddress(LocalAvailable);
+				Emit.LoadLocalAddress(LocalDestination);
 			}
 
 			Emit.Call(writer.MethodInfo);
 		}
 
-		void CallStringStreamWriter(ValueWriter writer, Type effective, bool useLocals)
+		void EmitSimpleStream(Schema schema, ValueWriter writer)
 		{
+			// push *value
+			Emit.LoadArgument(0);
+			LoadIndirect(schema.NetType);
+
+			// push stream
 			Emit.LoadArgument(ARG_STREAM);
+
+			// push buffer
 			Emit.LoadArgument(ARG_BUFFER);
+
+			// push &available
+			LocalAvailable = Emit.DeclareLocal(typeof(int), "available");
+			PushTotalAvailable();
+			Emit.StoreLocal(LocalAvailable);
 			Emit.LoadLocalAddress(LocalAvailable);
 
-			if (LocalDestination != null)
-			{
-				Emit.LoadLocalAddress(LocalDestination);
-			}
-			else
-			{
-				Emit.LoadArgumentAddress(ARG_POINTER);
-			}
+			// push &ptr;
+			Emit.LoadArgumentAddress(ARG_POINTER);
 
+			// call writer
 			Emit.Call(writer.MethodInfo);
+
+			Flush(resetAvailable: false, writtenTop: false);
+
+			Emit.Return();
 		}
 
 		void PushDestinationAvailable(bool useLocals)

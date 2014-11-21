@@ -1,0 +1,58 @@
+﻿# null
+Stream.Write({ Type = byte[], Length = 64 }, 0, 4)
+
+# empty string
+Stream.Write({ Type = byte[], Length = 64 }, 0, 2)
+
+# a
+Stream.Write({ Type = byte[], Length = 64 }, 0, 3)
+
+# a * 62
+Stream.Write({ Type = byte[], Length = 64 }, 0, 64)
+
+# a * 63
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 2)
+
+# a * 124
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+
+# a * 125
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 64)
+
+# a * 126
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 2)
+
+# (char)0
+Stream.Write({ Type = byte[], Length = 64 }, 0, 8)
+
+# (char)0 * 10
+Stream.Write({ Type = byte[], Length = 64 }, 0, 62)
+
+# (char)0 * 11
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 7)
+
+# " * 31
+Stream.Write({ Type = byte[], Length = 64 }, 0, 64)
+
+# " * 32
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 3)
+
+# \u00EE * 32
+Stream.Write({ Type = byte[], Length = 64 }, 0, 63)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 3)
+
+# unicode 'prize' * 8
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 41)
+
+# [ one ]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 7)
+

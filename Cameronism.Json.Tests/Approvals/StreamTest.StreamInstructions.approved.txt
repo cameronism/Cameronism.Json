@@ -267,25 +267,235 @@ ret
 
 # string
 
-ldarg.3
-ldlen
-conv.i4
-stloc.0
 ldarg.0
 ldind.ref
 ldarg.2
 ldarg.3
+ldarg.3
+ldlen
+conv.i4
+stloc.0
 ldloca.s 0
 ldarga.s 1
 call Void WriteToStreamUtf8(System.String, System.IO.Stream, Byte[], Int32 ByRef, Byte* ByRef)
 ldarg.2
 ldarg.3
-ldc.i4.0 -- this is wrong
-we should add a special case for simple string since it's so different from the other simple writers
+ldc.i4.0
 ldarg.3
 ldlen
 conv.i4
 ldloc.0
+sub
+tail.callvirt Void Write(Byte[], Int32, Int32)
+ret
+
+
+# string[]
+
+ldarg.1
+stloc.0
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.0
+ldind.ref
+dup
+brtrue.s _label0
+pop
+ldloc.1
+ldc.i4.4
+bge.s _label2
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+br _label1
+
+_label0:
+ldloc.1
+ldc.i4.1
+bge.s _label3
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+ldc.i4.0
+stloc.2
+br.s _label4
+
+_label5:
+ldloc.2
+brfalse.s _label6
+ldloc.1
+ldc.i4.1
+bge.s _label7
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label7:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label6:
+dup
+ldloc.2
+ldelem.ref
+ldarg.2
+ldarg.3
+ldloca.s 1
+ldloca.s 0
+call Void WriteToStreamUtf8(System.String, System.IO.Stream, Byte[], Int32 ByRef, Byte* ByRef)
+ldloc.2
+ldc.i4.1
+add
+stloc.2
+
+_label4:
+dup
+ldlen
+conv.i4
+ldloc.2
+bgt.s _label5
+pop
+ldloc.1
+ldc.i4.1
+bge.s _label8
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+_label8:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+_label1:
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
 sub
 tail.callvirt Void Write(Byte[], Int32, Int32)
 ret
