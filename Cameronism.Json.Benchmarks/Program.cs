@@ -60,7 +60,7 @@ namespace Cameronism.Json.Benchmarks
 		}
 #endif
 
-		unsafe void CameronismJson<T>(T item, UnmanagedMemoryStream ms)
+		unsafe void CameronismPointer<T>(T item, UnmanagedMemoryStream ms)
 		{
 			int resul = Cameronism.Json.Serializer.Serialize(item, ms);
 			if (resul <= 0) throw new InsufficientMemoryException();
@@ -68,6 +68,11 @@ namespace Cameronism.Json.Benchmarks
 
 		static byte[] _Buffer;
 		unsafe void CameronismStream<T>(T item, UnmanagedMemoryStream ms)
+		{
+			Cameronism.Json.Serializer.Serialize(item, ms, _Buffer);
+		}
+
+		unsafe void CameronismFakeStream<T>(T item, UnmanagedMemoryStream ms)
 		{
 			var buffer = _Buffer;
 			fixed (byte* ptr = _Buffer)
@@ -110,8 +115,9 @@ namespace Cameronism.Json.Benchmarks
 #if FPBENCH
 				Brianary,
 #endif
-				CameronismJson,
+				CameronismPointer,
 				CameronismStream,
+				CameronismFakeStream,
 			};
 
 			var testGroup = new TestGroup(name);
