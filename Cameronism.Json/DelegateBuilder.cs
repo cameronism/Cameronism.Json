@@ -10,7 +10,6 @@ namespace Cameronism.Json
 {
 	internal unsafe class DelegateBuilder
 	{
-		internal static bool CompletelyIgnoringDipose = true; // FIXME
 		internal static bool UseSigilVerify = true;
 
 		// call one of the static create methods
@@ -725,7 +724,8 @@ namespace Cameronism.Json
 				PushAddress(enumeratorType);
 			}
 
-			var exceptionBlock = CompletelyIgnoringDipose || enumerable.Dispose == null ? null : Emit.BeginExceptionBlock();
+			// FIXME need to have some support for Dispose
+			//var exceptionBlock = enumerable.Dispose == null ? null : Emit.BeginExceptionBlock();
 
 			// unroll the first iteration so the loop can always write the comma
 
@@ -796,17 +796,17 @@ namespace Cameronism.Json
 
 			Emit.MarkLabel(closeArray);
 
-			if (exceptionBlock != null)
-			{
-				var f = Emit.BeginFinallyBlock(exceptionBlock);
-				CallCorrectly(enumerable.Dispose, enumeratorType);
-				Emit.EndFinallyBlock(f);
-				Emit.EndExceptionBlock(exceptionBlock);
-			}
-			else
-			{
-				Emit.Pop(); // discard enumerator
-			}
+			// this is where the finally block would go
+			//if (exceptionBlock != null)
+			//{
+			//	var f = Emit.BeginFinallyBlock(exceptionBlock);
+			//	CallCorrectly(enumerable.Dispose, enumeratorType);
+			//	Emit.EndFinallyBlock(f);
+			//	Emit.EndExceptionBlock(exceptionBlock);
+			//}
+			//else
+
+			Emit.Pop(); // discard enumerator
 
 			// end array
 			Depth--;

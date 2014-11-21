@@ -168,9 +168,45 @@ namespace Cameronism.Json.Tests
 				new { a = System.Net.IPAddress.Parse("1:2::3:4") },
 				new { a = System.Net.IPAddress.Parse("11AA:22BB::33CC:44DD") },
 				new { a = (System.Net.IPAddress)null });
+			failed += SerializeValues(sb, buffer, A(Guid.Empty, new List<System.Net.IPAddress> { null, System.Net.IPAddress.Any, System.Net.IPAddress.Broadcast }));
+			failed += SerializeValues(sb, buffer, A(true, Enumerable.Range(0, 16).ToDictionary(i => i.ToString())));
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");
+		}
+
+		[Fact]
+		public void BadUsage()
+		{
+			var badSchema = new Schema { JsonType = (JsonType)int.MaxValue };
+			Assert.Throws<ArgumentException>(() => DelegateBuilder.CreateStream<int>(badSchema));
+
+			badSchema = new Schema { JsonType = JsonType.Boolean, NetType = this.GetType() };
+			Assert.Throws<ArgumentException>(() => DelegateBuilder.CreateStream<int>(badSchema));
+
+			badSchema = new Schema
+			{
+				JsonType = JsonType.Array,
+				NetType = typeof(int[]),
+				Items = new Schema
+				{
+					JsonType = (JsonType)int.MaxValue,
+					NetType = typeof(int),
+				}
+			};
+			Assert.Throws<ArgumentException>(() => DelegateBuilder.CreateStream<int[]>(badSchema));
+
+			badSchema = new Schema
+			{
+				JsonType = JsonType.Array,
+				NetType = typeof(int[]),
+				Items = new Schema
+				{
+					JsonType = JsonType.Integer,
+					NetType = this.GetType(),
+				}
+			};
+			Assert.Throws<ArgumentException>(() => DelegateBuilder.CreateStream<int[]>(badSchema));
 		}
 
 		/// <summary>Return count of failed values</summary>

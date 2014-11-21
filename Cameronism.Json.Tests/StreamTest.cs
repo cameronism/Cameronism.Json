@@ -119,6 +119,8 @@ namespace Cameronism.Json.Tests
 			var d = new DateTime(2014, 11, 18, 7, 42, 41, 111, DateTimeKind.Utc);
 			AssertNullableValue(d, Newtonsoft.Json.JsonConvert.SerializeObject(d), ms);
 
+			AssertEqual("\"1.2.3.4\"", System.Net.IPAddress.Parse("1.2.3.4"), ms);
+
 			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
 
@@ -303,7 +305,7 @@ namespace Cameronism.Json.Tests
 		void AssertValue<T>(T value, string description, StreamSpy ss)
 		{
 			string instructions;
-			var json = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+			var json = Newtonsoft.Json.JsonConvert.SerializeObject(value, new NewtonsoftConverters.IPAddressConverter());
 			ss.Log.WriteLine("# " + description);
 			Assert.Equal(json, ToJson(value, ss, out instructions));
 			ss.Log.WriteLine();
