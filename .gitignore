@@ -7,3 +7,6 @@ packages/
 *.txt.bak
 *.received.txt
 *.nupkg
+_.*
+*.psess
+TestResults/
