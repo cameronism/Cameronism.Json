@@ -500,3 +500,220 @@ sub
 tail.callvirt Void Write(Byte[], Int32, Int32)
 ret
 
+
+# List<string>
+
+ldarg.1
+stloc.0
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.0
+ldind.ref
+dup
+brtrue.s ifNotNull_0
+pop
+ldloc.1
+ldc.i4.4
+bge.s enoughAvailable_2
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+enoughAvailable_2:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 110
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 117
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 108
+stind.i1
+ldloc.1
+ldc.i4.4
+sub
+stloc.1
+br ifNull_1
+
+ifNotNull_0:
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_3
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+enoughAvailable_3:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 91
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+call Enumerator GetEnumerator()
+stloc.2
+ldloca.s 2
+dup
+constrained. System.Collections.Generic.List`1+Enumerator[System.String]
+callvirt Boolean MoveNext()
+brfalse.s closeArray_6
+dup
+constrained. System.Collections.Generic.List`1+Enumerator[System.String]
+callvirt System.String get_Current()
+ldarg.2
+ldarg.3
+ldloca.s 1
+ldloca.s 0
+call Void WriteToStreamUtf8(System.String, System.IO.Stream, Byte[], Int32 ByRef, Byte* ByRef)
+br.s loopBottom_4
+
+loopTop_5:
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_8
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+enoughAvailable_8:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 44
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+dup
+constrained. System.Collections.Generic.List`1+Enumerator[System.String]
+callvirt System.String get_Current()
+ldarg.2
+ldarg.3
+ldloca.s 1
+ldloca.s 0
+call Void WriteToStreamUtf8(System.String, System.IO.Stream, Byte[], Int32 ByRef, Byte* ByRef)
+
+loopBottom_4:
+dup
+constrained. System.Collections.Generic.List`1+Enumerator[System.String]
+callvirt Boolean MoveNext()
+brtrue.s loopTop_5
+
+closeArray_6:
+pop
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_9
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1
+ldarg.1
+stloc.0
+
+enoughAvailable_9:
+ldloc.0
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0
+ldc.i4.s 93
+stind.i1
+ldloc.1
+ldc.i4.1
+sub
+stloc.1
+
+ifNull_1:
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1
+sub
+tail.callvirt Void Write(Byte[], Int32, Int32)
+ret
+

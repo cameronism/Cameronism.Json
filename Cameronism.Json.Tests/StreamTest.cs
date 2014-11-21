@@ -211,6 +211,12 @@ namespace Cameronism.Json.Tests
 			ToJson<string[]>(null, ms, out instructions);
 			sb.AppendLine(instructions);
 
+			sb.AppendLine();
+			sb.AppendLine("# List<string>");
+			sb.AppendLine();
+			ToJson<List<string>>(null, ms, out instructions);
+			sb.AppendLine(instructions);
+
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
@@ -268,6 +274,19 @@ namespace Cameronism.Json.Tests
 			AssertString(theValue, "unicode 'prize' * 8", ss);
 
 			AssertValue(new[] { "one" }, "[ one ]", ss);
+
+			List<string> xs;
+
+			xs = Enumerable.Range(0, 26).Select(i => i.ToString()).ToList();
+			AssertValue(xs, "[ \"0\", ... , \"25\" ]", ss);
+
+			xs = Enumerable.Range(0, 27).Select(i => i.ToString()).ToList();
+			AssertValue(xs, "[ \"0\", ... , \"26\" ]", ss);
+
+			xs = Enumerable.Range(0, 192).Select(i => ((char)i).ToString()).ToList();
+			AssertValue(xs, "[ \"\\u0000\", ... , \"\\u00bf\" ]", ss);
+
+			AssertValue(A("b", "c"), "{ i: b, j: c }", ss);
 
 			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
