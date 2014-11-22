@@ -209,6 +209,15 @@ namespace Cameronism.Json.Tests
 			Assert.Throws<ArgumentException>(() => DelegateBuilder.CreateStream<int[]>(badSchema));
 		}
 
+		[Fact]
+		public void ValueWriterBasics()
+		{
+			var defaultInt = ValueWriter.Lookup.Default<int>();
+			var defaultLong = ValueWriter.Lookup.Default<long>();
+
+			Assert.False(defaultInt.Equals(defaultLong));
+		}
+
 		/// <summary>Return count of failed values</summary>
 		static int SerializeValues<T>(StringBuilder sb, byte[] buffer, params T[] values)
 		{

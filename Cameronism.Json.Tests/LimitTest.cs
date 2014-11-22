@@ -51,9 +51,7 @@ namespace Cameronism.Json.Tests
 			Assert.Equal(0, ConvertUTF.EscapeJson("a", null));
 			Assert.Equal(1, ConvertUTF.EscapeJson("a", _Buffer));
 			Assert.Equal(0, ConvertUTF.EscapeJson("\uD800", _Buffer)); // lonely high surrogate
-
-			// unicode replacement char?
-			//Assert.Equal(3, ConvertUTF.EscapeJson("\uDBFF\uDFFF", _Buffer));
+			Assert.Equal(4, ConvertUTF.EscapeJson("\uDBFF\uDFFF", _Buffer)); // real high surrogate
 		}
 
 		unsafe static void Describe<T>(T value, StringBuilder sb, int count)

@@ -10,6 +10,13 @@ namespace Cameronism.Json.Tests
 {
 	public class SchemaTest
 	{
+		interface IMarker<T>
+		{
+		}
+
+		class Marked : IMarker<int>
+		{
+		}
 
 		[System.Runtime.Serialization.DataContract]
 		public class ExplicitDataMemberOrder
@@ -20,6 +27,24 @@ namespace Cameronism.Json.Tests
 			public int B;
 			[System.Runtime.Serialization.DataMember(Order=1)]
 			public int A;
+		}
+
+		[System.Runtime.Serialization.DataContract]
+		public class DataMemberSomeOrder
+		{
+			[System.Runtime.Serialization.DataMember]
+			public int C { get; set; }
+			[System.Runtime.Serialization.DataMember(Order=2)]
+			public int B;
+			[System.Runtime.Serialization.DataMember(Order=1)]
+			public int A;
+		}
+
+		[System.Runtime.Serialization.DataContract]
+		public class NoDataMember
+		{
+			public int A;
+			public int B { get; set; }
 		}
 
 		public static string HumanName(Type t)
@@ -126,6 +151,10 @@ namespace Cameronism.Json.Tests
 				typeof(System.Net.IPAddress),
 
 				typeof(ExplicitDataMemberOrder),
+				typeof(DataMemberSomeOrder),
+				typeof(NoDataMember),
+
+				typeof(Marked),
 			})
 			{
 				var schema = Cameronism.Json.Schema.Reflect(t);
@@ -139,6 +168,34 @@ namespace Cameronism.Json.Tests
 
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
+		}
+
+		[Fact]
+		public void MinimumLengthCalculation()
+		{
+			Schema schema;
+
+			schema = new Schema
+			{
+				JsonType = (JsonType)int.MaxValue,
+			};
+			Assert.Throws<ArgumentException>(() => schema.CalculateMinimumLength());
+
+
+			schema = new Schema
+			{
+				JsonType = JsonType.Object,
+				Members = new KeyValuePair<string, Schema>[0],
+			};
+			Assert.Equal(2, schema.CalculateMinimumLength());
+
+
+			schema = new Schema
+			{
+				JsonType = JsonType.Object,
+				Members = null,
+			};
+			Assert.Throws<ArgumentException>(() => schema.CalculateMinimumLength());
 		}
 	}
 }

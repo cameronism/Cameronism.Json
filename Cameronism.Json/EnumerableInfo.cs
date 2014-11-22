@@ -34,21 +34,7 @@ namespace Cameronism.Json
 				getEnumeratorCandidates.Add(genericEnumerable.GetMethod("GetEnumerator"));
 			}
 
-			getEnumeratorCandidates.Sort((m1, m2) =>
-			{
-				// prefer the public method
-				if (m1.IsPublic != m2.IsPublic) return m1.IsPublic ? -1 : 1;
-
-				var r1 = m1.ReturnType;
-				var r2 = m2.ReturnType;
-				// prefer the concrete type
-				if (r1.IsInterface != r2.IsInterface) return r1.IsInterface ? 1 : -1;
-
-				// prefer the struct
-				if (r1.IsValueType != r2.IsValueType) return r1.IsValueType ? 1 : -1;
-
-				return 0;
-			});
+			getEnumeratorCandidates.Sort(SortEnumeratorCandidates);
 
 			ie.GetEnumerator = getEnumeratorCandidates.FirstOrDefault();
 
@@ -82,6 +68,22 @@ namespace Cameronism.Json
 			}
 
 			return ie;
+		}
+
+		public static int SortEnumeratorCandidates(MethodInfo m1, MethodInfo m2)
+		{
+			// prefer the public method
+			if (m1.IsPublic != m2.IsPublic) return m1.IsPublic ? -1 : 1;
+
+			var r1 = m1.ReturnType;
+			var r2 = m2.ReturnType;
+			// prefer the concrete type
+			if (r1.IsInterface != r2.IsInterface) return r1.IsInterface ? 1 : -1;
+
+			// prefer the struct
+			if (r1.IsValueType != r2.IsValueType) return r1.IsValueType ? -1 : 1;
+
+			return 0;
 		}
 
 		static Type GetGenericEnumerable(Type t)

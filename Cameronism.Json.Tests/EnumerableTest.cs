@@ -128,6 +128,7 @@ namespace Cameronism.Json.Tests
 				typeof(IReadOnlyCollection<ushort>),
 				typeof(IReadOnlyList<long>),
 				typeof(IList<ulong>),
+				this.GetType(), // throw in something non enumerable
 			})
 			{
 				var methods = EnumerableInfo.FindMethods(type);
@@ -260,5 +261,27 @@ namespace Cameronism.Json.Tests
 			return DelegateBuilderTest.SerializeValues(sb, buffer, values, approveIL);
 		}
 
+		class MethodBucket
+		{
+			public int _1 () { return 0; }
+			public string _2 () { return null; }
+			public IDisposable _3() { return null; }
+			private int _4() { return 0; }
+			private IDisposable _5() { return null; }
+		}
+
+		[Fact]
+		public void VerifyGetEnumeratorOrder()
+		{
+			// repeat it several times so that we try both directions of all comparisons
+			var methods = Enumerable.Repeat(typeof(MethodBucket).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly), 16)
+				.SelectMany(xs => xs)
+				.ToArray();
+
+			var expectedOrder = methods.OrderBy(mi => int.Parse(mi.Name.Substring(1))).ToList();
+			Array.Sort(methods, EnumerableInfo.SortEnumeratorCandidates);
+
+			Assert.Equal(expectedOrder.Select(mi => mi.Name), methods.Select(mi => mi.Name), StringComparer.Ordinal);
+		}
 	}
 }

@@ -262,3 +262,20 @@ IsVirtual: True
 Declaring Type: System.IDisposable
 
 
+# Cameronism.Json.Tests.EnumerableTest
+## GetEnumerator
+`null`
+
+## MoveNext
+`null`
+
+## get_Current
+`null`
+
+## get_Count
+`null`
+
+## Dispose
+`null`
+
+

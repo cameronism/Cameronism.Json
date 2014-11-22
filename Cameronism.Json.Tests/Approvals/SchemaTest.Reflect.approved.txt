@@ -791,3 +791,124 @@
   "FieldInfo": null,
   "PropertyInfo": null
 }
+
+
+# Cameronism.Json.Tests.SchemaTest+DataMemberSomeOrder
+{
+  "NetType": "Cameronism.Json.Tests.SchemaTest+DataMemberSomeOrder",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "A",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "A",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    },
+    {
+      "Key": "B",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "B",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    },
+    {
+      "Key": "C",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "C",
+          "MemberType": "System.Int32"
+        }
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# Cameronism.Json.Tests.SchemaTest+NoDataMember
+{
+  "NetType": "Cameronism.Json.Tests.SchemaTest+NoDataMember",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [
+    {
+      "Key": "A",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": {
+          "Name": "A",
+          "MemberType": "System.Int32"
+        },
+        "PropertyInfo": null
+      }
+    },
+    {
+      "Key": "B",
+      "Value": {
+        "NetType": "System.Int32",
+        "JsonType": "Integer",
+        "Nullable": false,
+        "Items": null,
+        "Keys": null,
+        "Members": null,
+        "FieldInfo": null,
+        "PropertyInfo": {
+          "Name": "B",
+          "MemberType": "System.Int32"
+        }
+      }
+    }
+  ],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}
+
+
+# Cameronism.Json.Tests.SchemaTest+Marked
+{
+  "NetType": "Cameronism.Json.Tests.SchemaTest+Marked",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": null,
+  "Keys": null,
+  "Members": [],
+  "FieldInfo": null,
+  "PropertyInfo": null
+}

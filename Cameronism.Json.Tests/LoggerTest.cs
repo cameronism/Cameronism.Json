@@ -414,21 +414,36 @@ namespace Cameronism.Json.Tests
 				{
 					var files = new List<FileStream>();
 
+					var myException = new IndexOutOfRangeException();
+					var errors = new List<Exception>();
+
 					using (var logger = Logger.Create<Guid>(
 						fs =>
 						{
 							files.Add(fs);
+
 							ss.Release();
+							if (files.Count == 1)
+							{
+								throw myException;
+							}
 						},
 						ushort.MaxValue,
 						logDirectory: dir.Info.FullName))
 					{
+						logger.ErrorLogger = (ex, msg) => errors.Add(ex);
 						logger.Interval = TimeSpan.FromMilliseconds(1);
 						var g = Guid.NewGuid();
 
 						logger.Write(ref g);
 
 						// wait for send to be invoked
+						ss.Wait();
+
+						// push another
+						logger.Write(ref g);
+
+						// wait again
 						ss.Wait();
 					}
 
@@ -444,7 +459,9 @@ namespace Cameronism.Json.Tests
 						}
 					}
 
-					Assert.Equal(1, files.Count);
+					Assert.Equal(2, files.Count);
+					Assert.Equal(1, errors.Count);
+					Assert.Same(myException, errors[0]);
 				}
 			}
 		}

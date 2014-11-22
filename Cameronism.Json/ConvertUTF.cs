@@ -323,14 +323,18 @@ namespace Cameronism.Json
 				} else if (ch < 0x10000) {
 					bytesToWrite = 3;
 					byteMark_len = firstByteMark_3;
-				} else if (ch < 0x110000) {
+				} else // if (ch < 0x110000) {
+				// if we've made it this far
+				// 0x10ffff is the highest possible value
+				{
+					
 					bytesToWrite = 4;
 					byteMark_len = firstByteMark_4;
-				} else {
+				} /*else {
 					bytesToWrite = 3;
 					ch = UNI_REPLACEMENT_CHAR;
 					byteMark_len = firstByteMark_3;
-				}
+				}*/
 
 				if (target + bytesToWrite > targetEnd) {
 					source = oldSource; /* Back up source pointer! */
