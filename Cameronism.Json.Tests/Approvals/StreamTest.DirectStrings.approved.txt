@@ -83,6 +83,11 @@ Stream.Write({ Type = byte[], Length = 64 }, 0, 64)
 Stream.Write({ Type = byte[], Length = 64 }, 0, 62)
 Stream.Write({ Type = byte[], Length = 64 }, 0, 29)
 
+# [ null * 25 ]
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 64)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 6)
+
 # { i: b, j: c }
 Stream.Write({ Type = byte[], Length = 64 }, 0, 17)
 

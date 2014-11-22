@@ -266,6 +266,7 @@ namespace Cameronism.Json.Tests
 					12345678901234567890,
 					long.MaxValue,
 					ulong.MaxValue,
+					9876543210,
 				};
 
 			Approve(
@@ -319,6 +320,8 @@ namespace Cameronism.Json.Tests
 					-12345678901234567,
 					-123456789012345678,
 					-1234567890123456789,
+					9876543210,
+					-9876543210,
 				};
 
 			Approve(

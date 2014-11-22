@@ -70,7 +70,7 @@ namespace Cameronism.Json
 		}
 
 		/// <summary>Offset in the current log file</summary>
-		public long Position { get { return _Length; } }
+		public long Position { get { return _Position; } }
 		/// <summary>Number of records written to the current log file</summary>
 		public int RecordCount { get { return _RecordCount; } }
 		/// <summary>Has Dispose been called</summary>

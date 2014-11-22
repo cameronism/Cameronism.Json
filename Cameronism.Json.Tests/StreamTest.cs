@@ -288,9 +288,49 @@ namespace Cameronism.Json.Tests
 			xs = Enumerable.Range(0, 192).Select(i => ((char)i).ToString()).ToList();
 			AssertValue(xs, "[ \"\\u0000\", ... , \"\\u00bf\" ]", ss);
 
+			xs = Enumerable.Range(0, 26).Select(i => (string)null).ToList();
+			AssertValue(xs, "[ null * 25 ]", ss);
+
 			AssertValue(A("b", "c"), "{ i: b, j: c }", ss);
 
 			ApprovalTests.Approvals.Verify(sw.ToString());
+		}
+
+		[Fact]
+		public unsafe void PublicStreamCall()
+		{
+			var ms = new MemoryStream();
+			var g = Guid.NewGuid();
+			string json;
+			var buffer = new byte[1024];
+
+			Serializer.Serialize(g, ms, buffer);
+			ms.Position = 0;
+			json = LoggerTest.Read(ms);
+			var n1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Guid>(json);
+			Assert.Equal(g, n1);
+
+			ms.SetLength(0);
+			Serializer.Serialize(g, ms, buffer);
+			ms.Position = 0;
+			json = LoggerTest.Read(ms);
+			var n2 = Newtonsoft.Json.JsonConvert.DeserializeObject<Guid>(json);
+			Assert.Equal(g, n2);
+
+			Assert.Throws<ArgumentNullException>(() => Serializer.Serialize(g, ms, null));
+			Assert.Throws<ArgumentOutOfRangeException>(() => Serializer.Serialize(g, ms, new byte[1023]));
+
+			// zero
+			for (int i = 0; i < buffer.Length; i++) buffer[i] = 0;
+
+			fixed (byte* ptr = buffer)
+			{
+				var ums = new UnmanagedMemoryStream(ptr, buffer.Length);
+				Serializer.Serialize(g, ums);
+
+				// just sanity check the length - ascii
+				Assert.Equal(json.Length, ums.Position);
+			}
 		}
 
 		void AssertString(string value, string description, StreamSpy ss)

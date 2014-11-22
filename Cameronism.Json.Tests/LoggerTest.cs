@@ -52,14 +52,20 @@ namespace Cameronism.Json.Tests
 			return String.Format("{0:HH'-'mm'-'ss'.'fffffff}.{1}.log.json", dt, g.ToString().Substring(0, 8));
 		}
 
-		static void Run<T>(Action<Logger<T>> act, Action<List<FileStream>, DirectoryInfo> assert, int? flushRecordCount = null)
+		static void Run<T>(Action<Logger<T>> act, Action<List<FileStream>, DirectoryInfo> assert, int? flushRecordCount = null, long? maxFileSize = null, Action<FileStream> afterSend = null)
 		{
 			var files = new List<FileStream>();
 
 			using (var dir = new DisposableDirectory())
 			{
-				using (var logger = Logger.Create<T>(fs => files.Add(fs), short.MaxValue, 
-					logDirectory: dir.Info.FullName, 
+				using (var logger = Logger.Create<T>(
+					fs =>
+					{
+						files.Add(fs);
+						if (afterSend != null) afterSend(fs);
+					}, 
+					maxFileSize ?? short.MaxValue,
+					logDirectory: dir.Info.FullName,
 					flushRecordCount: flushRecordCount,
 					logNamer: GetLogName))
 				{
@@ -84,7 +90,7 @@ namespace Cameronism.Json.Tests
 			}
 		}
 
-		static string Read(FileStream fs)
+		public static string Read(Stream fs)
 		{
 			using (var rd = new StreamReader(fs, Encoding.UTF8, false, 4096, leaveOpen: true))
 			{
@@ -273,6 +279,174 @@ namespace Cameronism.Json.Tests
 					Assert.Equal("[9]", Read(files[3]));
 					Assert.Equal("[]", Read(files[4]));
 				});
+		}
+
+		[Fact]
+		public void UseAfterDispose()
+		{
+			Logger<int> theLogger = null;
+
+			Run<int>(
+				flushRecordCount: 3,
+				maxFileSize: ushort.MaxValue,
+				act: (logger) =>
+				{
+					theLogger = logger;
+				},
+				assert: (files, dir) =>
+				{
+					Assert.InRange(theLogger.Position, 0, ushort.MaxValue);
+					Assert.Equal(0, theLogger.RecordCount);
+					Assert.Equal(true, theLogger.Disposed);
+
+					Assert.Throws<ObjectDisposedException>(() =>
+					{
+						var i = 0;
+						theLogger.Write(ref i);
+					});
+
+					Assert.Throws<ObjectDisposedException>(() =>
+					{
+						theLogger.Send();
+					});
+				});
+		}
+
+		[Fact]
+		public void Rollover()
+		{
+			Run<Guid>(
+				maxFileSize: 128,
+				act: (logger) =>
+				{
+					// force an unreasonably small reserve to test rollver
+					logger.ReservedRecordSize = 1;
+
+					for (int i = 0; i < 10; i++)
+					{
+						var g = Guid.NewGuid();
+						logger.Write(ref g);
+					}
+				},
+				assert: (files, dir) =>
+				{
+					Assert.Equal(4, files.Count);
+				});
+		}
+
+		[Fact]
+		public void SendError()
+		{
+			var errors = new List<Tuple<Exception, string>>();
+			var myError = new NotImplementedException();
+
+			Run<Guid>(
+				afterSend: fs => { throw myError; },
+				act: (logger) =>
+				{
+					logger.ErrorLogger = (ex, msg) => errors.Add(Tuple.Create(ex, msg));
+
+					for (int i = 0; i < 10; i++)
+					{
+						var g = Guid.NewGuid();
+						logger.Write(ref g);
+					}
+				},
+				assert: (files, dir) =>
+				{
+					Assert.Equal(1, errors.Count);
+					Assert.ReferenceEquals(errors[0].Item1, myError);
+				});
+
+			int afterSendCount = 0;
+			// do it again without custom error logger
+			Run<Guid>(
+				afterSend: fs => { afterSendCount++; throw myError; },
+				act: (logger) =>
+				{
+					for (int i = 0; i < 10; i++)
+					{
+						var g = Guid.NewGuid();
+						logger.Write(ref g);
+					}
+				},
+				assert: (files, dir) =>
+				{
+					Assert.Equal(1, errors.Count);
+					Assert.Equal(1, afterSendCount);
+				});
+		}
+
+		[Fact]
+		public void BasicTimer()
+		{
+			Logger theLogger = null;
+			Run<Guid>(
+				act: (logger) =>
+				{
+					theLogger = logger;
+					logger.Interval = null;
+					for (int i = 0; i < 10; i++)
+					{
+						var g = Guid.NewGuid();
+						logger.Write(ref g);
+					}
+				},
+				assert: (files, dir) =>
+				{
+					Assert.Null(theLogger.Interval);
+
+					var ts = TimeSpan.FromHours(1);
+					theLogger.Interval = ts;
+					Assert.Equal(ts, theLogger.Interval);
+				});
+		}
+
+		[Fact(Timeout=1000)] // real filesystem :(
+		public void ActualTimer()
+		{
+			using (var ss = new SemaphoreSlim(1))
+			{
+				// acquire here and release when the timer goes
+				ss.Wait();
+
+				using (var dir = new DisposableDirectory())
+				{
+					var files = new List<FileStream>();
+
+					using (var logger = Logger.Create<Guid>(
+						fs =>
+						{
+							files.Add(fs);
+							ss.Release();
+						},
+						ushort.MaxValue,
+						logDirectory: dir.Info.FullName))
+					{
+						logger.Interval = TimeSpan.FromMilliseconds(1);
+						var g = Guid.NewGuid();
+
+						logger.Write(ref g);
+
+						// wait for send to be invoked
+						ss.Wait();
+					}
+
+					foreach (var fs in files)
+					{
+						try
+						{
+							fs.Dispose();
+						}
+						catch (Exception)
+						{
+							// don't care
+						}
+					}
+
+					Assert.Equal(1, files.Count);
+				}
+			}
 		}
 	}
 }

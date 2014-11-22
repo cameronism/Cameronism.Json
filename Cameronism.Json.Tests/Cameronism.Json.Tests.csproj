@@ -85,6 +85,7 @@
     <Compile Include="CompareNewtonsoft.cs" />
     <Compile Include="DelegateBuilderTest.cs" />
     <Compile Include="EnumerableTest.cs" />
+    <Compile Include="LimitTest.cs" />
     <Compile Include="LoggerTest.cs" />
     <Compile Include="Lookups.cs" />
     <Compile Include="NewtonsoftConverters.cs" />
