@@ -276,6 +276,7 @@ namespace Cameronism.Json.Tests
 				sb.AppendLine();
 				sb.AppendLine();
 				bool equal = mine != null && Enumerable.SequenceEqual(newtonsoft, mine);
+				if (equal) AssertStreamVersion(value, newtonsoft);
 				sb.AppendFormat("### Equal: {0}", equal);
 				if (mine != null)
 				{
@@ -324,6 +325,27 @@ namespace Cameronism.Json.Tests
 				len = (int)ms.Position;
 			}
 			return ms.GetBuffer().Take(len);
+		}
+
+		static byte[] _Buffer = new byte[1024];
+		static IEnumerable<byte> GetStreamVersion<T>(T value)
+		{
+			var ms = new MemoryStream();
+			DelegateBuilder.UseSigilVerify = false;
+			try
+			{
+				Serializer.Serialize(value, ms, _Buffer);
+			}
+			finally
+			{
+				DelegateBuilder.UseSigilVerify = true;
+			}
+			return ms.GetBuffer().Take((int)ms.Position);
+		}
+
+		static void AssertStreamVersion<T>(T value, IEnumerable<byte> other)
+		{
+			Assert.Equal(other, GetStreamVersion(value));
 		}
 
 		static readonly MethodInfo DescribeMethod = typeof(DelegateBuilderTest).GetMethod("Describe", BindingFlags.Static | BindingFlags.NonPublic);
