@@ -2,9 +2,16 @@
 
 *Very* fast JSON serializer for .NET
 
-This serializer gains much of its speed by writing directly to byte pointers `byte*`.
-By avoiding the overhead of TextWriter and Stream this JSON serializer is the speed of
-binary serializers.
+Writing directly to byte sequences (`byte*` or `Stream`) rather than `TextWriter`
+allows this JSON serializer to achieve the speed of binary serializers.
+
+```csharp
+// Easiest serialization method
+void Serializer.Serialize<T>(T item, Stream destination, byte[] buffer)
+
+// Fastest serialization method
+void Serializer.Serialize<T>(T item, byte* destination, int available)
+```
 
 Deserialization is not currently supported, I recommend JIL for your deserialization needs.
 
@@ -94,8 +101,14 @@ stream for a file on disk (or not on disk at all).
 
 	PM> Install-Package Cameronism.Json
 
+## Logger
 
-### JSON types from .NET types
+TODO Show the logger
+
+TODO Show logger benchmarks
+
+
+## JSON types from .NET types
 
 No deserialization (use JIL or Newtonsoft)
 
