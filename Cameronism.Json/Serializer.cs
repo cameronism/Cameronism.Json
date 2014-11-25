@@ -23,10 +23,11 @@ namespace Cameronism.Json
 		#region static lookups
 		internal const int SIZEOF_DIGIT_PAIRS = 100 * 2;
 		internal const int SIZEOF_HEX_PAIRS = 256 * 2;
+		internal const int SIZEOF_BASE64 = 64;
 		internal const int MAX_JSON_ESCAPE_CODEPOINT = 0x90;
 		internal const int MAX_JSON_ESCAPE_LENGTH = 6;
 		internal const int SIZEOF_JSON_ESCAPES = MAX_JSON_ESCAPE_CODEPOINT * MAX_JSON_ESCAPE_LENGTH;
-		internal const int SIZEOF_STATIC_LOOKUPS = SIZEOF_JSON_ESCAPES + SIZEOF_DIGIT_PAIRS + SIZEOF_HEX_PAIRS;
+		internal const int SIZEOF_STATIC_LOOKUPS = SIZEOF_JSON_ESCAPES + SIZEOF_DIGIT_PAIRS + SIZEOF_HEX_PAIRS + SIZEOF_BASE64;
 
 		static byte LowerHex(byte number)
 		{
@@ -35,7 +36,7 @@ namespace Cameronism.Json
 				'a' + number - 10);
 		}
 
-		internal static void CreateStaticLookups(byte* dst, out ushort* digitPairs, out byte* jsonEscapes, out ushort* hexPairsLower)
+		internal static void CreateStaticLookups(byte* dst, out ushort* digitPairs, out byte* jsonEscapes, out ushort* hexPairsLower, out byte* b64)
 		{
 			hexPairsLower = (ushort*)dst;
 
@@ -119,17 +120,25 @@ namespace Cameronism.Json
 					*dst++ = 0;
 				}
 			}
+
+			b64 = dst;
+			for (int i = 0; i < 26; i++) *dst++ = (byte)('A' + i);
+			for (int i = 0; i < 26; i++) *dst++ = (byte)('a' + i);
+			for (int i = 0; i < 10; i++) *dst++ = (byte)('0' + i);
+			*dst++ = (byte)'+';
+			*dst++ = (byte)'/';
 		}
 		#endregion
 
 		internal static readonly ushort* DIGIT_PAIRS;
 		internal static readonly ushort* HEX_PAIRS_LOWER;
 		internal static readonly byte* JSON_ESCAPES;
+		internal static readonly byte* BASE64;
 		static Serializer()
 		{
 			// Hold onto < 1K until the process exits
 			IntPtr ptr = Marshal.AllocHGlobal(SIZEOF_STATIC_LOOKUPS);
-			CreateStaticLookups((byte*)ptr.ToPointer(), out DIGIT_PAIRS, out JSON_ESCAPES, out HEX_PAIRS_LOWER);
+			CreateStaticLookups((byte*)ptr.ToPointer(), out DIGIT_PAIRS, out JSON_ESCAPES, out HEX_PAIRS_LOWER, out BASE64);
 		}
 
 		#region writers
@@ -608,6 +617,62 @@ namespace Cameronism.Json
 			*c++ = (byte)'"';
 
 			return (int)(c - start);
+		}
+
+		[ValueWriter]
+		internal static int WriteBase64(byte[] val, byte* dst, int avail)
+		{
+			if (val == null) return WriteNull(dst, avail);
+
+			int required = (((val.Length + 2) * 4) / 3) + 2;
+			if (avail < required) return -required;
+
+			byte* lookup = BASE64;
+
+			byte* start = dst;
+			*dst++ = (byte)'"';
+
+			int three;
+			int i;
+			for (i = 0; i < val.Length - 2; i += 3)
+			{
+				three =
+					(val[i + 0] << 16) |
+					(val[i + 1] << 8) |
+					(val[i + 2]);
+
+				*dst++ = *(lookup + ((three >> 18) & 63));
+				*dst++ = *(lookup + ((three >> 12) & 63));
+				*dst++ = *(lookup + ((three >>  6) & 63));
+				*dst++ = *(lookup + ((three >>  0) & 63));
+			}
+
+			switch (val.Length - i)
+			{
+				case 2:
+					three =
+						(val[i + 0] << 10) |
+						(val[i + 1] << 2);
+
+					*dst++ = *(lookup + ((three >> 12) & 63));
+					*dst++ = *(lookup + ((three >>  6) & 63));
+					*dst++ = *(lookup + ((three >>  0) & 63));
+
+					*dst++ = (byte)'=';
+					break;
+				case 1:
+					three = (val[i + 0] << 4);
+
+					*dst++ = *(lookup + ((three >> 6) & 63));
+					*dst++ = *(lookup + ((three >> 0) & 63));
+					*dst++ = (byte)'=';
+					*dst++ = (byte)'=';
+					break;
+			}
+
+			*dst++ = (byte)'"';
+
+			return (int)(dst - start);
 		}
 
 		#region floating point

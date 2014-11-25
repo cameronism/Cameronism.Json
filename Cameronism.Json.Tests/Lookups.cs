@@ -19,8 +19,8 @@ namespace Cameronism.Json.Tests
 			fixed (byte* b = bs)
 			{
 				ushort* digitPairs, hexPairs;
-				byte* jsonEscapes;
-				Serializer.CreateStaticLookups(b, out digitPairs, out jsonEscapes, out hexPairs);
+				byte* jsonEscapes, base64;
+				Serializer.CreateStaticLookups(b, out digitPairs, out jsonEscapes, out hexPairs, out base64);
 			}
 
 			var sb = Hex.Dump(bs);

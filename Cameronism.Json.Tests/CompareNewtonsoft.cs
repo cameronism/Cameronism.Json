@@ -433,6 +433,29 @@ namespace Cameronism.Json.Tests
 				Cameronism.Json.Serializer.SIZEOF_DATETIME_8601);
 		}
 
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public unsafe void DumpBase64()
+		{
+			var dts = new[] {
+				null,
+				new byte[] { },
+				new byte[] { 1 },
+				new byte[] { 1, 2 },
+				new byte[] { 1, 2, 3 },
+				new byte[] { 1, 2, 3, 4 },
+				new byte[] { 1, 2, 3, 4, 5 },
+				new byte[] { 1, 2, 3, 4, 5, 6 },
+			};
+
+			Approve(
+				dts,
+				Cameronism.Json.Serializer.WriteBase64,
+				(sb, g) => sb.AppendLine("# " + g),
+				64);
+		}
+
+
 		static unsafe void Approve<T>(IEnumerable<T> values, LowWriter<T> writer, Action<StringBuilder, T> heading, int? minBuffer = null)
 		{
 			int failed = 0;

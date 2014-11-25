@@ -125,6 +125,8 @@ No deserialization (use JIL or Newtonsoft)
 	  TODO
 	- from `System.Net.IPAddress`  
 	  handled by delegate generator, very Windows specific
+    - from `byte[]`
+	  TODO
 	- from enum
 		- FlagAttribute  
 		  TODO

@@ -1,0 +1,121 @@
+﻿
+
+# 
+
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 22                                               ""
+
+## Cameronism.Json
+
+
+0000   22 22                                               ""
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 3d 3d 22                                   "AQ=="
+
+## Cameronism.Json
+
+
+0000   22 41 51 3d 3d 22                                   "AQ=="
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 49 3d 22                                   "AQI="
+
+## Cameronism.Json
+
+
+0000   22 41 51 49 3d 22                                   "AQI="
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 49 44 22                                   "AQID"
+
+## Cameronism.Json
+
+
+0000   22 41 51 49 44 22                                   "AQID"
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 49 44 42 41 3d   3d 22                     "AQIDBA= ="
+
+## Cameronism.Json
+
+
+0000   22 41 51 49 44 42 41 3d   3d 22                     "AQIDBA= ="
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 49 44 42 41 55   3d 22                     "AQIDBAU ="
+
+## Cameronism.Json
+
+
+0000   22 41 51 49 44 42 41 55   3d 22                     "AQIDBAU ="
+
+### Equal: True
+
+# System.Byte[]
+
+
+## Newtonsoft
+
+
+0000   22 41 51 49 44 42 41 55   47 22                     "AQIDBAU G"
+
+## Cameronism.Json
+
+
+0000   22 41 51 49 44 42 41 55   47 22                     "AQIDBAU G"
+
+### Equal: True
