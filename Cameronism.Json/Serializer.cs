@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -637,34 +638,34 @@ namespace Cameronism.Json
 			for (i = 0; i < val.Length - 2; i += 3)
 			{
 				three =
-					(val[i + 0] << 16) |
-					(val[i + 1] << 8) |
+					(val[i    ] << 16) |
+					(val[i + 1] <<  8) |
 					(val[i + 2]);
 
-				*dst++ = *(lookup + ((three >> 18) & 63));
+				*dst++ = *(lookup + ((three >> 18)     ));
 				*dst++ = *(lookup + ((three >> 12) & 63));
 				*dst++ = *(lookup + ((three >>  6) & 63));
-				*dst++ = *(lookup + ((three >>  0) & 63));
+				*dst++ = *(lookup + ((three      ) & 63));
 			}
 
 			switch (val.Length - i)
 			{
 				case 2:
 					three =
-						(val[i + 0] << 10) |
-						(val[i + 1] << 2);
+						(val[i    ] << 10) |
+						(val[i + 1] <<  2);
 
-					*dst++ = *(lookup + ((three >> 12) & 63));
+					*dst++ = *(lookup + ((three >> 12)     ));
 					*dst++ = *(lookup + ((three >>  6) & 63));
-					*dst++ = *(lookup + ((three >>  0) & 63));
+					*dst++ = *(lookup + ((three      ) & 63));
 
 					*dst++ = (byte)'=';
 					break;
 				case 1:
-					three = (val[i + 0] << 4);
+					three = val[i] << 4;
 
-					*dst++ = *(lookup + ((three >> 6) & 63));
-					*dst++ = *(lookup + ((three >> 0) & 63));
+					*dst++ = *(lookup + ((three >> 6)     ));
+					*dst++ = *(lookup + ((three     ) & 63));
 					*dst++ = (byte)'=';
 					*dst++ = (byte)'=';
 					break;
@@ -673,6 +674,11 @@ namespace Cameronism.Json
 			*dst++ = (byte)'"';
 
 			return (int)(dst - start);
+		}
+
+		static void WriteBase64ToStream(byte[] value, Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
+		{
+			throw new NotImplementedException();
 		}
 
 		#region floating point

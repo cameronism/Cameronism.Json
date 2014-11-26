@@ -912,3 +912,34 @@
   "FieldInfo": null,
   "PropertyInfo": null
 }
+
+
+# System.Collections.Generic.Dictionary<System.String, System.Byte[]>
+{
+  "NetType": "System.Collections.Generic.Dictionary<System.String, System.Byte[]>",
+  "JsonType": "Object",
+  "Nullable": true,
+  "Items": {
+    "NetType": "System.Byte[]",
+    "JsonType": "String",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Keys": {
+    "NetType": "System.String",
+    "JsonType": "String",
+    "Nullable": true,
+    "Items": null,
+    "Keys": null,
+    "Members": null,
+    "FieldInfo": null,
+    "PropertyInfo": null
+  },
+  "Members": null,
+  "FieldInfo": null,
+  "PropertyInfo": null
+}

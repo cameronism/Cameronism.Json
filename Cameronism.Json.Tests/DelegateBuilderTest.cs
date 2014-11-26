@@ -170,6 +170,8 @@ namespace Cameronism.Json.Tests
 				new { a = (System.Net.IPAddress)null });
 			failed += SerializeValues(sb, buffer, A(Guid.Empty, new List<System.Net.IPAddress> { null, System.Net.IPAddress.Any, System.Net.IPAddress.Broadcast }));
 			failed += SerializeValues(sb, buffer, A(true, Enumerable.Range(0, 16).ToDictionary(i => i.ToString())));
+			failed += SerializeValues(sb, buffer, new byte[] { }, new byte[] { 255 }, new byte[] { 255, 254 }, new byte[] { 255, 254, 253 }, null);
+			failed += SerializeValues(sb, buffer, A(new byte[] { }), A(new byte[] { 255 }), A(new byte[] { 255, 254 }), A(new byte[] { 255, 254, 253 }));
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failed == 0, "Look at the approval " + failed + " tests failed");

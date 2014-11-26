@@ -199,7 +199,12 @@ namespace Cameronism.Json
 				case TypeCode.UInt64: return JsonType.Integer;
 			}
 
-			if (underlying == typeof(Guid) || underlying == typeof(DateTimeOffset) || underlying == typeof(System.Net.IPAddress)) return JsonType.String;
+			// stringly typed FTW
+			if (underlying == typeof(Guid) || 
+				underlying == typeof(DateTimeOffset) || 
+				underlying == typeof(System.Net.IPAddress) ||
+				underlying == typeof(byte[]))
+				return JsonType.String;
 
 			IEnumerable<Type> interfaces = t.GetInterfaces();
 			if (t.IsInterface) interfaces = new[] { t }.Concat(interfaces);

@@ -155,6 +155,8 @@ namespace Cameronism.Json.Tests
 				typeof(NoDataMember),
 
 				typeof(Marked),
+
+				typeof(Dictionary<string, byte[]>),
 			})
 			{
 				var schema = Cameronism.Json.Schema.Reflect(t);

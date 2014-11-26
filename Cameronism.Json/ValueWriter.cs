@@ -121,6 +121,14 @@ namespace Cameronism.Json
 				Type = typeof(string),
 				MethodInfo = typeof(ConvertUTF).GetMethod("WriteToStreamUtf8", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public),
 			};
+
+			// 2 byte[] -> base64 options
+			Add<byte[]>(Serializer.WriteBase64, _Writers, (long)DestinationType.Pointer);
+			_Writers[new Lookup(typeof(byte[]), DestinationType.Stream)] = new ValueWriter
+			{
+				Type = typeof(byte[]),
+				MethodInfo = typeof(Serializer).GetMethod("WriteBase64ToStream", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public),
+			};
 		}
 
 		static ValueWriter From<T>(PrimitiveWriter<T> writer)
@@ -150,10 +158,12 @@ namespace Cameronism.Json
 				effective = effective.GetEnumUnderlyingType();
 			}
 
-			var lookup = effective == typeof(string) ?
-				new Lookup(effective, destination) : 
-				new Lookup(effective);
+			// check for common (no options writer first)
+			var lookup = new Lookup(effective);
+			if (_Writers.TryGetValue(lookup, out writer)) return true;
 
+			// fallback to using the destination
+			lookup = new Lookup(effective, destination);
 			return _Writers.TryGetValue(lookup, out writer);
 		}
 		#endregion
