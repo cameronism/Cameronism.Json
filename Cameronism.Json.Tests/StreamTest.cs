@@ -182,6 +182,17 @@ namespace Cameronism.Json.Tests
 			sw.WriteLine("# " + @"[ + String.Join(',', Enumerable.Repeat(int.MinValue, 64)) + ]");
 			Assert.Equal(json, ToJson(xs, ss, out instructions));
 
+			// poke around the boundaries of filling up the 64 byte _Buffer
+			foreach (int len in new[] { 0, 1, 44, 45, 46, 89, 90, 91 })
+			{
+				sw.WriteLine();
+
+				var bs = new byte[len];
+				json = "\"" + Convert.ToBase64String(bs) + "\"";
+				sw.WriteLine("# [0,...] -> base 64 -- " + len);
+				Assert.Equal(json, ToJson(bs, ss, out instructions));
+			}
+
 			ApprovalTests.Approvals.Verify(sw.ToString());
 		}
 

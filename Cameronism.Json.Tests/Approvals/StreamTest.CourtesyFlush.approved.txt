@@ -17,3 +17,34 @@ Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
 Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
 Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
 Stream.Write({ Type = byte[], Length = 64 }, 0, 48)
+
+# [0,...] -> base 64 -- 0
+Stream.Write({ Type = byte[], Length = 64 }, 0, 2)
+
+# [0,...] -> base 64 -- 1
+Stream.Write({ Type = byte[], Length = 64 }, 0, 6)
+
+# [0,...] -> base 64 -- 44
+Stream.Write({ Type = byte[], Length = 64 }, 0, 62)
+
+# [0,...] -> base 64 -- 45
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 1)
+
+# [0,...] -> base 64 -- 46
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 5)
+
+# [0,...] -> base 64 -- 89
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+
+# [0,...] -> base 64 -- 90
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 1)
+
+# [0,...] -> base 64 -- 91
+Stream.Write({ Type = byte[], Length = 64 }, 0, 61)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 60)
+Stream.Write({ Type = byte[], Length = 64 }, 0, 5)

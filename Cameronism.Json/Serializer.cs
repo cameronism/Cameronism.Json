@@ -620,12 +620,21 @@ namespace Cameronism.Json
 			return (int)(c - start);
 		}
 
+		/// <summary>
+		/// Calculate string length including wrapping quotes for JSON
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static int GetBase64StringLength(int byteCount)
+		{
+			return (((byteCount + 2) / 3) * 4) + 2;
+		}
+
 		[ValueWriter]
 		internal static int WriteBase64(byte[] val, byte* dst, int avail)
 		{
 			if (val == null) return WriteNull(dst, avail);
 
-			int required = (((val.Length + 2) * 4) / 3) + 2;
+			int required = GetBase64StringLength(val.Length);
 			if (avail < required) return -required;
 
 			byte* lookup = BASE64;
@@ -678,7 +687,82 @@ namespace Cameronism.Json
 
 		static void WriteBase64ToStream(byte[] value, Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
 		{
-			throw new NotImplementedException();
+			if (value == null)
+			{
+				ConvertUTF.NullToStream(stream, buffer, ref available, ref bufferOffset);
+				return;
+			}
+
+			var dst = bufferOffset;
+			var bufferStart = ConvertUTF.GetStart(buffer, dst, available);
+			var lastBatchStart = bufferStart + buffer.Length - 5; // 4 for "digits", 1 for close quote
+			int required = GetBase64StringLength(value.Length);
+
+			// flush if there's not enough room for best case
+			if (available < required)
+			{
+				ConvertUTF.Flush(stream, buffer, (int)(dst - bufferStart));
+				dst = bufferStart;
+			}
+
+			byte* start = dst;
+			*dst++ = (byte)'"';
+
+			byte* lookup = BASE64;
+			int three;
+			int i;
+			for (i = 0; i < value.Length - 2; i += 3)
+			{
+				if (dst > lastBatchStart)
+				{
+					ConvertUTF.Flush(stream, buffer, (int)(dst - bufferStart));
+					dst = bufferStart;
+				}
+
+				three =
+					(value[i    ] << 16) |
+					(value[i + 1] <<  8) |
+					(value[i + 2]);
+
+				*dst++ = *(lookup + ((three >> 18)     ));
+				*dst++ = *(lookup + ((three >> 12) & 63));
+				*dst++ = *(lookup + ((three >>  6) & 63));
+				*dst++ = *(lookup + ((three      ) & 63));
+			}
+
+			// 1 in 3 chance we don't need this
+			if (dst > lastBatchStart)
+			{
+				ConvertUTF.Flush(stream, buffer, (int)(dst - bufferStart));
+				dst = bufferStart;
+			}
+
+			switch (value.Length - i)
+			{
+				case 2:
+					three =
+						(value[i    ] << 10) |
+						(value[i + 1] <<  2);
+
+					*dst++ = *(lookup + ((three >> 12)     ));
+					*dst++ = *(lookup + ((three >>  6) & 63));
+					*dst++ = *(lookup + ((three      ) & 63));
+					*dst++ = (byte)'=';
+					break;
+				case 1:
+					three = value[i] << 4;
+
+					*dst++ = *(lookup + ((three >> 6)     ));
+					*dst++ = *(lookup + ((three     ) & 63));
+					*dst++ = (byte)'=';
+					*dst++ = (byte)'=';
+					break;
+			}
+
+			*dst++ = (byte)'"';
+
+			bufferOffset = dst;
+			available = buffer.Length - (int)(dst - bufferStart);
 		}
 
 		#region floating point

@@ -105,7 +105,7 @@ namespace Cameronism.Json
 		{
 			if (value == null)
 			{
-				NullToStreamUtf8(stream, buffer, ref available, ref bufferOffset);
+				NullToStream(stream, buffer, ref available, ref bufferOffset);
 				return;
 			}
 
@@ -152,7 +152,7 @@ namespace Cameronism.Json
 			available = buffer.Length - (int)(ptr - bufferStart);
 		}
 
-		unsafe static void NullToStreamUtf8(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
+		internal unsafe static void NullToStream(Stream stream, byte[] buffer, ref int available, ref byte* bufferOffset)
 		{
 			var ptr = bufferOffset;
 			var bufferStart = GetStart(buffer, ptr, available);
@@ -172,12 +172,12 @@ namespace Cameronism.Json
 			available = buffer.Length - (int)((ptr + 4) - bufferStart);
 		}
 
-		static byte* GetStart(byte[] buffer, byte* offset, int available)
+		internal static byte* GetStart(byte[] buffer, byte* offset, int available)
 		{
 			return offset - (buffer.Length - available);
 		}
 
-		static void Flush(Stream stream, byte[] buffer, int count)
+		internal static void Flush(Stream stream, byte[] buffer, int count)
 		{
 			if (count > 0) stream.Write(buffer, 0, count);
 		}
