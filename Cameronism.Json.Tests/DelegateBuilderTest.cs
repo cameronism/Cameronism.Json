@@ -333,15 +333,7 @@ namespace Cameronism.Json.Tests
 		static IEnumerable<byte> GetStreamVersion<T>(T value)
 		{
 			var ms = new MemoryStream();
-			DelegateBuilder.UseSigilVerify = false;
-			try
-			{
-				Serializer.Serialize(value, ms, _Buffer);
-			}
-			finally
-			{
-				DelegateBuilder.UseSigilVerify = true;
-			}
+			Serializer.Serialize(value, ms, _Buffer);
 			return ms.GetBuffer().Take((int)ms.Position);
 		}
 

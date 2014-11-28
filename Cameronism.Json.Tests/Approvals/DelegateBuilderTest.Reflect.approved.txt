@@ -163,13 +163,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Int32 GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteInt32(Int32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -183,13 +185,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Boolean GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteBoolean(Boolean, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -203,7 +207,7 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Byte GetValueOrDefault()
@@ -211,6 +215,8 @@ conv.u4
 ldarg.1
 ldarg.2
 call Int32 WriteUInt32(UInt32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -224,13 +230,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Char GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteCharUtf8(Char, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -244,13 +252,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call System.DateTime GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteDateTime8601(System.DateTime, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -264,13 +274,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call System.Decimal GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteDecimal(System.Decimal, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -284,13 +296,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Double GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteDouble(Double, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -304,7 +318,7 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Int16 GetValueOrDefault()
@@ -312,6 +326,8 @@ conv.i4
 ldarg.1
 ldarg.2
 call Int32 WriteInt32(Int32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -325,13 +341,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Int64 GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteInt64(Int64, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -345,7 +363,7 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call SByte GetValueOrDefault()
@@ -353,6 +371,8 @@ conv.i4
 ldarg.1
 ldarg.2
 call Int32 WriteInt32(Int32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -366,13 +386,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call Single GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteSingle(Single, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -386,7 +408,7 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call UInt16 GetValueOrDefault()
@@ -394,6 +416,8 @@ conv.u4
 ldarg.1
 ldarg.2
 call Int32 WriteUInt32(UInt32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -407,13 +431,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call UInt32 GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteUInt32(UInt32, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -427,13 +453,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call UInt64 GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteUInt64(UInt64, Byte*, Int32)
+
+theEnd:
 ret
 
 
@@ -457,13 +485,15 @@ pop
 ldarg.1
 ldarg.2
 call Int32 WriteNull(Byte*, Int32)
-ret
+br.s theEnd
 
 HasValue_true:
 call System.Guid GetValueOrDefault()
 ldarg.1
 ldarg.2
 call Int32 WriteGuidFormatD(System.Guid, Byte*, Int32)
+
+theEnd:
 ret
 
 

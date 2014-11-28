@@ -367,9 +367,6 @@ namespace Cameronism.Json.Tests
 			ms.Log.WriteLine("# " + expected);
 			Assert.Equal(expected, ToJson(value, ms));
 
-			// FIXME submit a sigil bug with testcase for this
-			DelegateBuilder.UseSigilVerify = false;
-
 			ms.Log.WriteLine();
 			ms.Log.WriteLine("# " + expected);
 			Assert.Equal(expected, ToJson((T?)value, ms));
@@ -377,7 +374,6 @@ namespace Cameronism.Json.Tests
 			ms.Log.WriteLine();
 			ms.Log.WriteLine("# null");
 			Assert.Equal("null", ToJson((T?)null, ms));
-			DelegateBuilder.UseSigilVerify = true;
 
 			ms.Log.WriteLine();
 		}

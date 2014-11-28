@@ -307,6 +307,7 @@ namespace Cameronism.Json
 		void EmitSimpleComplete(Schema schema, ValueWriter writer)
 		{
 			var effective = schema.NetType;
+			Sigil.Label theEnd = null;
 
 			if (Nullable.GetUnderlyingType(effective) != null)
 			{
@@ -327,7 +328,8 @@ namespace Cameronism.Json
 
 				if (Destination == DestinationType.Stream) Flush();
 
-				Emit.Return();
+				theEnd = Emit.DefineLabel("theEnd");
+				Emit.Branch(theEnd);
 
 				Emit.MarkLabel(hasValueTrue);
 
@@ -339,6 +341,8 @@ namespace Cameronism.Json
 			CallWriter(writer, effective, false);
 
 			if (Destination == DestinationType.Stream) Flush();
+
+			if (theEnd != null) Emit.MarkLabel(theEnd);
 
 			Emit.Return();
 		}
