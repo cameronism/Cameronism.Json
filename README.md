@@ -10,10 +10,10 @@ allows this JSON serializer to achieve the speed of binary serializers.
 void Serializer.Serialize<T>(T item, Stream destination, byte[] buffer)
 
 // Fastest serialization method
-void Serializer.Serialize<T>(T item, byte* destination, int available)
+int Serializer.Serialize<T>(T item, byte* destination, int available)
 ```
 
-Deserialization is not currently supported, I recommend JIL for your deserialization needs.
+Deserialization is not currently supported, I recommend [Jil](https://github.com/kevin-montrose/Jil) for your deserialization needs.
 
 ## Benchmarks
 
@@ -64,9 +64,24 @@ new
 
 ## Usage
 
+Stream Usage:
+
 ```csharp
 var stuffToSerialize = GetSomeStuff();
-var buffer = new byte[4096]; // for performance buffers like this should be reused
+Stream destination = GetDestinationStream();
+byte[] buffer = GetReusedBuffer();
+Serializer.Serialize(stuffToSerialize, destination, buffer);
+
+// destination now has the JSON
+```
+
+---
+
+Pointer Usage:
+
+```csharp
+var stuffToSerialize = GetSomeStuff();
+byte[] buffer = GetReusedBuffer();
 int position;
 unsafe
 {
@@ -93,6 +108,11 @@ string debug = Encoding.UTF8.GetString(buffer, 0, position);
 
 ---
 
+[BufferManager](http://msdn.microsoft.com/en-us/library/System.ServiceModel.Channels.BufferManager%28v=vs.110%29.aspx)
+is an option for reusing buffers.
+
+---
+
 Serialize may be also be called with an [UnmanagedMemoryStream](http://msdn.microsoft.com/en-us/library/system.io.unmanagedmemorystream%28v=vs.110%29.aspx).
 [MemoryMappedFile](http://msdn.microsoft.com/en-us/library/system.io.memorymappedfiles.memorymappedfile%28v=vs.110%29.aspx) can be used to get an unmanaged
 stream for a file on disk (or not on disk at all).
@@ -110,7 +130,7 @@ TODO Show logger benchmarks
 
 ## JSON types from .NET types
 
-No deserialization (use JIL or Newtonsoft)
+No deserialization (use Jil or Newtonsoft)
 
 - string
 	- from `System.String`  
@@ -198,65 +218,6 @@ No deserialization (use JIL or Newtonsoft)
 
 ## TODO
 
-- Submit Sigil bug (and hopefully test + fix) for incorrect SigilVerificationException : MarkLabel expects a value on the stack, but it was empty
-
-  The following fails with doVerify: true, it seems to work fine with doVerify: false
-
-		ldarg.3
-		ldlen
-		conv.i4
-		stloc.0 // System.Int32 available
-		ldarg.0
-		dup
-		call Boolean get_HasValue()
-
-		brtrue HasValue_true
-		pop
-		ldarg.1
-		ldloc.0 // System.Int32 available
-		call Int32 WriteNull(Byte*, Int32)
-		ldc.i4.m1
-		mul
-		ldloc.0 // System.Int32 available
-		add
-		stloc.0 // System.Int32 available
-		ldarg.2
-		ldarg.3
-		ldc.i4.0
-		ldarg.3
-		ldlen
-		conv.i4
-		ldloc.0 // System.Int32 available
-		sub
-		callvirt Void Write(Byte[], Int32, Int32)
-		ret
-
-		HasValue_true:
-		call Int32 GetValueOrDefault()
-		ldarg.1
-		ldloc.0 // System.Int32 available
-		call Int32 WriteInt32(Int32, Byte*, Int32)
-		ldc.i4.m1
-		mul
-		ldloc.0 // System.Int32 available
-		add
-		stloc.0 // System.Int32 available
-		ldarg.2
-		ldarg.3
-		ldc.i4.0
-		ldarg.3
-		ldlen
-		conv.i4
-		ldloc.0 // System.Int32 available
-		sub
-		callvirt Void Write(Byte[], Int32, Int32)
-		ret
-
-- Support serializing to Stream
-  + It won't be as fast but will be much more accessible
-  + So far, looks like it will be slower by less than 10%
-  + Caller will be responsible for providing `byte[]` buffer  
-    `Serializer.Serialize<T>(T value, Stream destination, byte[] buffer)`
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
