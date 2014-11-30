@@ -202,7 +202,9 @@ namespace Cameronism.Json
 			}
 			
 			var num = (double)value;	
-			return num.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+			var stringVal = num.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+			if (stringVal.IndexOf('.') == -1) stringVal += ".0";
+			return stringVal;
 		}
 	}
 }

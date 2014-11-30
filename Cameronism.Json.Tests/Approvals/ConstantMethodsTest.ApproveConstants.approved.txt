@@ -635,3 +635,94 @@ Expected constant: False
 
 
 
+# C43 System.Double
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   30 2e 30                                            0.0
+
+## Cameronism.Json
+
+
+0000   30 2e 30                                            0.0
+
+
+# C44 System.Single
+
+Expected constant: True
+** SKIPPED ** - fix this
+
+## Newtonsoft
+
+
+0000   30 2e 30                                            0.0
+
+## Cameronism.Json
+
+`null`
+
+
+
+# C45 System.SByte
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 32                                               -2
+
+## Cameronism.Json
+
+
+0000   2d 32                                               -2
+
+
+# C46 System.Int16
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 32                                               -2
+
+## Cameronism.Json
+
+
+0000   2d 32                                               -2
+
+
+# C47 System.Int32
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 32                                               -2
+
+## Cameronism.Json
+
+
+0000   2d 32                                               -2
+
+
+# C48 System.Int64
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 32                                               -2
+
+## Cameronism.Json
+
+
+0000   2d 32                                               -2
+
+

@@ -52,6 +52,12 @@ namespace Cameronism.Json.Tests
 		DateTime D40 { get { return new DateTime(2010, 1, 1, 1, 1, 1, DateTimeKind.Utc); } } // TODO
 		Guid D41 { get { return new Guid("3350c137-a6c7-4e3f-aa4d-182f068899c5"); } } // TODO
 		DelegateBuilderTest.B<int> D42 { get { return new DelegateBuilderTest.B<int>(); } }
+		double C43 { get { return 0; } }
+		float C44 { get { return 0; } }
+		sbyte C45 { get { return -2; } }
+		short C46 { get { return -2; } }
+		int C47 { get { return -2; } }
+		long C48 { get { return -2; } }
 		#endregion
 		static DateTime SomeDateTime() { return new DateTime(2010, 1, 1, 1, 1, 1, DateTimeKind.Utc); }
 
