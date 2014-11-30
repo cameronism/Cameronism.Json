@@ -1,0 +1,637 @@
+﻿# C2 System.String
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+
+# C3 System.String
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 61 22                                            "a"
+
+## Cameronism.Json
+
+
+0000   22 61 22                                            "a"
+
+
+# C4 System.Int32
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31                                                  1
+
+## Cameronism.Json
+
+
+0000   31                                                  1
+
+
+# C5 System.Nullable<System.Int32>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31                                                  1
+
+## Cameronism.Json
+
+
+0000   31                                                  1
+
+
+# C6 System.Nullable<System.Int32>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+
+# C7 System.Char
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 61 22                                            "a"
+
+## Cameronism.Json
+
+
+0000   22 61 22                                            "a"
+
+
+# C8 System.Nullable<System.Char>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 61 22                                            "a"
+
+## Cameronism.Json
+
+
+0000   22 61 22                                            "a"
+
+
+# C9 System.Nullable<System.Char>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+
+# C10 System.DateTime
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 30 30 30 31 2d 30 31   2d 30 31 54 30 30 3a 30   "0001-01 -01T00:0
+0010   30 3a 30 30 22                                      0:00"
+
+## Cameronism.Json
+
+
+0000   22 30 30 30 31 2d 30 31   2d 30 31 54 30 30 3a 30   "0001-01 -01T00:0
+0010   30 3a 30 30 22                                      0:00"
+
+
+# C11 System.Int32
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 31                                               -1
+
+## Cameronism.Json
+
+
+0000   2d 31                                               -1
+
+
+# C12 System.Int32
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   2d 32 31 34 37 34 38 33   36 34 38                  -2147483 648
+
+## Cameronism.Json
+
+
+0000   2d 32 31 34 37 34 38 33   36 34 38                  -2147483 648
+
+
+# C13 System.Int64
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 30 39 39 35 31 31 36   32 37 37 37 35            10995116 27775
+
+## Cameronism.Json
+
+
+0000   31 30 39 39 35 31 31 36   32 37 37 37 35            10995116 27775
+
+
+# C14 System.Double
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   30 2e 35                                            0.5
+
+## Cameronism.Json
+
+
+0000   30 2e 35                                            0.5
+
+
+# C15 System.Single
+
+Expected constant: True
+** SKIPPED ** - fix this
+
+## Newtonsoft
+
+
+0000   30 2e 35                                            0.5
+
+## Cameronism.Json
+
+`null`
+
+
+
+# C16 System.SByte
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 32 37                                            127
+
+## Cameronism.Json
+
+
+0000   31 32 37                                            127
+
+
+# C17 System.Byte
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   32 35 35                                            255
+
+## Cameronism.Json
+
+
+0000   32 35 35                                            255
+
+
+# C18 System.Int16
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   33 32 37 36 37                                      32767
+
+## Cameronism.Json
+
+
+0000   33 32 37 36 37                                      32767
+
+
+# C19 System.UInt16
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   36 35 35 33 35                                      65535
+
+## Cameronism.Json
+
+
+0000   36 35 35 33 35                                      65535
+
+
+# C20 System.UInt32
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   34 32 39 34 39 36 37 32   39 35                     42949672 95
+
+## Cameronism.Json
+
+
+0000   34 32 39 34 39 36 37 32   39 35                     42949672 95
+
+
+# C21 System.UInt64
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 38 34 34 36 37 34 34   30 37 33 37 30 39 35 35   18446744 07370955
+0010   31 36 31 35                                         1615
+
+## Cameronism.Json
+
+
+0000   31 38 34 34 36 37 34 34   30 37 33 37 30 39 35 35   18446744 07370955
+0010   31 36 31 35                                         1615
+
+
+# C22 System.Nullable<System.Int64>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 30 39 39 35 31 31 36   32 37 37 37 35            10995116 27775
+
+## Cameronism.Json
+
+
+0000   31 30 39 39 35 31 31 36   32 37 37 37 35            10995116 27775
+
+
+# C23 System.Nullable<System.Double>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   30 2e 35                                            0.5
+
+## Cameronism.Json
+
+
+0000   30 2e 35                                            0.5
+
+
+# C24 System.Nullable<System.Single>
+
+Expected constant: True
+** SKIPPED ** - fix this
+
+## Newtonsoft
+
+
+0000   30 2e 35                                            0.5
+
+## Cameronism.Json
+
+`null`
+
+
+
+# C25 System.Nullable<System.SByte>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 32 37                                            127
+
+## Cameronism.Json
+
+
+0000   31 32 37                                            127
+
+
+# C26 System.Nullable<System.Byte>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   32 35 35                                            255
+
+## Cameronism.Json
+
+
+0000   32 35 35                                            255
+
+
+# C27 System.Nullable<System.Int16>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   33 32 37 36 37                                      32767
+
+## Cameronism.Json
+
+
+0000   33 32 37 36 37                                      32767
+
+
+# C28 System.Nullable<System.UInt16>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   36 35 35 33 35                                      65535
+
+## Cameronism.Json
+
+
+0000   36 35 35 33 35                                      65535
+
+
+# C29 System.Nullable<System.UInt32>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   34 32 39 34 39 36 37 32   39 35                     42949672 95
+
+## Cameronism.Json
+
+
+0000   34 32 39 34 39 36 37 32   39 35                     42949672 95
+
+
+# C30 System.Nullable<System.UInt64>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   31 38 34 34 36 37 34 34   30 37 33 37 30 39 35 35   18446744 07370955
+0010   31 36 31 35                                         1615
+
+## Cameronism.Json
+
+
+0000   31 38 34 34 36 37 34 34   30 37 33 37 30 39 35 35   18446744 07370955
+0010   31 36 31 35                                         1615
+
+
+# C31 System.Guid
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 30 30 30 30 30 30 30   30 2d 30 30 30 30 2d 30   "0000000 0-0000-0
+0010   30 30 30 2d 30 30 30 30   2d 30 30 30 30 30 30 30   000-0000 -0000000
+0020   30 30 30 30 30 22                                   00000"
+
+## Cameronism.Json
+
+
+0000   22 30 30 30 30 30 30 30   30 2d 30 30 30 30 2d 30   "0000000 0-0000-0
+0010   30 30 30 2d 30 30 30 30   2d 30 30 30 30 30 30 30   000-0000 -0000000
+0020   30 30 30 30 30 22                                   00000"
+
+
+# C32 System.Nullable<System.Guid>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 30 30 30 30 30 30 30   30 2d 30 30 30 30 2d 30   "0000000 0-0000-0
+0010   30 30 30 2d 30 30 30 30   2d 30 30 30 30 30 30 30   000-0000 -0000000
+0020   30 30 30 30 30 22                                   00000"
+
+## Cameronism.Json
+
+
+0000   22 30 30 30 30 30 30 30   30 2d 30 30 30 30 2d 30   "0000000 0-0000-0
+0010   30 30 30 2d 30 30 30 30   2d 30 30 30 30 30 30 30   000-0000 -0000000
+0020   30 30 30 30 30 22                                   00000"
+
+
+# C33 System.Boolean
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   74 72 75 65                                         true
+
+## Cameronism.Json
+
+
+0000   74 72 75 65                                         true
+
+
+# C34 System.Nullable<System.Boolean>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   66 61 6c 73 65                                      false
+
+## Cameronism.Json
+
+
+0000   66 61 6c 73 65                                      false
+
+
+# C35 System.Nullable<System.Boolean>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+
+# C36 System.Decimal
+
+Expected constant: True
+** SKIPPED ** - fix this
+
+## Newtonsoft
+
+
+0000   31 2e 31                                            1.1
+
+## Cameronism.Json
+
+`null`
+
+
+
+# C37 System.Nullable<System.Decimal>
+
+Expected constant: True
+** SKIPPED ** - fix this
+
+## Newtonsoft
+
+
+0000   31 2e 31                                            1.1
+
+## Cameronism.Json
+
+`null`
+
+
+
+# C38 System.Nullable<System.Decimal>
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   6e 75 6c 6c                                         null
+
+## Cameronism.Json
+
+
+0000   6e 75 6c 6c                                         null
+
+
+# D39 System.DateTime
+
+Expected constant: False
+
+## Newtonsoft
+
+
+0000   22 32 30 31 30 2d 30 31   2d 30 31 54 30 31 3a 30   "2010-01 -01T01:0
+0010   31 3a 30 31 5a 22                                   1:01Z"
+
+## Cameronism.Json
+
+`null`
+
+
+
+# D40 System.DateTime
+
+Expected constant: False
+
+## Newtonsoft
+
+
+0000   22 32 30 31 30 2d 30 31   2d 30 31 54 30 31 3a 30   "2010-01 -01T01:0
+0010   31 3a 30 31 5a 22                                   1:01Z"
+
+## Cameronism.Json
+
+`null`
+
+
+
+# D41 System.Guid
+
+Expected constant: False
+
+## Newtonsoft
+
+
+0000   22 33 33 35 30 63 31 33   37 2d 61 36 63 37 2d 34   "3350c13 7-a6c7-4
+0010   65 33 66 2d 61 61 34 64   2d 31 38 32 66 30 36 38   e3f-aa4d -182f068
+0020   38 39 39 63 35 22                                   899c5"
+
+## Cameronism.Json
+
+`null`
+
+
+
+# D42 Cameronism.Json.Tests.DelegateBuilderTest+B<System.Int32>
+
+Expected constant: False
+
+## Newtonsoft
+
+
+0000   7b 22 69 22 3a 30 7d                                {"i":0}
+
+## Cameronism.Json
+
+`null`
+
+
+
