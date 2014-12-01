@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -60,6 +61,12 @@ namespace Cameronism.Json.Tests
 		long C48 { get { return -2; } }
 		#endregion
 		static DateTime SomeDateTime() { return new DateTime(2010, 1, 1, 1, 1, 1, DateTimeKind.Utc); }
+		#region inner types
+		class OneConstant
+		{
+			public int A { get { return 0; } }
+		}
+		#endregion
 
 		static bool ToleratedFailure(Type type, string newtonsoft)
 		{
@@ -129,6 +136,67 @@ namespace Cameronism.Json.Tests
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failedEqualCount == 0, "Look at the approval, " + failedEqualCount + " failed");
+		}
+
+		[Fact]
+		public void ConstantObjects()
+		{
+			var sb = new StringBuilder();
+			int failedCount = 0;
+
+			TrySerializer(sb, new OneConstant());
+
+			ApprovalTests.Approvals.Verify(sb.ToString());
+			Assert.True(failedCount == 0, "Look at the approval, " + failedCount + " failed");
+		}
+
+		unsafe static int TrySerializer<T>(StringBuilder sb, params T[] samples)
+		{
+			int failures = 0;
+
+			sb.AppendLine();
+			sb.AppendLine("# " + SchemaTest.HumanName(typeof(T)));
+			sb.AppendLine();
+
+			var emit = DelegateBuilder.CreateStream<T>(Schema.Reflect(typeof(T)));
+			string instructions;
+			var del = (Serializer.WriteToStream<T>)emit.CreateDelegate(typeof(Serializer.WriteToStream<T>), out instructions);
+			sb.AppendLine(emit.Instructions());
+			sb.AppendLine();
+
+			var ms = new MemoryStream();
+			var buffer = new byte[64];
+
+			for (int i = 0; i < samples.Length; i++)
+			{
+				ms.Position = 0;
+				fixed (byte* ptr = buffer)
+				{
+					del.Invoke(ref samples[i], ptr, ms, buffer);
+				}
+
+				var newt = DelegateBuilderTest.GetNewtonsoft(samples[i]);
+				var mine = ms.GetBuffer().Take((int)ms.Position);
+
+				sb.AppendLine();
+				sb.AppendLine("## Newtonsoft");
+				Util.Hex.Dump(sb, newt);
+				sb.AppendLine();
+
+				sb.AppendLine();
+				sb.AppendLine("## Cameronism.Json");
+				Util.Hex.Dump(sb, mine);
+				sb.AppendLine();
+				sb.AppendLine();
+
+				bool equal = newt.SequenceEqual(mine);
+				sb.AppendLine("Equal: " + equal);
+				sb.AppendLine();
+
+				if (!equal) failures++;
+			}
+
+			return failures;
 		}
 	}
 }

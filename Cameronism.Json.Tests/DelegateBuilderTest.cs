@@ -316,7 +316,7 @@ namespace Cameronism.Json.Tests
 			return result < 0 ? null : buffer.Take(result);
 		}
 
-		static IEnumerable<byte> GetNewtonsoft<T>(T value)
+		internal static IEnumerable<byte> GetNewtonsoft<T>(T value)
 		{
 			var ms = new MemoryStream();
 			int len;
