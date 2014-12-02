@@ -66,6 +66,11 @@ namespace Cameronism.Json.Tests
 		{
 			public int A { get { return 0; } }
 		}
+		class OneConstantThen
+		{
+			public int A { get { return 0; } }
+			public int B { get; set; }
+		}
 		#endregion
 
 		static bool ToleratedFailure(Type type, string newtonsoft)
@@ -145,6 +150,7 @@ namespace Cameronism.Json.Tests
 			int failedCount = 0;
 
 			TrySerializer(sb, new OneConstant());
+			TrySerializer(sb, new OneConstantThen());
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failedCount == 0, "Look at the approval, " + failedCount + " failed");

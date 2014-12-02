@@ -13,7 +13,9 @@ namespace Cameronism.Json
 
 		public static string TryGetJson(MethodInfo mi)
 		{
-			return (string)_Disassemble.MakeGenericMethod(mi.DeclaringType, mi.ReturnType).Invoke(null, new object[] { mi });
+			var declaringType = mi.DeclaringType;
+			if (declaringType.IsValueType) return null; // Don't know how to make Sigil.Disassembler happy with these - generics + struct
+			return (string)_Disassemble.MakeGenericMethod(declaringType, mi.ReturnType).Invoke(null, new object[] { mi });
 		}
 
 		static string Disassemble<T1, TReturn>(MethodInfo mi)

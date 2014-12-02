@@ -12,6 +12,189 @@ ldarg.0
 ldind.ref
 
 
+brtrue.s IfNotNull_0
+
+ldloc.1 // System.Int32 available
+ldc.i4.4
+bge.s enoughAvailable_2
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1 // System.Int32 available
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1 // System.Int32 available
+ldarg.1
+stloc.0 // System.Byte* destination
+
+enoughAvailable_2:
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 110
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 117
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 108
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 108
+stind.i1
+ldloc.1 // System.Int32 available
+ldc.i4.4
+sub
+stloc.1 // System.Int32 available
+br.s ifNull_1
+
+IfNotNull_0:
+
+ldloc.1 // System.Int32 available
+ldc.i4.7
+bge.s enoughAvailable_3
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1 // System.Int32 available
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1 // System.Int32 available
+ldarg.1
+stloc.0 // System.Byte* destination
+
+enoughAvailable_3:
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 123
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 34
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 65
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 34
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 58
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 48
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 125
+stind.i1
+ldloc.1 // System.Int32 available
+ldc.i4.7
+sub
+stloc.1 // System.Int32 available
+
+ifNull_1:
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1 // System.Int32 available
+sub
+tail.
+callvirt Void Write(Byte[], Int32, Int32)
+ret
+
+
+## Newtonsoft
+
+
+0000   7b 22 41 22 3a 30 7d                                {"A":0}
+
+## Cameronism.Json
+
+
+0000   7b 22 41 22 3a 30 7d                                {"A":0}
+
+Equal: True
+
+
+# Cameronism.Json.Tests.ConstantMethodsTest+OneConstantThen
+
+ldarg.1
+stloc.0 // System.Byte* destination
+
+ldarg.3
+ldlen
+conv.i4
+stloc.1 // System.Int32 available
+ldarg.0
+ldind.ref
+
+
 dup
 brtrue.s IfNotNull_0
 pop
@@ -77,7 +260,7 @@ br ifNull_1
 IfNotNull_0:
 
 ldloc.1 // System.Int32 available
-ldc.i4.7
+ldc.i4.s 13
 bge.s enoughAvailable_3
 ldarg.2
 ldarg.3
@@ -136,31 +319,62 @@ add
 stloc.0 // System.Byte* destination
 ldc.i4.s 58
 stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 48
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 44
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 34
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 66
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 34
+stind.i1
+ldloc.0 // System.Byte* destination
+dup
+ldc.i4.1
+conv.i
+add
+stloc.0 // System.Byte* destination
+ldc.i4.s 58
+stind.i1
 ldloc.1 // System.Int32 available
-ldc.i4.5
+ldc.i4.s 11
 sub
 stloc.1 // System.Int32 available
 
--- FIXME constant stuff
-
-afterFlush_4:
-ldloc.0 // System.Byte* destination
 ldloc.1 // System.Int32 available
-call Int32 WriteInt32(Int32, Byte*, Int32)
-dup
-conv.i
-ldloc.0 // System.Byte* destination
-add
-stloc.0 // System.Byte* destination
-ldc.i4.m1
-mul
-ldloc.1 // System.Int32 available
-add
-stloc.1 // System.Int32 available
-
-ldloc.1 // System.Int32 available
-ldc.i4.1
-bge.s enoughAvailable_5
+ldc.i4.2
+bge.s enoughAvailable_4
 ldarg.2
 ldarg.3
 ldc.i4.0
@@ -177,7 +391,42 @@ stloc.1 // System.Int32 available
 ldarg.1
 stloc.0 // System.Byte* destination
 
-enoughAvailable_5:
+enoughAvailable_4:
+call Int32 get_B()
+
+ldloc.1 // System.Int32 available
+ldc.i4.s 11
+bge.s afterFlush_5
+ldarg.2
+ldarg.3
+ldc.i4.0
+ldarg.3
+ldlen
+conv.i4
+ldloc.1 // System.Int32 available
+sub
+callvirt Void Write(Byte[], Int32, Int32)
+ldarg.3
+ldlen
+conv.i4
+stloc.1 // System.Int32 available
+ldarg.1
+stloc.0 // System.Byte* destination
+
+afterFlush_5:
+ldloc.0 // System.Byte* destination
+ldloc.1 // System.Int32 available
+call Int32 WriteInt32(Int32, Byte*, Int32)
+dup
+conv.i
+ldloc.0 // System.Byte* destination
+add
+stloc.0 // System.Byte* destination
+ldc.i4.m1
+mul
+ldloc.1 // System.Int32 available
+add
+stloc.1 // System.Int32 available
 ldloc.0 // System.Byte* destination
 dup
 ldc.i4.1
@@ -208,12 +457,12 @@ ret
 ## Newtonsoft
 
 
-0000   7b 22 41 22 3a 30 7d                                {"A":0}
+0000   7b 22 41 22 3a 30 2c 22   42 22 3a 30 7d            {"A":0," B":0}
 
 ## Cameronism.Json
 
 
-0000   7b 22 41 22 3a 30 7d                                {"A":0}
+0000   7b 22 41 22 3a 30 2c 22   42 22 3a 30 7d            {"A":0," B":0}
 
 Equal: True
 

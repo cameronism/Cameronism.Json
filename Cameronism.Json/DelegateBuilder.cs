@@ -847,10 +847,39 @@ namespace Cameronism.Json
 
 		void EmitObject(Schema schema, bool pushResult = false)
 		{
+			// merge consecutive constant strings
+			var spans = new List<KeyValuePair<string, Schema>>();
+			for (int i = 0; i < schema.Members.Count; i++)
+			{
+				Append(spans, 
+					(i == 0 ? "{\"" : ",\"") +
+					Escape(schema.Members[i].Key) +
+					"\":");
+
+				string constant = null;
+				var member = schema.Members[i].Value;
+				var prop = member.PropertyInfo;
+				if (prop != null)
+				{
+					constant = ConstantMethods.TryGetJson(prop.GetMethod);
+				}
+
+				if (constant != null)
+				{
+					Append(spans, constant);
+				}
+				else
+				{
+					spans.Add(new KeyValuePair<string, Schema>(null, member));
+				}
+
+				if (i == schema.Members.Count - 1) Append(spans, "}");
+			}
+
 			var underlying = Nullable.GetUnderlyingType(schema.NetType);
 			var systemNullable = underlying != null;
 			Sigil.Label ifNull = null;
-			bool anyMembers = schema.Members.Any();
+			bool anyMembers = spans.Any(span => span.Value != null);
 			if (schema.Nullable)
 			{
 				var ifNotNull = DefineLabel("IfNotNull");
@@ -877,9 +906,6 @@ namespace Cameronism.Json
 				}
 			}
 
-			// assert we've got at least minimum length
-			var minLength = schema.CalculateMinimumLength();
-
 			if (schema.Members.Count == 0)
 			{
 				if (pushResult) Depth++;
@@ -888,32 +914,56 @@ namespace Cameronism.Json
 			}
 			else
 			{
-				for (int i = 0; i < schema.Members.Count; i++)
+				int lastNonConstant = -1;
+				int minLength = 0;
+
+				// find last non constant and min length
+				for (int i = 0; i < spans.Count; i++)
 				{
-					// assert we've got enough
-					var enoughAvailable = DefineLabel("enoughAvailable");
-					Emit.LoadLocal(LocalAvailable);
-					Emit.LoadConstant(minLength);
-					Emit.BranchIfGreaterOrEqual(enoughAvailable);
+					var span = spans[i];
+					if (span.Key != null)
 					{
-						int extra = pushResult ? 2 : 1;
-						Depth += extra;
-						ReturnFailed();
-						Depth -= extra;
+						minLength += Encoding.UTF8.GetByteCount(span.Key);
+					}
+					else
+					{
+						lastNonConstant = i;
+						minLength += span.Value.CalculateMinimumLength(considerNullMembers: true);
+					}
+				}
+
+				for (int i = 0; i < spans.Count; i++)
+				{
+					var span = spans[i];
+
+					if (i == 0 || i <= lastNonConstant)
+					{
+						// assert we've got enough
+						var enoughAvailable = DefineLabel("enoughAvailable");
+						Emit.LoadLocal(LocalAvailable);
+						Emit.LoadConstant(minLength);
+						Emit.BranchIfGreaterOrEqual(enoughAvailable);
+						{
+							int extra = pushResult ? 2 : 1;
+							Depth += extra;
+							ReturnFailed();
+							Depth -= extra;
+						}
+
+						Emit.MarkLabel(enoughAvailable);
 					}
 
-					Emit.MarkLabel(enoughAvailable);
+					if (span.Key != null)
+					{
+						WriteConstant(span.Key, assertAvailable: false);
+						minLength -= Encoding.UTF8.GetByteCount(span.Key);
+						continue;
+					}
 
-					var member = schema.Members[i];
-					var lastMember = i == schema.Members.Count - 1;
+					var member = span.Value;
+					minLength -= member.CalculateMinimumLength(considerNullSelf: true);
 
-					// write the member name
-					var label =
-						(i == 0 ? "{" : ",") +
-						"\"" + member.Key + "\":";
-					minLength -= WriteConstant(label, assertAvailable: false);
-					minLength -= member.Value.CalculateMinimumLength(considerNullSelf: true);
-
+					var lastMember = i == lastNonConstant;
 					if (!lastMember)
 					{
 						// sanity check minLength
@@ -930,9 +980,9 @@ namespace Cameronism.Json
 					Depth += loopDepth;
 
 					// get the member value
-					if (member.Value.FieldInfo != null)
+					if (member.FieldInfo != null)
 					{
-						Emit.LoadField(member.Value.FieldInfo);
+						Emit.LoadField(member.FieldInfo);
 					}
 					else
 					{
@@ -940,11 +990,11 @@ namespace Cameronism.Json
 						{
 							PushAddress(systemNullable ? underlying : schema.NetType);
 						}
-						Emit.Call(member.Value.PropertyInfo.GetMethod);
+						Emit.Call(member.PropertyInfo.GetMethod);
 					}
 
 					// write the member value
-					EmitInline(member.Value);
+					EmitInline(member);
 
 					Depth -= loopDepth;
 
@@ -952,9 +1002,6 @@ namespace Cameronism.Json
 
 					// we probably won't care about result until we create more fine grained estimates when out of room
 				}
-				if (pushResult) Depth++;
-				WriteConstant("}");
-				if (pushResult) Depth--;
 			}
 
 			if (pushResult)
@@ -968,6 +1015,25 @@ namespace Cameronism.Json
 			{
 				Emit.MarkLabel(ifNull);
 			}
+		}
+
+		static void Append(List<KeyValuePair<string, Schema>> list, string value)
+		{
+			var last = list.LastOrDefault();
+			if (last.Key == null)
+			{
+				list.Add(new KeyValuePair<string, Schema>(value, null));
+			}
+			else
+			{
+				list[list.Count - 1] = new KeyValuePair<string, Schema>(last.Key + value, null);
+			}
+		}
+
+		static string Escape(string value)
+		{
+			// FIXME
+			return value;
 		}
 
 		void EmitDictionary(Schema schema, bool pushResult = false)
