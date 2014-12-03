@@ -11,10 +11,13 @@ namespace Cameronism.Json
 	{
 		static MethodInfo _Disassemble = typeof(ConstantMethods).GetMethod("Disassemble", BindingFlags.Static | BindingFlags.NonPublic);
 
-		public static string TryGetJson(MethodInfo mi)
+		public static string TryGetJson(MethodInfo mi, Type type)
 		{
 			var declaringType = mi.DeclaringType;
 			if (declaringType.IsValueType) return null; // Don't know how to make Sigil.Disassembler happy with these - generics + struct
+
+			if (mi.IsVirtual && !type.IsSealed) return null; // Do not inline
+
 			return (string)_Disassemble.MakeGenericMethod(declaringType, mi.ReturnType).Invoke(null, new object[] { mi });
 		}
 

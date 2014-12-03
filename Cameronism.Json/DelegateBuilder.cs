@@ -861,7 +861,7 @@ namespace Cameronism.Json
 				var prop = member.PropertyInfo;
 				if (prop != null)
 				{
-					constant = ConstantMethods.TryGetJson(prop.GetMethod);
+					constant = ConstantMethods.TryGetJson(prop.GetMethod, schema.NetType);
 				}
 
 				if (constant != null)

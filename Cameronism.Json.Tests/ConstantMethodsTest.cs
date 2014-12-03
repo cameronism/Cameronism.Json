@@ -71,6 +71,13 @@ namespace Cameronism.Json.Tests
 			public int A { get { return 0; } }
 			public int B { get; set; }
 		}
+		class OneConstantVirtual
+		{
+			public virtual int A { get { return 0; } }
+		}
+		sealed class OneConstantSealed : OneConstantVirtual
+		{
+		}
 		#endregion
 
 		static bool ToleratedFailure(Type type, string newtonsoft)
@@ -96,7 +103,7 @@ namespace Cameronism.Json.Tests
 				var shouldBeConstant = mi.Name[4] == 'C';
 				var actual = mi.Invoke(this, null);
 				var nJSON = Newtonsoft.Json.JsonConvert.SerializeObject(actual);
-				var constant = ConstantMethods.TryGetJson(mi);
+				var constant = ConstantMethods.TryGetJson(mi, this.GetType());
 
 				var passed = shouldBeConstant ?
 					String.Equals(nJSON, constant, StringComparison.Ordinal) :
@@ -151,6 +158,8 @@ namespace Cameronism.Json.Tests
 
 			TrySerializer(sb, new OneConstant());
 			TrySerializer(sb, new OneConstantThen());
+			TrySerializer(sb, new OneConstantVirtual());
+			TrySerializer(sb, new OneConstantSealed());
 
 			ApprovalTests.Approvals.Verify(sb.ToString());
 			Assert.True(failedCount == 0, "Look at the approval, " + failedCount + " failed");
