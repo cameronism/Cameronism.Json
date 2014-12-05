@@ -24,7 +24,7 @@ namespace Cameronism.Json
 
 			public void FindSequential(ulong value, out byte* str, out int length)
 			{
-				byte* key = _TableStart + value;
+				byte* key = _TableStart + value * 4;
 				if (key >= _StringStart)
 				{
 					str = null;
@@ -65,7 +65,7 @@ namespace Cameronism.Json
 
 				*(ushort*)(destination + (i * 4)) = (ushort)offset;
 
-				int result = ConvertUTF.WriteStringUtf8(enumName, stringPtr, (int)(endStrings - stringPtr));
+				int result = ConvertUTF.WriteStringUtf8(enumName, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
 				if (result <= 0 || result >= ushort.MaxValue) return null;
 
 				*(ushort*)(destination + (i * 4) + 2) = (ushort)result;

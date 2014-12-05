@@ -211,6 +211,7 @@ namespace Cameronism.Json
 			*(ptr++) = (byte)'"';
 			return (int)(ptr - dst);
 		}
+
 		public unsafe static int WriteStringUtf8(string value, byte* dst, int avail)
 		{
 			if (value == null) return Serializer.WriteNull(dst, avail);
@@ -242,6 +243,41 @@ namespace Cameronism.Json
 			}
 			
 			*(ptr++) = (byte)'"';
+			return (int)(ptr - dst);
+		}
+
+		public unsafe static int WriteStringUtf8(string value, byte* dst, int avail, bool useQuote)
+		{
+			if (value == null) return Serializer.WriteNull(dst, avail);
+			
+			
+			int required = value.Length + (useQuote ? 2 : 0); // best case is unescaped ASCII
+			if (required > avail) return -required;
+			
+			byte* ptr = dst;
+			
+			if (useQuote) *(ptr++) = (byte)'"'; 
+			
+			fixed (char* ch = value)
+			{
+				ushort* sourceStart = (ushort*)ch;
+				ushort* sourceEnd = sourceStart + value.Length;
+				byte* targetStart = ptr;
+				byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+				var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
+				
+				// optimistic
+				ptr = targetStart;
+				
+				if (result == ConversionResult.targetExhausted)
+				{
+					// pessimistic estimate: 4x the number of unconverted chars + what we started with
+					return -(avail + 4 * (int)(sourceEnd - sourceStart));
+				}
+			}
+			
+			if (useQuote) *(ptr++) = (byte)'"';
+
 			return (int)(ptr - dst);
 		}
 		
