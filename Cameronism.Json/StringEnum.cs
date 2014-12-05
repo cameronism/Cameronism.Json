@@ -35,6 +35,28 @@ namespace Cameronism.Json
 				str = _StringStart + *(ushort*)key;
 				length = *(ushort*)(key + 2);
 			}
+
+			public void FindSequential(uint value, out byte* str, out int length)
+			{
+				byte* lookup = _TableStart;
+				byte* stop = _StringStart;
+
+				while (lookup < stop)
+				{
+					if (*(uint*)lookup == value)
+					{
+						str = _StringStart + *(ushort*)(lookup + 4);
+						length = *(ushort*)(lookup + 6);
+						return;
+					}
+
+					lookup += 8;
+				}
+
+				str = null;
+				length = 0;
+				return;
+			}
 		}
 
 		public static Lookup? GenerateIndexedLookup(Type type, byte* destination, int available, out int used)
@@ -85,11 +107,11 @@ namespace Cameronism.Json
 			int valueCount;
 			ulong maxValue;
 			DescribeEnum(type, out valueCount, out maxValue);
-			if (valueCount == 0) return null;
+			if (valueCount == 0 || maxValue > uint.MaxValue) return null;
 			maxValue++;
 
 			byte* endStrings = destination + available;
-			byte* stringPtr = (byte*)(destination + (valueCount * 4));
+			byte* stringPtr = (byte*)(destination + (valueCount * 8));
 			var stringsStart = stringPtr;
 
 			if (stringPtr >= destination + available) return null;
@@ -101,20 +123,18 @@ namespace Cameronism.Json
 				if (offset > ushort.MaxValue) return null;
 
 				string enumName = Enum.GetName(type, i);
-				if (enumName == null)
-				{
-					continue;
-				}
+				if (enumName == null) continue;
 
-				*(ushort*)(destination + (ix * 4)) = (ushort)offset;
+				*(uint*)(destination + ix) = (uint)i;
+				*(ushort*)(destination + ix + 4) = (ushort)offset;
 
 				int result = ConvertUTF.WriteStringUtf8(enumName, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
 				if (result <= 0 || result >= ushort.MaxValue) return null;
 
-				*(ushort*)(destination + (ix * 4) + 2) = (ushort)result;
+				*(ushort*)(destination + ix + 6) = (ushort)result;
 
 				stringPtr += result;
-				ix++;
+				ix += 8;
 			}
 
 			used = (int)(stringPtr - destination);

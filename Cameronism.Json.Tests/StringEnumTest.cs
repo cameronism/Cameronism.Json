@@ -103,23 +103,23 @@ namespace Cameronism.Json.Tests
 
 
 				var chars = new char[64];
-				//foreach (T dow in Enum.GetValues(typeof(T)))
-				//{
-				//	byte* str;
-				//	int len;
-				//	lookup.Value.FindSequential(Convert.ToUInt64(dow), out str, out len);
-				//	Assert.True(str != null, "string must not be null");
-				//	var dowString = dow.ToString();
-				//	Assert.Equal(dowString.Length, len);
+				foreach (T dow in Enum.GetValues(typeof(T)))
+				{
+					byte* str;
+					int len;
+					lookup.Value.FindSequential(Convert.ToUInt32(dow), out str, out len);
+					Assert.True(str != null, "string must not be null");
+					var dowString = dow.ToString();
+					Assert.Equal(dowString.Length, len);
 
-				//	string actualString;
-				//	fixed (char* ch = chars)
-				//	{
-				//		var strLen = Encoding.UTF8.GetChars(str, len, ch, chars.Length);
-				//		actualString = new string(ch, 0, strLen);
-				//	}
-				//	Assert.Equal(dowString, actualString);
-				//}
+					string actualString;
+					fixed (char* ch = chars)
+					{
+						var strLen = Encoding.UTF8.GetChars(str, len, ch, chars.Length);
+						actualString = new string(ch, 0, strLen);
+					}
+					Assert.Equal(dowString, actualString);
+				}
 			}
 		}
 	}
