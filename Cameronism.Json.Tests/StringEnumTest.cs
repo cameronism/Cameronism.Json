@@ -21,34 +21,50 @@ namespace Cameronism.Json.Tests
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void SkippyEnum()
 		{
-			ApproveSequentialEnum<Skippy>();
+			var sb = new StringBuilder();
+			ApproveIndexedEnum<Skippy>(sb);
+			sb.AppendLine();
+			sb.AppendLine();
+			ApproveSortedEnum<Skippy>(sb);
+			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void DayOfWeekEnum()
 		{
-			ApproveSequentialEnum<DayOfWeek>();
+			var sb = new StringBuilder();
+			ApproveIndexedEnum<DayOfWeek>(sb);
+			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
-		public void ApproveSequentialEnum<T>()
+		public void ApproveIndexedEnum<T>(StringBuilder sb)
 		{
 			var buffer = new byte[1024];
-			int stringStart;
-			int freeStart;
 
 			fixed (byte* ptr = buffer)
 			{
-				var lookup = StringEnum.GenerateSequentialLookup(typeof(T), ptr, buffer.Length, out freeStart);
+				int freeStart;
+				var lookup = StringEnum.GenerateIndexedLookup(typeof(T), ptr, buffer.Length, out freeStart);
 
 				Assert.True(lookup.HasValue, "lookup must have been generated");
-				stringStart = (int)(lookup.Value.StringStart - ptr);
+				var stringStart = (int)(lookup.Value.StringStart - ptr);
+
+
+				sb.AppendLine("# Indexed " + SchemaTest.HumanName(typeof(T)));
+				sb.AppendLine("## Lookups");
+				Util.Hex.Dump(sb, buffer.Take(stringStart));
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine("## Strings");
+				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
+
 
 				var chars = new char[64];
 				foreach (T dow in Enum.GetValues(typeof(T)))
 				{
 					byte* str;
 					int len;
-					lookup.Value.FindSequential(Convert.ToUInt64(dow), out str, out len);
+					lookup.Value.FindIndexed(Convert.ToUInt64(dow), out str, out len);
 					Assert.True(str != null, "string must not be null");
 					var dowString = dow.ToString();
 					Assert.Equal(dowString.Length, len);
@@ -62,16 +78,49 @@ namespace Cameronism.Json.Tests
 					Assert.Equal(dowString, actualString);
 				}
 			}
+		}
 
-			var sb = new StringBuilder();
-			sb.AppendLine("## Lookups");
-			Util.Hex.Dump(sb, buffer.Take(stringStart));
-			sb.AppendLine();
-			sb.AppendLine();
-			sb.AppendLine("## Strings");
-			Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
+		public void ApproveSortedEnum<T>(StringBuilder sb)
+		{
+			var buffer = new byte[1024];
 
-			ApprovalTests.Approvals.Verify(sb.ToString());
+			fixed (byte* ptr = buffer)
+			{
+				int freeStart;
+				var lookup = StringEnum.GenerateSortedLookup(typeof(T), ptr, buffer.Length, out freeStart);
+
+				Assert.True(lookup.HasValue, "lookup must have been generated");
+				var stringStart = (int)(lookup.Value.StringStart - ptr);
+
+
+				sb.AppendLine("# Sorted " + SchemaTest.HumanName(typeof(T)));
+				sb.AppendLine("## Lookups");
+				Util.Hex.Dump(sb, buffer.Take(stringStart));
+				sb.AppendLine();
+				sb.AppendLine();
+				sb.AppendLine("## Strings");
+				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
+
+
+				var chars = new char[64];
+				//foreach (T dow in Enum.GetValues(typeof(T)))
+				//{
+				//	byte* str;
+				//	int len;
+				//	lookup.Value.FindSequential(Convert.ToUInt64(dow), out str, out len);
+				//	Assert.True(str != null, "string must not be null");
+				//	var dowString = dow.ToString();
+				//	Assert.Equal(dowString.Length, len);
+
+				//	string actualString;
+				//	fixed (char* ch = chars)
+				//	{
+				//		var strLen = Encoding.UTF8.GetChars(str, len, ch, chars.Length);
+				//		actualString = new string(ch, 0, strLen);
+				//	}
+				//	Assert.Equal(dowString, actualString);
+				//}
+			}
 		}
 	}
 }

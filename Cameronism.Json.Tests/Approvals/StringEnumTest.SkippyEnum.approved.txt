@@ -1,8 +1,20 @@
-﻿## Lookups
+﻿# Indexed Cameronism.Json.Tests.StringEnumTest+Skippy
+## Lookups
 
 
 0000   00 00 00 00 00 00 03 00   00 00 00 00 03 00 03 00   ........ ........
 0010   00 00 00 00 06 00 03 00   00 00 00 00 09 00 03 00   ........ ........
+
+## Strings
+
+
+0000   46 6f 6f 42 61 72 42 6f   70 42 61 7a               FooBarBo pBaz
+
+# Sorted Cameronism.Json.Tests.StringEnumTest+Skippy
+## Lookups
+
+
+0000   00 00 03 00 03 00 03 00   06 00 03 00 09 00 03 00   ........ ........
 
 ## Strings
 

@@ -22,7 +22,7 @@ namespace Cameronism.Json
 				_StringStart = stringStart;
 			}
 
-			public void FindSequential(ulong value, out byte* str, out int length)
+			public void FindIndexed(ulong value, out byte* str, out int length)
 			{
 				byte* key = _TableStart + value * 4;
 				if (key >= _StringStart)
@@ -37,13 +37,15 @@ namespace Cameronism.Json
 			}
 		}
 
-		public static Lookup? GenerateSequentialLookup(Type type, byte* destination, int available, out int used)
+		public static Lookup? GenerateIndexedLookup(Type type, byte* destination, int available, out int used)
 		{
 			used = 0;
 
-			var maybeMaxValue = GetMaxValue(type);
-			if (!maybeMaxValue.HasValue) return null;
-			var maxValue = maybeMaxValue.Value + 1;
+			int valueCount;
+			ulong maxValue;
+			DescribeEnum(type, out valueCount, out maxValue);
+			if (valueCount == 0) return null;
+			maxValue++;
 
 			byte* endStrings = destination + available;
 			byte* stringPtr = (byte*)(destination + (maxValue * 4));
@@ -76,18 +78,59 @@ namespace Cameronism.Json
 			return new Lookup(destination, stringsStart);
 		}
 
-		public static ulong? GetMaxValue(Type type)
+		public static Lookup? GenerateSortedLookup(Type type, byte* destination, int available, out int used)
 		{
-			bool any = false;
-			ulong maxValue = 0;
-			foreach (var val in Enum.GetValues(type))
+			used = 0;
+
+			int valueCount;
+			ulong maxValue;
+			DescribeEnum(type, out valueCount, out maxValue);
+			if (valueCount == 0) return null;
+			maxValue++;
+
+			byte* endStrings = destination + available;
+			byte* stringPtr = (byte*)(destination + (valueCount * 4));
+			var stringsStart = stringPtr;
+
+			if (stringPtr >= destination + available) return null;
+
+			int ix = 0;
+			for (ulong i = 0; i < maxValue; i++)
 			{
-				any = true;
+				long offset = stringPtr - stringsStart;
+				if (offset > ushort.MaxValue) return null;
+
+				string enumName = Enum.GetName(type, i);
+				if (enumName == null)
+				{
+					continue;
+				}
+
+				*(ushort*)(destination + (ix * 4)) = (ushort)offset;
+
+				int result = ConvertUTF.WriteStringUtf8(enumName, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
+				if (result <= 0 || result >= ushort.MaxValue) return null;
+
+				*(ushort*)(destination + (ix * 4) + 2) = (ushort)result;
+
+				stringPtr += result;
+				ix++;
+			}
+
+			used = (int)(stringPtr - destination);
+			return new Lookup(destination, stringsStart);
+		}
+
+		public static void DescribeEnum(Type type, out int valueCount, out ulong maxValue)
+		{
+			maxValue = 0;
+			var allValues = Enum.GetValues(type);
+			valueCount = allValues.Length;
+			foreach (var val in allValues)
+			{
 				var num = Convert.ToUInt64(val);
 				if (num > maxValue) maxValue = num;
 			}
-
-			return any ? maxValue : (ulong?)null;
 		}
 	}
 }
