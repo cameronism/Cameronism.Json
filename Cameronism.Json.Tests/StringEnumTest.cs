@@ -18,6 +18,42 @@ namespace Cameronism.Json.Tests
 			Baz = 7,
 		}
 
+		enum Sparse : uint
+		{
+			v1 = 1 << 0,
+			v2 = 1 << 1,
+			v3 = 1 << 2,
+			v4 = 1 << 3,
+			v5 = 1 << 4,
+			v6 = 1 << 5,
+			v7 = 1 << 6,
+			v8 = 1 << 7,
+			v9 = 1 << 8,
+			v10 = 1 << 9,
+			v11 = 1 << 10,
+			v12 = 1 << 11,
+			v13 = 1 << 12,
+			v14 = 1 << 13,
+			v15 = 1 << 14,
+			v16 = 1 << 15,
+			v17 = 1 << 16,
+			v18 = 1 << 17,
+			v19 = 1 << 18,
+			v20 = 1 << 19,
+			v21 = 1 << 20,
+			v22 = 1 << 21,
+			v23 = 1 << 22,
+			v24 = 1 << 23,
+			v25 = 1 << 24,
+			v26 = 1 << 25,
+			v27 = 1 << 26,
+			v28 = 1 << 27,
+			v29 = 1 << 28,
+			v30 = 1 << 29,
+			v31 = 1 << 30,
+			v32 = ((uint)1 << 31),
+		}
+
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void SkippyEnum()
 		{
@@ -26,6 +62,14 @@ namespace Cameronism.Json.Tests
 			sb.AppendLine();
 			sb.AppendLine();
 			ApproveSortedEnum<Skippy>(sb);
+			ApprovalTests.Approvals.Verify(sb.ToString());
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public void SparseEnum()
+		{
+			var sb = new StringBuilder();
+			ApproveSortedEnum<Sparse>(sb);
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 

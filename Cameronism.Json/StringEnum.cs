@@ -104,31 +104,27 @@ namespace Cameronism.Json
 		{
 			used = 0;
 
-			int valueCount;
-			ulong maxValue;
-			DescribeEnum(type, out valueCount, out maxValue);
-			if (valueCount == 0 || maxValue > uint.MaxValue) return null;
-			maxValue++;
+			var values = SortValues(Enum.GetValues(type));
+			if (values.Length == 0) return null;
+			var maxValue = values[values.Length - 1].Key;
+			if (maxValue > uint.MaxValue) return null;
 
 			byte* endStrings = destination + available;
-			byte* stringPtr = (byte*)(destination + (valueCount * 8));
+			byte* stringPtr = (byte*)(destination + (values.Length * 8));
 			var stringsStart = stringPtr;
 
 			if (stringPtr >= destination + available) return null;
 
 			int ix = 0;
-			for (ulong i = 0; i < maxValue; i++)
+			foreach (var value in values)
 			{
 				long offset = stringPtr - stringsStart;
 				if (offset > ushort.MaxValue) return null;
 
-				string enumName = Enum.GetName(type, i);
-				if (enumName == null) continue;
-
-				*(uint*)(destination + ix) = (uint)i;
+				*(uint*)(destination + ix) = (uint)value.Key;
 				*(ushort*)(destination + ix + 4) = (ushort)offset;
 
-				int result = ConvertUTF.WriteStringUtf8(enumName, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
+				int result = ConvertUTF.WriteStringUtf8(value.Value, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
 				if (result <= 0 || result >= ushort.MaxValue) return null;
 
 				*(ushort*)(destination + ix + 6) = (ushort)result;
@@ -139,6 +135,38 @@ namespace Cameronism.Json
 
 			used = (int)(stringPtr - destination);
 			return new Lookup(destination, stringsStart);
+		}
+
+		static KeyValuePair<ulong, string>[] SortValues(Array values)
+		{
+			var sorted = new KeyValuePair<ulong, string>[values.Length];
+
+			for (int i = 0; i < sorted.Length; i++)
+			{
+				var value = values.GetValue(i);
+				var num = Convert.ToUInt64(value);
+				sorted[i] = new KeyValuePair<ulong, string>(num, value.ToString());
+			}
+
+			// insertion sort -- probably already sorted
+			for (int i = 1; i < sorted.Length; i++)
+			{
+				int j = i;
+				var temp = sorted[i];
+				var exchanged = false;
+ 
+				while (sorted[j - 1].Key > temp.Key)
+				{
+					sorted[j] = sorted[j - 1];
+					j--;
+					exchanged = true;
+					if (j == 0) break;
+				}
+ 
+				if (exchanged) sorted[j] = temp;
+			}
+
+			return sorted;
 		}
 
 		public static void DescribeEnum(Type type, out int valueCount, out ulong maxValue)
