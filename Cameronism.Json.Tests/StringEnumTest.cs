@@ -54,6 +54,14 @@ namespace Cameronism.Json.Tests
 			v32 = ((uint)1 << 31),
 		}
 
+		enum Negatives : int
+		{
+			NegativeOne = -1,
+			One = 1,
+			Min = int.MinValue,
+			Max = int.MaxValue,
+		}
+
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void SkippyEnum()
 		{
@@ -70,6 +78,8 @@ namespace Cameronism.Json.Tests
 		{
 			var sb = new StringBuilder();
 			ApproveSortedEnum<Sparse>(sb);
+
+			ApproveSortedEnum<Negatives>(sb, expectGenerated: false);
 			ApprovalTests.Approvals.Verify(sb.ToString());
 		}
 
@@ -124,7 +134,7 @@ namespace Cameronism.Json.Tests
 			}
 		}
 
-		public void ApproveSortedEnum<T>(StringBuilder sb)
+		public void ApproveSortedEnum<T>(StringBuilder sb, bool expectGenerated = true)
 		{
 			var buffer = new byte[1024];
 
@@ -132,6 +142,12 @@ namespace Cameronism.Json.Tests
 			{
 				int freeStart;
 				var lookup = StringEnum.GenerateSortedLookup(typeof(T), ptr, buffer.Length, out freeStart);
+
+				if (!expectGenerated)
+				{
+					Assert.False(lookup.HasValue, "lookup must not have been generated");
+					return;
+				}
 
 				Assert.True(lookup.HasValue, "lookup must have been generated");
 				var stringStart = (int)(lookup.Value.StringStart - ptr);

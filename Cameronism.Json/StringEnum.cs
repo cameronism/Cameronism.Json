@@ -104,7 +104,7 @@ namespace Cameronism.Json
 		{
 			used = 0;
 
-			var values = SortValues(Enum.GetValues(type));
+			var values = SortValues(type);
 			if (values.Length == 0) return null;
 			var maxValue = values[values.Length - 1].Key;
 			if (maxValue > uint.MaxValue) return null;
@@ -137,14 +137,29 @@ namespace Cameronism.Json
 			return new Lookup(destination, stringsStart);
 		}
 
-		static KeyValuePair<ulong, string>[] SortValues(Array values)
+		static KeyValuePair<ulong, string>[] SortValues(Type type)
 		{
+			var values = Enum.GetValues(type);
+			bool signed;
+			switch (Type.GetTypeCode(type))
+			{
+				case TypeCode.SByte:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+					signed = true;
+					break;
+				default:
+					signed = false;
+					break;
+			}
+
 			var sorted = new KeyValuePair<ulong, string>[values.Length];
 
 			for (int i = 0; i < sorted.Length; i++)
 			{
 				var value = values.GetValue(i);
-				var num = Convert.ToUInt64(value);
+				var num = signed ? (ulong)Convert.ToInt64(value) : Convert.ToUInt64(value);
 				sorted[i] = new KeyValuePair<ulong, string>(num, value.ToString());
 			}
 
