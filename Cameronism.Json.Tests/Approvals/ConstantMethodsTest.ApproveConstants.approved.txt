@@ -198,7 +198,6 @@ Expected constant: True
 # C15 System.Single
 
 Expected constant: True
-** SKIPPED ** - fix this
 
 ## Newtonsoft
 
@@ -207,8 +206,8 @@ Expected constant: True
 
 ## Cameronism.Json
 
-`null`
 
+0000   30 2e 35                                            0.5
 
 
 # C16 System.SByte
@@ -336,7 +335,6 @@ Expected constant: True
 # C24 System.Nullable<System.Single>
 
 Expected constant: True
-** SKIPPED ** - fix this
 
 ## Newtonsoft
 
@@ -345,8 +343,8 @@ Expected constant: True
 
 ## Cameronism.Json
 
-`null`
 
+0000   30 2e 35                                            0.5
 
 
 # C25 System.Nullable<System.SByte>
@@ -653,7 +651,6 @@ Expected constant: True
 # C44 System.Single
 
 Expected constant: True
-** SKIPPED ** - fix this
 
 ## Newtonsoft
 
@@ -662,8 +659,8 @@ Expected constant: True
 
 ## Cameronism.Json
 
-`null`
 
+0000   30 2e 30                                            0.0
 
 
 # C45 System.SByte

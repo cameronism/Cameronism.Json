@@ -87,8 +87,7 @@ namespace Cameronism.Json.Tests
 		{
 			var underlying = Nullable.GetUnderlyingType(type) ?? type;
 
-			return newtonsoft != null &&
-				(underlying == typeof(float) || underlying == typeof(decimal));
+			return newtonsoft != null && underlying == typeof(decimal);
 		}
 
 		[Fact]
