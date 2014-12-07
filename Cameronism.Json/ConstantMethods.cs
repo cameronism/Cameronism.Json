@@ -186,10 +186,24 @@ namespace Cameronism.Json
 			return num.ToString(System.Globalization.CultureInfo.InvariantCulture);
 		}
 
-		static string GetEscapedString(string value)
+		unsafe static string GetEscapedString(string value)
 		{
-			// fixme escape
-			return "\"" + value + "\"";
+			var required = Encoding.UTF8.GetByteCount(value);
+			byte[] buffer;
+			required = required * 2 + 2;
+			int result;
+			while (true)
+			{
+				buffer = new byte[required];
+				fixed (byte* ptr = buffer)
+				{
+					result = ConvertUTF.WriteStringUtf8(value, ptr, buffer.Length);
+				}
+				if (result > 2) break;
+
+				required *= 2;
+			}
+			return Encoding.UTF8.GetString(buffer, 0, result);
 		}
 
 		static string GetDoubleValue(object value, Type returnType)

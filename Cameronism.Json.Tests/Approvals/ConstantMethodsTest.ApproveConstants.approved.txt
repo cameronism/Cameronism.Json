@@ -726,3 +726,52 @@ Expected constant: True
 0000   2d 32                                               -2
 
 
+# C49 System.Char
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 5c 75 30 30 30 30 22                             "\u0000"
+
+## Cameronism.Json
+
+
+0000   22 5c 75 30 30 30 30 22                             "\u0000"
+
+
+# C50 System.String
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 5c 72 5c 6e 22                                   "\r\n"
+
+## Cameronism.Json
+
+
+0000   22 5c 72 5c 6e 22                                   "\r\n"
+
+
+# C51 System.String
+
+Expected constant: True
+
+## Newtonsoft
+
+
+0000   22 ef bd b2 e3 82 93 e4   b9 87 20 e4 b8 82 e4 b9   "....... .. .....
+0010   87 63 e5 b0 ba e4 b9 87   ef bd b2 20 ef be 89 e4   .c...... ... ....
+0020   b8 82 20 6f 75 ef bd b2   2e 22                     .. ou... ."
+
+## Cameronism.Json
+
+
+0000   22 ef bd b2 e3 82 93 e4   b9 87 20 e4 b8 82 e4 b9   "....... .. .....
+0010   87 63 e5 b0 ba e4 b9 87   ef bd b2 20 ef be 89 e4   .c...... ... ....
+0020   b8 82 20 6f 75 ef bd b2   2e 22                     .. ou... ."
+
+

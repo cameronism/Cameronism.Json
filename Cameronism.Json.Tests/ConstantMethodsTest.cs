@@ -59,6 +59,9 @@ namespace Cameronism.Json.Tests
 		short C46 { get { return -2; } }
 		int C47 { get { return -2; } }
 		long C48 { get { return -2; } }
+		char C49 { get { return '\u0000'; } }
+		string C50 { get { return "\r\n"; } }
+		string C51 { get { return "\uFF72\u3093\u4E47 \u4E02\u4E47c\u5C3A\u4E47\uFF72 \uFF89\u4E02 ou\uFF72."; } }
 		#endregion
 		static DateTime SomeDateTime() { return new DateTime(2010, 1, 1, 1, 1, 1, DateTimeKind.Utc); }
 		#region inner types

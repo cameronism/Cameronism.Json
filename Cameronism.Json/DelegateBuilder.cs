@@ -955,8 +955,8 @@ namespace Cameronism.Json
 
 					if (span.Key != null)
 					{
-						WriteConstant(span.Key, assertAvailable: false);
-						minLength -= Encoding.UTF8.GetByteCount(span.Key);
+						int written = WriteConstant(span.Key, assertAvailable: false);
+						minLength -= written;
 						continue;
 					}
 
