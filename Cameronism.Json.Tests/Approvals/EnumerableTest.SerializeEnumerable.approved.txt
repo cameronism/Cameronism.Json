@@ -1046,6 +1046,8 @@ stloc.1
 dup
 constrained. System.Collections.Generic.Dictionary`2+Enumerator[System.String,System.Int32]
 callvirt System.Collections.Generic.KeyValuePair`2[System.String,System.Int32] get_Current()
+ldloca.s 3
+initobj System.Collections.Generic.KeyValuePair`2[System.String,System.Int32]
 stloc.3
 ldloca.s 3
 dup

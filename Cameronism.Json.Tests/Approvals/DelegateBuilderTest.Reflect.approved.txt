@@ -4249,6 +4249,8 @@ mul
 ret
 
 enoughAvailable_5:
+ldloca.s 2
+initobj System.Collections.Generic.KeyValuePair`2[System.Int32,System.Int32]
 stloc.2
 ldloca.s 2
 call Int32 get_Value()
@@ -4565,6 +4567,8 @@ mul
 ret
 
 enoughAvailable_8:
+ldloca.s 2
+initobj System.Collections.Generic.KeyValuePair`2[System.Int32,System.Int32]
 stloc.2
 ldloca.s 2
 call Int32 get_Value()
