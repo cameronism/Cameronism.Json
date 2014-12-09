@@ -81,6 +81,21 @@ namespace Cameronism.Json.Tests
 		sealed class OneConstantSealed : OneConstantVirtual
 		{
 		}
+		class StringThen
+		{
+			public string A { get { return "\u0000"; } }
+			public string B { get; set; }
+		}
+		class ThenString
+		{
+			public string A { get; set; }
+			public string B { get { return "\u0000"; } }
+		}
+		class NoConstants
+		{
+			public string A { get; set; }
+			public string B { get; set; }
+		}
 		#endregion
 
 		static bool ToleratedFailure(Type type, string newtonsoft)
@@ -214,6 +229,50 @@ namespace Cameronism.Json.Tests
 			}
 
 			return failures;
+		}
+
+		[Fact]
+		public void CheckBoundaries()
+		{
+			Assert.NotNull(CheckBoundary(new NoConstants { A = "...", B = "\u0000" }));
+			Assert.NotNull(CheckBoundary(new ThenString { A = "..." }));
+			Assert.NotNull(CheckBoundary(new StringThen { B = "..." }));
+		}
+
+		// returns the length of serialized value when successful
+		unsafe static int? CheckBoundary<T>(T value, int maxLength = 64)
+		{
+			const byte init = 255;
+			var nJSON = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(value));
+			var success = false;
+			var buffer = new byte[maxLength + 2];
+			var emit = DelegateBuilder.CreatePointer<T>(Schema.Reflect(typeof(T)));
+			string instructions;
+			var del = (Serializer.WriteToPointer<T>)emit.CreateDelegate(typeof(Serializer.WriteToPointer<T>), out instructions);
+
+			for (int i = 1; i <= maxLength; i++)
+			{
+				for (int j = 0; j < buffer.Length; j++) buffer[j] = init;
+
+				int result;
+				fixed (byte* ptr = buffer)
+				{
+					result = del.Invoke(ref value, ptr + 1, i);
+				}
+
+				// make sure we didn't go past the boundary
+				Assert.Equal(init, buffer[0]);
+				Assert.Equal(init, buffer[i + 1]);
+				Assert.True(result <= i, "Don't exceed length");
+
+				if (result > 0)
+				{
+					Assert.Equal(nJSON, buffer.Skip(1).Take(result));
+					success = true;
+				}
+			}
+
+			return success ? (int?)nJSON.Length : null;
 		}
 	}
 }
