@@ -196,7 +196,7 @@ namespace Cameronism.Json
 			ushort* sourceStart = (ushort*)&value;
 			ushort* sourceEnd = sourceStart + 1;
 			byte* targetStart = ptr;
-			byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+			byte* targetEnd = targetStart + avail - 2; // leave room for the quote
 			var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
 			
 			// optimistic
@@ -229,7 +229,7 @@ namespace Cameronism.Json
 				ushort* sourceStart = (ushort*)ch;
 				ushort* sourceEnd = sourceStart + value.Length;
 				byte* targetStart = ptr;
-				byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+				byte* targetEnd = targetStart + avail - 2; // leave room for the quote
 				var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
 				
 				// optimistic
@@ -263,7 +263,7 @@ namespace Cameronism.Json
 				ushort* sourceStart = (ushort*)ch;
 				ushort* sourceEnd = sourceStart + value.Length;
 				byte* targetStart = ptr;
-				byte* targetEnd = targetStart + avail - 1; // leave room for the quote
+				byte* targetEnd = targetStart + avail - 2; // leave room for the quote
 				var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
 				
 				// optimistic
@@ -296,7 +296,7 @@ namespace Cameronism.Json
 					ushort* sourceStart = (ushort*)cptr;
 					ushort* sourceEnd = (ushort*)(cptr + s.Length);
 					byte* targetStart = bptr;
-					byte* targetEnd = bptr + b.Length;
+					byte* targetEnd = bptr + b.Length - 1;
 					var result = EscapeJson(ref sourceStart, sourceEnd, ref targetStart, targetEnd);
 					return (int)(targetStart - bptr);
 				}

@@ -81,14 +81,20 @@ namespace Cameronism.Json.Tests
 		sealed class OneConstantSealed : OneConstantVirtual
 		{
 		}
+		[System.Runtime.Serialization.DataContract]
 		class StringThen
 		{
+			[System.Runtime.Serialization.DataMember(Order=1)]
 			public string A { get { return "\u0000"; } }
+			[System.Runtime.Serialization.DataMember(Order=2)]
 			public string B { get; set; }
 		}
+		[System.Runtime.Serialization.DataContract]
 		class ThenString
 		{
+			[System.Runtime.Serialization.DataMember(Order=1)]
 			public string A { get; set; }
+			[System.Runtime.Serialization.DataMember(Order=2)]
 			public string B { get { return "\u0000"; } }
 		}
 		class NoConstants
@@ -236,7 +242,11 @@ namespace Cameronism.Json.Tests
 		{
 			Assert.NotNull(CheckBoundary(new NoConstants { A = "...", B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "..." }));
+			Assert.NotNull(CheckBoundary(new ThenString { A = "\u0000" }));
+			Assert.NotNull(CheckBoundary(new ThenString { A = "\n" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "..." }));
+			Assert.NotNull(CheckBoundary(new StringThen { B = "\u0000" }));
+			Assert.NotNull(CheckBoundary(new StringThen { B = "\n" }));
 		}
 
 		// returns the length of serialized value when successful

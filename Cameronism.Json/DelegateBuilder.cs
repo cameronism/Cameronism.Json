@@ -936,22 +936,20 @@ namespace Cameronism.Json
 				{
 					var span = spans[i];
 
-					if (i == 0 || i <= lastNonConstant)
+					// assert we've got enough
+					var enoughAvailable = DefineLabel("enoughAvailable");
+					Emit.LoadLocal(LocalAvailable);
+					Emit.LoadConstant(minLength);
+					Emit.BranchIfGreaterOrEqual(enoughAvailable);
 					{
-						// assert we've got enough
-						var enoughAvailable = DefineLabel("enoughAvailable");
-						Emit.LoadLocal(LocalAvailable);
-						Emit.LoadConstant(minLength);
-						Emit.BranchIfGreaterOrEqual(enoughAvailable);
-						{
-							int extra = pushResult ? 2 : 1;
-							Depth += extra;
-							ReturnFailed();
-							Depth -= extra;
-						}
-
-						Emit.MarkLabel(enoughAvailable);
+						int extra = pushResult ? 2 : 1;
+						if (i > lastNonConstant) extra--;
+						Depth += extra;
+						ReturnFailed();
+						Depth -= extra;
 					}
+
+					Emit.MarkLabel(enoughAvailable);
 
 					if (span.Key != null)
 					{

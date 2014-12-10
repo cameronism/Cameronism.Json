@@ -212,12 +212,12 @@ No deserialization (use Jil or Newtonsoft)
 - Whitespace for 8 byte alignment  
   TODO
 - Inline constant properties
-  TODO
   Properties that return a constant will not be called, the serialized value
   will be calculated when generating serialization method
 
 ## TODO
 
+- Test for inlined constant properties around stream boundaries
 - Better return value when insufficient space
   + object serializer
     * currently just doubles original avail param
@@ -225,7 +225,6 @@ No deserialization (use Jil or Newtonsoft)
     * should decrease available before serializing member, save some room for following members
 - Minimum length (and maybe reserved length) per schema  
   DateTime and Guid are JSON type string but we know a lot more about their length than the general string case
-- Inline constant properties (see optimizations)
 - Call Dispose on enumerators
 - Performance test array with unrolled first iteration
 

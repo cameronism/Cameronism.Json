@@ -650,6 +650,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_6
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_6:
 ldloc.0
 dup
 ldc.i4.1
@@ -915,6 +925,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_9
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_9:
 ldloc.0
 dup
 ldc.i4.1
@@ -1205,7 +1225,7 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s ifNull_9
+br ifNull_9
 
 IfNotNull_8:
 ldloc.1
@@ -1299,6 +1319,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_14
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_14:
 ldloc.0
 dup
 ldc.i4.1
@@ -1313,6 +1343,16 @@ sub
 stloc.1
 
 ifNull_9:
+ldloc.1
+ldc.i4.4
+bge.s enoughAvailable_15
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -1609,6 +1649,17 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_11
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -1625,7 +1676,7 @@ stloc.1
 ifNull_6:
 ldloc.1
 ldc.i4.s 10
-bge.s enoughAvailable_11
+bge.s enoughAvailable_12
 pop
 pop
 ldarg.2
@@ -1633,7 +1684,7 @@ ldc.i4.s 254
 mul
 ret
 
-enoughAvailable_11:
+enoughAvailable_12:
 ldloc.0
 dup
 ldc.i4.1
@@ -1680,7 +1731,7 @@ sub
 stloc.1
 ldloc.1
 ldc.i4.5
-bge.s enoughAvailable_12
+bge.s enoughAvailable_13
 pop
 pop
 ldarg.2
@@ -1688,14 +1739,14 @@ ldc.i4.s 254
 mul
 ret
 
-enoughAvailable_12:
+enoughAvailable_13:
 call Int32 get_j()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s success_13
+bgt.s success_14
 pop
 pop
 ldarg.2
@@ -1703,7 +1754,7 @@ ldc.i4.s 254
 mul
 ret
 
-success_13:
+success_14:
 dup
 conv.i
 ldloc.0
@@ -1714,6 +1765,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.4
+bge.s enoughAvailable_15
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_15:
 ldloc.0
 dup
 ldc.i4.1
@@ -2228,6 +2289,17 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_19
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_19:
 ldloc.0
 dup
 ldc.i4.1
@@ -2242,6 +2314,17 @@ sub
 stloc.1
 
 ifNull_14:
+ldloc.1
+ldc.i4.4
+bge.s enoughAvailable_20
+pop
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_20:
 ldloc.0
 dup
 ldc.i4.1
@@ -2258,7 +2341,7 @@ stloc.1
 ifNull_6:
 ldloc.1
 ldc.i4.s 19
-bge.s enoughAvailable_19
+bge.s enoughAvailable_21
 pop
 pop
 ldarg.2
@@ -2266,7 +2349,7 @@ ldc.i4.s 254
 mul
 ret
 
-enoughAvailable_19:
+enoughAvailable_21:
 ldloc.0
 dup
 ldc.i4.1
@@ -2313,7 +2396,7 @@ sub
 stloc.1
 ldloc.1
 ldc.i4.s 14
-bge.s enoughAvailable_20
+bge.s enoughAvailable_22
 pop
 pop
 ldarg.2
@@ -2321,14 +2404,14 @@ ldc.i4.s 254
 mul
 ret
 
-enoughAvailable_20:
+enoughAvailable_22:
 call Int32 get_j()
 ldloc.0
 ldloc.1
 call Int32 WriteInt32(Int32, Byte*, Int32)
 dup
 ldc.i4.0
-bgt.s success_21
+bgt.s success_23
 pop
 pop
 ldarg.2
@@ -2336,7 +2419,7 @@ ldc.i4.s 254
 mul
 ret
 
-success_21:
+success_23:
 dup
 conv.i
 ldloc.0
@@ -2347,6 +2430,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.s 13
+bge.s enoughAvailable_24
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_24:
 ldloc.0
 dup
 ldc.i4.1
@@ -2968,7 +3061,7 @@ ldloc.1
 ldc.i4.4
 sub
 stloc.1
-br.s ifNull_22
+br ifNull_22
 
 IfNotNull_21:
 ldloc.1
@@ -3062,6 +3155,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_27
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_27:
 ldloc.0
 dup
 ldc.i4.1
@@ -3076,6 +3179,16 @@ sub
 stloc.1
 
 ifNull_22:
+ldloc.1
+ldc.i4.4
+bge.s enoughAvailable_28
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_28:
 ldloc.0
 dup
 ldc.i4.1
@@ -3090,6 +3203,16 @@ sub
 stloc.1
 
 ifNull_14:
+ldloc.1
+ldc.i4.s 13
+bge.s enoughAvailable_29
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_29:
 ldloc.0
 dup
 ldc.i4.1
@@ -3104,6 +3227,16 @@ sub
 stloc.1
 
 ifNull_9:
+ldloc.1
+ldc.i4.7
+bge.s enoughAvailable_30
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_30:
 ldloc.0
 dup
 ldc.i4.1
@@ -3970,6 +4103,16 @@ add
 stloc.1
 
 ifNull_30:
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_34
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_34:
 ldloc.0
 dup
 ldc.i4.1
@@ -3984,6 +4127,16 @@ sub
 stloc.1
 
 ifNull_22:
+ldloc.1
+ldc.i4.s 11
+bge.s enoughAvailable_35
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_35:
 ldloc.0
 dup
 ldc.i4.1
@@ -3998,6 +4151,16 @@ sub
 stloc.1
 
 ifNull_14:
+ldloc.1
+ldc.i4.s 13
+bge.s enoughAvailable_36
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_36:
 ldloc.0
 dup
 ldc.i4.1
@@ -4012,6 +4175,16 @@ sub
 stloc.1
 
 ifNull_9:
+ldloc.1
+ldc.i4.7
+bge.s enoughAvailable_37
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_37:
 ldloc.0
 dup
 ldc.i4.1
@@ -4278,6 +4451,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_8
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_8:
 ldloc.0
 dup
 ldc.i4.1
@@ -4596,6 +4779,16 @@ mul
 ldloc.1
 add
 stloc.1
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_11
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_11:
 ldloc.0
 dup
 ldc.i4.1
@@ -4961,6 +5154,16 @@ add
 stloc.1
 
 ifNull_10:
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_14
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_14:
 ldloc.0
 dup
 ldc.i4.1
@@ -5378,6 +5581,16 @@ add
 stloc.1
 
 ifNull_13:
+ldloc.1
+ldc.i4.1
+bge.s enoughAvailable_17
+pop
+ldarg.2
+ldc.i4.s 254
+mul
+ret
+
+enoughAvailable_17:
 ldloc.0
 dup
 ldc.i4.1
