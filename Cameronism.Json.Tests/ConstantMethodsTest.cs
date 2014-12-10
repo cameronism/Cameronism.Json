@@ -82,7 +82,7 @@ namespace Cameronism.Json.Tests
 		{
 		}
 		[System.Runtime.Serialization.DataContract]
-		class StringThen
+		internal class StringThen
 		{
 			[System.Runtime.Serialization.DataMember(Order=1)]
 			public string A { get { return "\u0000"; } }
@@ -90,7 +90,7 @@ namespace Cameronism.Json.Tests
 			public string B { get; set; }
 		}
 		[System.Runtime.Serialization.DataContract]
-		class ThenString
+		internal class ThenString
 		{
 			[System.Runtime.Serialization.DataMember(Order=1)]
 			public string A { get; set; }
@@ -240,13 +240,17 @@ namespace Cameronism.Json.Tests
 		[Fact]
 		public void CheckBoundaries()
 		{
+			var az = String.Concat(Enumerable.Range(0, 26).Select(i => 'a' + (char)i));
+
 			Assert.NotNull(CheckBoundary(new NoConstants { A = "...", B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "..." }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "\n" }));
+			Assert.NotNull(CheckBoundary(new ThenString { A = az }, 96));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "..." }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\n" }));
+			Assert.NotNull(CheckBoundary(new StringThen { B = az }, 96));
 		}
 
 		// returns the length of serialized value when successful
@@ -254,11 +258,11 @@ namespace Cameronism.Json.Tests
 		{
 			const byte init = 255;
 			var nJSON = Encoding.UTF8.GetBytes(Newtonsoft.Json.JsonConvert.SerializeObject(value));
-			var success = false;
 			var buffer = new byte[maxLength + 2];
 			var emit = DelegateBuilder.CreatePointer<T>(Schema.Reflect(typeof(T)));
 			string instructions;
 			var del = (Serializer.WriteToPointer<T>)emit.CreateDelegate(typeof(Serializer.WriteToPointer<T>), out instructions);
+			int? successLength = null;
 
 			for (int i = 1; i <= maxLength; i++)
 			{
@@ -278,11 +282,23 @@ namespace Cameronism.Json.Tests
 				if (result > 0)
 				{
 					Assert.Equal(nJSON, buffer.Skip(1).Take(result));
-					success = true;
+					if (successLength == null)
+					{
+						successLength = i;
+					}
 				}
 			}
 
-			return success ? (int?)nJSON.Length : null;
+			if (successLength.HasValue)
+			{
+				// do stuff with the stream version now
+				//for (int i = nJSON.Length; i >= nJSON.Length / 2; i--)
+				//{
+
+				//}
+			}
+
+			return successLength;
 		}
 	}
 }
