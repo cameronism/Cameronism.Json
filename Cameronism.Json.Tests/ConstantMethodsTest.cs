@@ -241,16 +241,19 @@ namespace Cameronism.Json.Tests
 		public void CheckBoundaries()
 		{
 			var az = String.Concat(Enumerable.Range(0, 26).Select(i => 'a' + (char)i));
+			var azAZ = az + String.Concat(Enumerable.Range(0, 26).Select(i => 'A' + (char)i));
 
 			Assert.NotNull(CheckBoundary(new NoConstants { A = "...", B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "..." }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = "\n" }));
 			Assert.NotNull(CheckBoundary(new ThenString { A = az }, 96));
+			Assert.NotNull(CheckBoundary(new ThenString { A = azAZ }, 152));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "..." }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\n" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = az }, 96));
+			Assert.NotNull(CheckBoundary(new StringThen { A = azAZ }, 152));
 		}
 
 		// returns the length of serialized value when successful
@@ -291,11 +294,22 @@ namespace Cameronism.Json.Tests
 
 			if (successLength.HasValue)
 			{
-				// do stuff with the stream version now
-				//for (int i = nJSON.Length; i >= nJSON.Length / 2; i--)
-				//{
+				emit = DelegateBuilder.CreateStream<T>(Schema.Reflect(typeof(T)));
+				var streamer = (Serializer.WriteToStream<T>)emit.CreateDelegate(typeof(Serializer.WriteToStream<T>), out instructions);
+				var min = Math.Max(nJSON.Length / 2, 32);
+				var ms = new MemoryStream(nJSON.Length);
 
-				//}
+				// do stuff with the stream version now
+				for (int i = nJSON.Length; i >= min; i--)
+				{
+					ms.SetLength(0);
+					buffer = new byte[i];
+					fixed (byte* ptr = buffer)
+					{
+						streamer.Invoke(ref value, ptr, ms, buffer);
+					}
+					Assert.Equal(nJSON, ms.GetBuffer().Take((int)ms.Length));
+				}
 			}
 
 			return successLength;
