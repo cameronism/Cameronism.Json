@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,6 +57,57 @@ namespace Cameronism.Json
 				str = null;
 				length = 0;
 				return;
+			}
+		}
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct FullEnum
+		{
+			[FieldOffset(0)]
+			ulong _Value;
+
+			[FieldOffset(8)]
+			fixed byte _String[8];
+
+			[FieldOffset(8)]
+			byte _Kind;
+
+			[FieldOffset(10)]
+			ushort _Length;
+			
+			[FieldOffset(12)]
+			uint _Offset;
+
+			public ulong Value { get { return _Value; } }
+
+			public void GetString(byte* regionStart, out int length, out byte* start)
+			{
+				if ((_Kind & 0x80) == 0)
+				{
+					fixed (byte* ptr = _String)
+					{
+						for (int i = 0; i < 8; i++)
+						{
+							if (*(ptr + i) != 0)
+							{
+								// this is generally a very bad idea 
+								// this struct must not be on the .NET heap
+								start = ptr + i;
+								length = 8 - i;
+								return;
+							}
+						}
+					}
+
+					// this shouldn't happen
+					start = null;
+					length = 0;
+				}
+				else
+				{
+					start = regionStart + _Offset;
+					length = _Length;
+				}
 			}
 		}
 

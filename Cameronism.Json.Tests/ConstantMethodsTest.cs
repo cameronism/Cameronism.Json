@@ -253,7 +253,7 @@ namespace Cameronism.Json.Tests
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\u0000" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = "\n" }));
 			Assert.NotNull(CheckBoundary(new StringThen { B = az }, 96));
-			Assert.NotNull(CheckBoundary(new StringThen { A = azAZ }, 152));
+			Assert.NotNull(CheckBoundary(new StringThen { B = azAZ }, 152));
 		}
 
 		// returns the length of serialized value when successful
