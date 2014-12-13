@@ -60,6 +60,8 @@ namespace Cameronism.Json.Tests
 			One = 1,
 			Min = int.MinValue,
 			Max = int.MaxValue,
+			\uFF72\u3093a = short.MinValue - 1,
+			\uFF72\u3093aa = short.MinValue - 2,
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
@@ -84,6 +86,24 @@ namespace Cameronism.Json.Tests
 		}
 
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
+		public void VerboseEnum()
+		{
+			var sb = new StringBuilder();
+			ApproveVerboseEnum<DayOfWeek>(sb);
+			sb.AppendLine();
+			sb.AppendLine();
+			ApproveVerboseEnum<Sparse>(sb);
+			sb.AppendLine();
+			sb.AppendLine();
+			ApproveVerboseEnum<Skippy>(sb);
+			sb.AppendLine();
+			sb.AppendLine();
+			ApproveVerboseEnum<Negatives>(sb);
+
+			ApprovalTests.Approvals.Verify(sb.ToString());
+		}
+
+		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void DayOfWeekEnum()
 		{
 			var sb = new StringBuilder();
@@ -93,55 +113,40 @@ namespace Cameronism.Json.Tests
 
 		public void ApproveIndexedEnum<T>(StringBuilder sb)
 		{
-			var buffer = new byte[1024];
-
-			fixed (byte* ptr = buffer)
+			ApproveEnumCommon<T>("Indexed", sb, true, StringEnum.GenerateIndexedLookup, delegate(StringEnum.Lookup lookup, ulong value, out byte* str, out int length)
 			{
-				int freeStart;
-				var lookup = StringEnum.GenerateIndexedLookup(typeof(T), ptr, buffer.Length, out freeStart);
-
-				Assert.True(lookup.HasValue, "lookup must have been generated");
-				var stringStart = (int)(lookup.Value.StringStart - ptr);
-
-
-				sb.AppendLine("# Indexed " + SchemaTest.HumanName(typeof(T)));
-				sb.AppendLine("## Lookups");
-				Util.Hex.Dump(sb, buffer.Take(stringStart));
-				sb.AppendLine();
-				sb.AppendLine();
-				sb.AppendLine("## Strings");
-				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
-
-
-				var chars = new char[64];
-				foreach (T dow in Enum.GetValues(typeof(T)))
-				{
-					byte* str;
-					int len;
-					lookup.Value.FindIndexed(Convert.ToUInt64(dow), out str, out len);
-					Assert.True(str != null, "string must not be null");
-					var dowString = dow.ToString();
-					Assert.Equal(dowString.Length, len);
-
-					string actualString;
-					fixed (char* ch = chars)
-					{
-						var strLen = Encoding.UTF8.GetChars(str, len, ch, chars.Length);
-						actualString = new string(ch, 0, strLen);
-					}
-					Assert.Equal(dowString, actualString);
-				}
-			}
+				lookup.FindIndexed(value, out str, out length);
+			});
 		}
 
 		public void ApproveSortedEnum<T>(StringBuilder sb, bool expectGenerated = true)
 		{
+			ApproveEnumCommon<T>("Sorted", sb, expectGenerated, StringEnum.GenerateSortedLookup, delegate(StringEnum.Lookup lookup, ulong value, out byte* str, out int length)
+			{
+				lookup.FindSequential(value, out str, out length);
+			});
+		}
+
+		void ApproveVerboseEnum<T>(StringBuilder sb, bool expectGenerated = true)
+		{
+			ApproveEnumCommon<T>("Verbose", sb, expectGenerated, StringEnum.GenerateVerboseLookup, delegate(StringEnum.Lookup lookup, ulong value, out byte* str, out int length)
+			{
+				lookup.FindVerbose(value, out str, out length);
+			});
+		}
+
+		delegate StringEnum.Lookup? GenerateLookup(Type t, byte* ptr, int length, out int freeStart);
+		delegate void FindString(StringEnum.Lookup lookup, ulong value, out byte* str, out int length);
+
+		void ApproveEnumCommon<T>(string label, StringBuilder sb, bool expectGenerated, GenerateLookup generateLookup, FindString findString)
+		{
 			var buffer = new byte[1024];
+			for (int i = 0; i < buffer.Length; i++) buffer[i] = 255;
 
 			fixed (byte* ptr = buffer)
 			{
 				int freeStart;
-				var lookup = StringEnum.GenerateSortedLookup(typeof(T), ptr, buffer.Length, out freeStart);
+				var lookup = generateLookup(typeof(T), ptr, buffer.Length, out freeStart);
 
 				if (!expectGenerated)
 				{
@@ -153,7 +158,7 @@ namespace Cameronism.Json.Tests
 				var stringStart = (int)(lookup.Value.StringStart - ptr);
 
 
-				sb.AppendLine("# Sorted " + SchemaTest.HumanName(typeof(T)));
+				sb.AppendLine("# " + label + " " + SchemaTest.HumanName(typeof(T)));
 				sb.AppendLine("## Lookups");
 				Util.Hex.Dump(sb, buffer.Take(stringStart));
 				sb.AppendLine();
@@ -162,15 +167,27 @@ namespace Cameronism.Json.Tests
 				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
 
 
+				bool signed = false;
+				switch (Type.GetTypeCode(typeof(T)))
+				{
+					case TypeCode.SByte:
+					case TypeCode.Int16:
+					case TypeCode.Int32:
+					case TypeCode.Int64:
+						signed = true;
+						break;
+				}
+
 				var chars = new char[64];
 				foreach (T dow in Enum.GetValues(typeof(T)))
 				{
 					byte* str;
 					int len;
-					lookup.Value.FindSequential(Convert.ToUInt32(dow), out str, out len);
+					ulong enumValue = signed ? (ulong)Convert.ToInt64(dow) : Convert.ToUInt64(dow);
+					findString(lookup.Value, enumValue, out str, out len);
 					Assert.True(str != null, "string must not be null");
 					var dowString = dow.ToString();
-					Assert.Equal(dowString.Length, len);
+					Assert.Equal(Encoding.UTF8.GetByteCount(dowString), len);
 
 					string actualString;
 					fixed (char* ch = chars)

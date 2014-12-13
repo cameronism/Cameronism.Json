@@ -37,8 +37,9 @@ namespace Cameronism.Json
 				length = *(ushort*)(key + 2);
 			}
 
-			public void FindSequential(uint value, out byte* str, out int length)
+			public void FindSequential(ulong longValue, out byte* str, out int length)
 			{
+				uint value = (uint)longValue;
 				byte* lookup = _TableStart;
 				byte* stop = _StringStart;
 
@@ -58,10 +59,32 @@ namespace Cameronism.Json
 				length = 0;
 				return;
 			}
+
+			public void FindVerbose(ulong value, out byte* str, out int length)
+			{
+				byte* lookup = _TableStart;
+				byte* stop = _StringStart;
+
+				while (lookup < stop)
+				{
+					var verbose = (VerboseEnum*)lookup;
+					if (verbose->Value == value)
+					{
+						verbose->GetString(stop, out length, out str);
+						return;
+					}
+
+					lookup += 16;
+				}
+
+				str = null;
+				length = 0;
+				return;
+			}
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		struct FullEnum
+		struct VerboseEnum
 		{
 			[FieldOffset(0)]
 			ulong _Value;
@@ -71,6 +94,9 @@ namespace Cameronism.Json
 
 			[FieldOffset(8)]
 			byte _Kind;
+
+			[FieldOffset(9)]
+			byte _ZeroMe; // to zero every byte of the struct
 
 			[FieldOffset(10)]
 			ushort _Length;
@@ -108,6 +134,43 @@ namespace Cameronism.Json
 					start = regionStart + _Offset;
 					length = _Length;
 				}
+			}
+
+			/// <summary>
+			/// Returns true if string was inlined
+			/// </summary>
+			public bool Init(byte* regionStart, ulong value, byte* stringStart, int stringLength)
+			{
+				_Value = value;
+
+				// try to inline
+				if (stringLength < 8 || (stringLength == 8 && (*stringStart & 0x80) == 0))
+				{
+					fixed (byte* ptr = _String)
+					{
+						// zero out leading (if any)
+						int i;
+						for (i = 0; i < 8 - stringLength; i++)
+						{
+							*(ptr + i) = 0;
+						}
+
+						// finally copy it in
+						for (int j = 0; j < stringLength; j++)
+						{
+							*(ptr + i++) = *(stringStart + j);
+						}
+					}
+
+					return true;
+				}
+
+				// not inlined
+				_Kind = 0x80;
+				_ZeroMe = 0;
+				_Length = (ushort)stringLength;
+				_Offset = (uint)(stringStart - regionStart);
+				return false;
 			}
 		}
 
@@ -183,6 +246,39 @@ namespace Cameronism.Json
 
 				stringPtr += result;
 				ix += 8;
+			}
+
+			used = (int)(stringPtr - destination);
+			return new Lookup(destination, stringsStart);
+		}
+
+		public static Lookup? GenerateVerboseLookup(Type type, byte* destination, int available, out int used)
+		{
+			used = 0;
+
+			var values = SortValues(type);
+			if (values.Length == 0) return null;
+
+			byte* endStrings = destination + available;
+			byte* stringPtr = (byte*)(destination + (values.Length * 16));
+			var stringsStart = stringPtr;
+
+			if (stringPtr >= destination + available) return null;
+
+			int ix = 0;
+			foreach (var value in values)
+			{
+				long offset = stringPtr - stringsStart;
+				if (offset > ushort.MaxValue) return null;
+
+				int result = ConvertUTF.WriteStringUtf8(value.Value, stringPtr, (int)(endStrings - stringPtr), useQuote: false);
+				if (result <= 0 || result >= ushort.MaxValue) return null;
+
+				var verbose = (VerboseEnum*)(destination + ix);
+				bool inlined = verbose->Init(stringsStart, value.Key, stringPtr, result);
+
+				if (!inlined) stringPtr += result;
+				ix += 16;
 			}
 
 			used = (int)(stringPtr - destination);
