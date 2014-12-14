@@ -1,4 +1,9 @@
 ﻿# Verbose System.DayOfWeek
+
+GetLookupType: Indexed
+Values count: 7
+Max value: 6
+
 ## Lookups
 
 
@@ -16,6 +21,11 @@
 0000   57 65 64 6e 65 73 64 61   79                        Wednesda y
 
 # Verbose Cameronism.Json.Tests.StringEnumTest+Sparse
+
+GetLookupType: Sorted
+Values count: 32
+Max value: 2147483648
+
 ## Lookups
 
 
@@ -57,6 +67,11 @@
 zero bytes dumped
 
 # Verbose Cameronism.Json.Tests.StringEnumTest+Skippy
+
+GetLookupType: Indexed
+Values count: 4
+Max value: 7
+
 ## Lookups
 
 
@@ -70,6 +85,11 @@ zero bytes dumped
 zero bytes dumped
 
 # Verbose Cameronism.Json.Tests.StringEnumTest+Negatives
+
+GetLookupType: Verbose
+Values count: 6
+Max value: 18446744073709551615
+
 ## Lookups
 
 

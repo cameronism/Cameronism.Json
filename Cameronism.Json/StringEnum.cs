@@ -9,6 +9,18 @@ namespace Cameronism.Json
 {
 	unsafe internal class StringEnum
 	{
+		public enum LookupTypes
+		{
+			Unsupported,
+			/// <summary>
+			/// Not a lookup, just use the numeric value
+			/// </summary>
+			Numeric,
+			Indexed,
+			Sorted,
+			Verbose,
+		}
+
 		public struct Lookup
 		{
 			readonly byte* _TableStart;
@@ -174,15 +186,30 @@ namespace Cameronism.Json
 			}
 		}
 
-		public static Lookup? GenerateIndexedLookup(Type type, byte* destination, int available, out int used)
+		public static LookupTypes GetLookupType(KeyValuePair<ulong, string>[] values)
+		{
+			if (values.Length == 0) return LookupTypes.Numeric;
+
+			ulong max = values.Last().Key;
+
+			if (max > uint.MaxValue) return LookupTypes.Verbose;
+
+			var sortedSize = (ulong)(values.Length * 8);
+			var indexedSize = (max + 1) * 4;
+
+			return indexedSize <= sortedSize ?
+				LookupTypes.Indexed :
+				LookupTypes.Sorted;
+		}
+
+		public static Lookup? GenerateIndexedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
 		{
 			used = 0;
 
-			int valueCount;
-			ulong maxValue;
-			DescribeEnum(type, out valueCount, out maxValue);
+			int valueCount = values.Length;
 			if (valueCount == 0) return null;
-			maxValue++;
+
+			var maxValue = values.Last().Key + 1;
 
 			byte* endStrings = destination + available;
 			byte* stringPtr = (byte*)(destination + (maxValue * 4));
@@ -190,12 +217,13 @@ namespace Cameronism.Json
 
 			if (stringPtr >= destination + available) return null;
 
+			int valueIndex = 0;
 			for (ulong i = 0; i < maxValue; i++)
 			{
 				long offset = stringPtr - stringsStart;
 				if (offset > ushort.MaxValue) return null;
 
-				string enumName = Enum.GetName(type, i);
+				var enumName = GetString(values, (int)i, ref valueIndex);
 				if (enumName == null)
 				{
 					*(uint*)(destination + (i * 4)) = 0;
@@ -215,11 +243,10 @@ namespace Cameronism.Json
 			return new Lookup(destination, stringsStart);
 		}
 
-		public static Lookup? GenerateSortedLookup(Type type, byte* destination, int available, out int used)
+		public static Lookup? GenerateSortedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
 		{
 			used = 0;
 
-			var values = SortValues(type);
 			if (values.Length == 0) return null;
 			var maxValue = values[values.Length - 1].Key;
 			if (maxValue > uint.MaxValue) return null;
@@ -252,11 +279,10 @@ namespace Cameronism.Json
 			return new Lookup(destination, stringsStart);
 		}
 
-		public static Lookup? GenerateVerboseLookup(Type type, byte* destination, int available, out int used)
+		public static Lookup? GenerateVerboseLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
 		{
 			used = 0;
 
-			var values = SortValues(type);
 			if (values.Length == 0) return null;
 
 			byte* endStrings = destination + available;
@@ -285,7 +311,7 @@ namespace Cameronism.Json
 			return new Lookup(destination, stringsStart);
 		}
 
-		static KeyValuePair<ulong, string>[] SortValues(Type type)
+		public static KeyValuePair<ulong, string>[] SortValues(Type type)
 		{
 			var values = Enum.GetValues(type);
 			bool signed;
@@ -332,16 +358,18 @@ namespace Cameronism.Json
 			return sorted;
 		}
 
-		public static void DescribeEnum(Type type, out int valueCount, out ulong maxValue)
+		static string GetString(KeyValuePair<ulong, string>[] values, int value, ref int ix)
 		{
-			maxValue = 0;
-			var allValues = Enum.GetValues(type);
-			valueCount = allValues.Length;
-			foreach (var val in allValues)
+			for (int i = ix; i <= value && i < values.Length; i++)
 			{
-				var num = Convert.ToUInt64(val);
-				if (num > maxValue) maxValue = num;
+				if ((int)values[i].Key == value)
+				{
+					ix = i;
+					return values[i].Value;
+				}
 			}
+
+			return null;
 		}
 	}
 }

@@ -1,4 +1,9 @@
 ﻿# Indexed System.DayOfWeek
+
+GetLookupType: Indexed
+Values count: 7
+Max value: 6
+
 ## Lookups
 
 

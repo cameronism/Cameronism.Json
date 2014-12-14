@@ -1,4 +1,9 @@
 ﻿# Indexed Cameronism.Json.Tests.StringEnumTest+Skippy
+
+GetLookupType: Indexed
+Values count: 4
+Max value: 7
+
 ## Lookups
 
 
@@ -11,6 +16,11 @@
 0000   46 6f 6f 42 61 72 42 6f   70 42 61 7a               FooBarBo pBaz
 
 # Sorted Cameronism.Json.Tests.StringEnumTest+Skippy
+
+GetLookupType: Indexed
+Values count: 4
+Max value: 7
+
 ## Lookups
 
 

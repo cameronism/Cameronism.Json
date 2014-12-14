@@ -135,18 +135,19 @@ namespace Cameronism.Json.Tests
 			});
 		}
 
-		delegate StringEnum.Lookup? GenerateLookup(Type t, byte* ptr, int length, out int freeStart);
+		delegate StringEnum.Lookup? GenerateLookup(KeyValuePair<ulong, string>[] values, byte* ptr, int length, out int freeStart);
 		delegate void FindString(StringEnum.Lookup lookup, ulong value, out byte* str, out int length);
 
 		void ApproveEnumCommon<T>(string label, StringBuilder sb, bool expectGenerated, GenerateLookup generateLookup, FindString findString)
 		{
 			var buffer = new byte[1024];
 			for (int i = 0; i < buffer.Length; i++) buffer[i] = 255;
+			var values = StringEnum.SortValues(typeof(T));
 
 			fixed (byte* ptr = buffer)
 			{
 				int freeStart;
-				var lookup = generateLookup(typeof(T), ptr, buffer.Length, out freeStart);
+				var lookup = generateLookup(values, ptr, buffer.Length, out freeStart);
 
 				if (!expectGenerated)
 				{
@@ -159,6 +160,11 @@ namespace Cameronism.Json.Tests
 
 
 				sb.AppendLine("# " + label + " " + SchemaTest.HumanName(typeof(T)));
+				sb.AppendLine();
+				sb.AppendLine(String.Format("GetLookupType: {0}", StringEnum.GetLookupType(values)));
+				sb.AppendLine(String.Format("Values count: {0}", values.Length));
+				sb.AppendLine(String.Format("Max value: {0}", values.LastOrDefault().Key));
+				sb.AppendLine();
 				sb.AppendLine("## Lookups");
 				Util.Hex.Dump(sb, buffer.Take(stringStart));
 				sb.AppendLine();

@@ -1,4 +1,9 @@
 ﻿# Sorted Cameronism.Json.Tests.StringEnumTest+Sparse
+
+GetLookupType: Sorted
+Values count: 32
+Max value: 2147483648
+
 ## Lookups
 
 
