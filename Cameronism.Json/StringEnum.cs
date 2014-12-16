@@ -25,14 +25,20 @@ namespace Cameronism.Json
 		{
 			readonly byte* _TableStart;
 			readonly byte* _StringStart;
+			readonly uint _StringLength;
+			readonly LookupTypes _Type;
 
 			public byte* TableStart { get { return _TableStart; } }
 			public byte* StringStart { get { return _StringStart; } }
+			public uint StringLength { get { return _StringLength; } }
+			public LookupTypes Type { get { return _Type; } }
 
-			public Lookup(byte* tableStart, byte* stringStart)
+			public Lookup(byte* tableStart, byte* stringStart, byte* stringStop, LookupTypes type)
 			{
 				_TableStart = tableStart;
 				_StringStart = stringStart;
+				_StringLength = stringStop == null ? 0 : (uint)(stringStop - stringStart);
+				_Type = type;
 			}
 
 			public void FindIndexed(ulong value, out byte* str, out int length)
@@ -186,6 +192,125 @@ namespace Cameronism.Json
 			}
 		}
 
+		#region cache
+		const int PAGE_SIZE = 0x10000;
+		static byte* _Page = null;
+		static int _Offset = 0;
+		static Dictionary<Type, Lookup> _Cache = new Dictionary<Type, Lookup>();
+
+		public static Lookup GetCachedLookup(Type type)
+		{
+			Lookup cached;
+			lock (_Cache)
+			{
+				if (_Cache.TryGetValue(type, out cached))
+				{
+					return cached;
+				}
+				cached = GenerateLookup(type);
+				_Cache[type] = cached;
+			}
+			return cached;
+		}
+
+		static Lookup GenerateLookup(Type type)
+		{
+			if (_Page == null)
+			{
+				ResetPage();
+				if (_Page == null)
+				{
+					return new Lookup(null, null, null, LookupTypes.Unsupported);
+				}
+			}
+
+			KeyValuePair<ulong, string>[] values;
+			LookupTypes lookupType;
+			var lookup = GetLookup(type, _Page + _Offset, PAGE_SIZE - _Offset, out lookupType, out values);
+			if (lookup.Type != LookupTypes.Unsupported)
+			{
+				if (lookup.Type != LookupTypes.Numeric)
+				{
+					_Offset = (int)((lookup.StringStart + lookup.StringLength) - _Page);
+				}
+				return lookup;
+			}
+
+			// try again
+			Lookup? maybeLookup = null;
+			if (lookupType != LookupTypes.Unsupported && _Offset != 0)
+			{
+				ResetPage();
+				if (_Page != null)
+				{
+					byte* dst = _Page + _Offset;
+					int available = PAGE_SIZE - _Offset;
+
+					switch (lookupType)
+					{
+						case LookupTypes.Indexed:
+							maybeLookup = GenerateIndexedLookup(values, dst, available);
+							break;
+						case LookupTypes.Sorted:
+							maybeLookup = GenerateSortedLookup(values, dst, available);
+							break;
+						case LookupTypes.Verbose:
+							maybeLookup = GenerateVerboseLookup(values, dst, available);
+							break;
+					}
+				}
+			}
+
+			if (maybeLookup.HasValue)
+			{
+				lookup = maybeLookup.GetValueOrDefault();
+				_Offset = (int)((lookup.StringStart + lookup.StringLength) - _Page);
+				return lookup;
+			}
+
+			return new Lookup(null, null, null, LookupTypes.Unsupported);
+		}
+
+		static void ResetPage()
+		{
+			IntPtr ptr = Marshal.AllocHGlobal(PAGE_SIZE);
+			if (ptr == IntPtr.Zero)
+			{
+				_Page = null;
+				return;
+			}
+			_Page = (byte*)ptr.ToPointer();
+			_Offset = 0;
+		}
+		#endregion
+
+		static Lookup GetLookup(Type type, byte* destination, int available, out LookupTypes lookupType, out KeyValuePair<ulong, string>[] values)
+		{
+			values = SortValues(type);
+			// this out parameter is so caller can differentiate numeric from unsupported
+			lookupType = GetLookupType(values);
+
+			Lookup? maybeLookup = null;
+			switch (lookupType)
+			{
+				case LookupTypes.Indexed:
+					maybeLookup = GenerateIndexedLookup(values, destination, available);
+					break;
+				case LookupTypes.Sorted:
+					maybeLookup = GenerateSortedLookup(values, destination, available);
+					break;
+				case LookupTypes.Verbose:
+					maybeLookup = GenerateVerboseLookup(values, destination, available);
+					break;
+				case LookupTypes.Numeric:
+					return new Lookup(null, null, null, LookupTypes.Numeric);
+			}
+
+			return maybeLookup.HasValue ?
+				maybeLookup.GetValueOrDefault() :
+				new Lookup(null, null, null, LookupTypes.Unsupported);
+		}
+
 		public static LookupTypes GetLookupType(KeyValuePair<ulong, string>[] values)
 		{
 			if (values.Length == 0) return LookupTypes.Numeric;
@@ -202,10 +327,8 @@ namespace Cameronism.Json
 				LookupTypes.Sorted;
 		}
 
-		public static Lookup? GenerateIndexedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
+		public static Lookup? GenerateIndexedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available)
 		{
-			used = 0;
-
 			int valueCount = values.Length;
 			if (valueCount == 0) return null;
 
@@ -239,14 +362,11 @@ namespace Cameronism.Json
 				stringPtr += result;
 			}
 
-			used = (int)(stringPtr - destination);
-			return new Lookup(destination, stringsStart);
+			return new Lookup(destination, stringsStart, stringPtr, LookupTypes.Indexed);
 		}
 
-		public static Lookup? GenerateSortedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
+		public static Lookup? GenerateSortedLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available)
 		{
-			used = 0;
-
 			if (values.Length == 0) return null;
 			var maxValue = values[values.Length - 1].Key;
 			if (maxValue > uint.MaxValue) return null;
@@ -275,14 +395,11 @@ namespace Cameronism.Json
 				ix += 8;
 			}
 
-			used = (int)(stringPtr - destination);
-			return new Lookup(destination, stringsStart);
+			return new Lookup(destination, stringsStart, stringPtr, LookupTypes.Sorted);
 		}
 
-		public static Lookup? GenerateVerboseLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available, out int used)
+		public static Lookup? GenerateVerboseLookup(KeyValuePair<ulong, string>[] values, byte* destination, int available)
 		{
-			used = 0;
-
 			if (values.Length == 0) return null;
 
 			byte* endStrings = destination + available;
@@ -307,8 +424,7 @@ namespace Cameronism.Json
 				ix += 16;
 			}
 
-			used = (int)(stringPtr - destination);
-			return new Lookup(destination, stringsStart);
+			return new Lookup(destination, stringsStart, stringPtr, LookupTypes.Verbose);
 		}
 
 		public static KeyValuePair<ulong, string>[] SortValues(Type type)

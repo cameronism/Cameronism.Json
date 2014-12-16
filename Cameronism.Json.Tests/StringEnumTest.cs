@@ -135,7 +135,7 @@ namespace Cameronism.Json.Tests
 			});
 		}
 
-		delegate StringEnum.Lookup? GenerateLookup(KeyValuePair<ulong, string>[] values, byte* ptr, int length, out int freeStart);
+		delegate StringEnum.Lookup? GenerateLookup(KeyValuePair<ulong, string>[] values, byte* ptr, int length);
 		delegate void FindString(StringEnum.Lookup lookup, ulong value, out byte* str, out int length);
 
 		void ApproveEnumCommon<T>(string label, StringBuilder sb, bool expectGenerated, GenerateLookup generateLookup, FindString findString)
@@ -146,8 +146,7 @@ namespace Cameronism.Json.Tests
 
 			fixed (byte* ptr = buffer)
 			{
-				int freeStart;
-				var lookup = generateLookup(values, ptr, buffer.Length, out freeStart);
+				var lookup = generateLookup(values, ptr, buffer.Length);
 
 				if (!expectGenerated)
 				{
@@ -170,7 +169,7 @@ namespace Cameronism.Json.Tests
 				sb.AppendLine();
 				sb.AppendLine();
 				sb.AppendLine("## Strings");
-				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take(freeStart - stringStart));
+				Util.Hex.Dump(sb, buffer.Skip(stringStart).Take((int)lookup.Value.StringLength));
 
 
 				bool signed = false;
