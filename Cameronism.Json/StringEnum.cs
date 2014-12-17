@@ -193,6 +193,18 @@ namespace Cameronism.Json
 		}
 
 		#region cache
+		public static int PagesAllocated { get; private set; }
+		public static Lookup[] CachedLookups
+		{
+			get
+			{
+				lock (_Cache)
+				{
+					return _Cache.Values.ToArray();
+				}
+			}
+		}
+
 		const int PAGE_SIZE = 0x10000;
 		static byte* _Page = null;
 		static int _Offset = 0;
@@ -203,12 +215,11 @@ namespace Cameronism.Json
 			Lookup cached;
 			lock (_Cache)
 			{
-				if (_Cache.TryGetValue(type, out cached))
+				if (!_Cache.TryGetValue(type, out cached))
 				{
-					return cached;
+					cached = GenerateLookup(type);
+					_Cache[type] = cached;
 				}
-				cached = GenerateLookup(type);
-				_Cache[type] = cached;
 			}
 			return cached;
 		}
@@ -231,7 +242,7 @@ namespace Cameronism.Json
 			{
 				if (lookup.Type != LookupTypes.Numeric)
 				{
-					_Offset = (int)((lookup.StringStart + lookup.StringLength) - _Page);
+					SetOffset(lookup);
 				}
 				return lookup;
 			}
@@ -264,7 +275,7 @@ namespace Cameronism.Json
 			if (maybeLookup.HasValue)
 			{
 				lookup = maybeLookup.GetValueOrDefault();
-				_Offset = (int)((lookup.StringStart + lookup.StringLength) - _Page);
+				SetOffset(lookup);
 				return lookup;
 			}
 
@@ -279,8 +290,30 @@ namespace Cameronism.Json
 				_Page = null;
 				return;
 			}
+			PagesAllocated++;
 			_Page = (byte*)ptr.ToPointer();
 			_Offset = 0;
+		}
+
+		static void SetOffset(Lookup lookup)
+		{
+			byte* boundary = lookup.StringStart + lookup.StringLength;
+
+			// round up to next 64 byte boundary
+			ulong value = ((ulong)boundary + 63UL) & 0xffffffffffffffc0;
+			boundary = (byte*)value;
+
+			var offset = boundary - _Page;
+
+			if (offset + 64 >= PAGE_SIZE)
+			{
+				// this page is nearly full
+				// just allocate a new one next time
+				_Page = null;
+				return;
+			}
+
+			_Offset = (int)offset;
 		}
 		#endregion
 
@@ -487,5 +520,117 @@ namespace Cameronism.Json
 
 			return null;
 		}
+
+		#region writers
+		static int WriteString(byte* str, int len, byte* destination, int available)
+		{
+			int required = len + 2;
+			if (available < required) return -required;
+
+			*destination++ = (byte)'"';
+			for (int i = 0; i < len; i++)
+			{
+				*destination++ = *str++;
+			}
+			*destination = (byte)'"';
+			return required;
+		}
+		public static int WriteIndexed(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Indexed);
+			byte* str;
+			int len;
+			lookup.FindIndexed((ulong)number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteInt64(number, destination, available);
+		}
+		public static int WriteIndexed(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Indexed);
+			byte* str;
+			int len;
+			lookup.FindIndexed(number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteUInt64(number, destination, available);
+		}
+		public static int WriteSorted(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Sorted);
+			byte* str;
+			int len;
+			lookup.FindSequential((ulong)number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteInt64(number, destination, available);
+		}
+		public static int WriteSorted(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Sorted);
+			byte* str;
+			int len;
+			lookup.FindSequential(number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteUInt64(number, destination, available);
+		}
+		public static int WriteVerbose(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Verbose);
+			byte* str;
+			int len;
+			lookup.FindVerbose((ulong)number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteInt64(number, destination, available);
+		}
+		public static int WriteVerbose(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Verbose);
+			byte* str;
+			int len;
+			lookup.FindVerbose(number, out str, out len);
+			if (len > 0)
+			{
+				return WriteString(str, len, destination, available);
+			}
+			return Serializer.WriteUInt64(number, destination, available);
+		}
+		//public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		//public static int WriteIndexedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		//public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		//public static int WriteSortedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		//public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		//public static int WriteVerboseFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		//{
+		//	return 1;
+		//}
+		#endregion
 	}
 }
