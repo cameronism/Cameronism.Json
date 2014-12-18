@@ -607,30 +607,42 @@ namespace Cameronism.Json
 			}
 			return Serializer.WriteUInt64(number, destination, available);
 		}
-		//public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
-		//public static int WriteIndexedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
-		//public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
-		//public static int WriteSortedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
-		//public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
-		//public static int WriteVerboseFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
-		//{
-		//	return 1;
-		//}
+		public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteIndexed(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
+		public static int WriteIndexedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteIndexed(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
+		public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteSorted(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
+		public static int WriteSortedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteSorted(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
+		public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteVerbose(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
+		public static int WriteVerboseFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		{
+			if (number == 0) return WriteVerbose(0, lookupStart, stringStart, destination, available);
+
+			throw new NotImplementedException();
+		}
 		#endregion
 	}
 }
