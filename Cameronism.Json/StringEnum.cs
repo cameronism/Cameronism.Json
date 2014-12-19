@@ -607,42 +607,78 @@ namespace Cameronism.Json
 			}
 			return Serializer.WriteUInt64(number, destination, available);
 		}
-		public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		#region flags
+		static int GetFlagCount(long number, int @sizeof)
 		{
-			if (number == 0) return WriteIndexed(0, lookupStart, stringStart, destination, available);
+			var unum = (ulong)number;
+			if (number < 0)
+			{
+				if (@sizeof == 4)
+				{
+					unum = unum & 0xffffffff;
+				}
+				else
+				{
+					if (@sizeof == 1)
+					{
+						unum = unum & 0xff;
+					}
+					else if (@sizeof == 2)
+					{
+						unum = unum & 0xffff;
+					}
+				}
+			}
+			return GetFlagCount(unum);
+		}
+		static int GetFlagCount(ulong x)
+		{
+			// http://stackoverflow.com/a/109025
+			x = x - ((x >> 1) & 0x5555555555555555);
+			x = (x & 0x3333333333333333) + ((x >> 2) & 0x3333333333333333);
+			x = (x + (x >> 4)) & 0x0F0F0F0F0F0F0F0F;
+			x = x + (x >> 8);
+			x = x + (x >> 16);
+			x = x + (x >> 32); 
+			return (int)(x & 0xFF);
+		}
+		public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
+		{
+			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
 		public static int WriteIndexedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
-			if (number == 0) return WriteIndexed(0, lookupStart, stringStart, destination, available);
+			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
-		public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
-			if (number == 0) return WriteSorted(0, lookupStart, stringStart, destination, available);
+			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
 		public static int WriteSortedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
-			if (number == 0) return WriteSorted(0, lookupStart, stringStart, destination, available);
+			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
-		public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available)
+		public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
-			if (number == 0) return WriteVerbose(0, lookupStart, stringStart, destination, available);
+			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
 		public static int WriteVerboseFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
-			if (number == 0) return WriteVerbose(0, lookupStart, stringStart, destination, available);
+			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
 
 			throw new NotImplementedException();
 		}
+		#endregion
 		#endregion
 	}
 }
