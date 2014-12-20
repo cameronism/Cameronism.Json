@@ -315,6 +315,11 @@ namespace Cameronism.Json
 
 			_Offset = (int)offset;
 		}
+
+		static int[] GetFlagIterationOrder(byte* tableStart)
+		{
+			throw new NotImplementedException();
+		}
 		#endregion
 
 		static Lookup GetLookup(Type type, byte* destination, int available, out LookupTypes lookupType, out KeyValuePair<ulong, string>[] values)
@@ -608,8 +613,28 @@ namespace Cameronism.Json
 			return Serializer.WriteUInt64(number, destination, available);
 		}
 		#region flags
+		static int WriteInnerString(byte* str, int len, byte* destination, int available, bool firstValue)
+		{
+			int required = len;
+			if (!firstValue) required += 2;
+
+			if (available < required) return -required;
+
+			if (!firstValue)
+			{
+				*destination++ = (byte)',';
+				*destination++ = (byte)' ';
+			}
+
+			for (int i = 0; i < len; i++)
+			{
+				*destination++ = *str++;
+			}
+			return required;
+		}
 		static int GetFlagCount(long number, int @sizeof)
 		{
+			// need to try a lookup version of this to avoid branches
 			var unum = (ulong)number;
 			if (number < 0)
 			{
@@ -642,41 +667,113 @@ namespace Cameronism.Json
 			x = x + (x >> 32); 
 			return (int)(x & 0xFF);
 		}
+		static bool WriteIndexedFlagImp(ulong unum, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
+		{
+			result = 0;
+			var order = GetFlagIterationOrder(lookupStart);
+			if (order == null || available < 3) return false;
+
+			int number = (int)unum; // we know it fits in a ushort since Indexed
+			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Indexed);
+			var ptr = destination;
+
+			available -= 2;
+			*ptr++ = (byte)'"';
+
+			bool firstValue = true;
+			foreach (var ix in order)
+			{
+				if ((ix & number) == ix)
+				{
+					number -= ix;
+					byte* str = stringStart + *(ushort*)(lookupStart + ix);
+					int length = *(ushort*)(lookupStart + ix + 2);
+					int attempt = WriteInnerString(str, length, destination, available, firstValue);
+					if (attempt > 0)
+					{
+						firstValue = false;
+						ptr += attempt;
+						available -= attempt;
+					}
+					else
+					{
+						result = attempt - (int)(ptr - destination);
+						return false;
+					}
+				}
+			}
+
+			*ptr++ = (byte)'"';
+			result = (int)(ptr - destination);
+			return true;
+		}
+		static bool WriteSortedFlagImp(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
+		{
+			throw new NotImplementedException();
+		}
+		static bool WriteVerboseFlagImp(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
+		{
+			throw new NotImplementedException();
+		}
 		public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
 			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			int result;
+			if (WriteIndexedFlagImp((ulong)number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteInt64(number, destination, available);
 		}
 		public static int WriteIndexedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
 			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			int result;
+			if (WriteIndexedFlagImp(number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteUInt64(number, destination, available);
 		}
 		public static int WriteSortedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
-			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			if (GetFlagCount(number, @sizeof) <= 1) return WriteSorted(number, lookupStart, stringStart, destination, available);
+			int result;
+			if (WriteSortedFlagImp((ulong)number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteInt64(number, destination, available);
 		}
 		public static int WriteSortedFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
-			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			if (GetFlagCount(number) <= 1) return WriteSorted(number, lookupStart, stringStart, destination, available);
+			int result;
+			if (WriteSortedFlagImp(number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteUInt64(number, destination, available);
 		}
 		public static int WriteVerboseFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
-			if (GetFlagCount(number, @sizeof) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			if (GetFlagCount(number, @sizeof) <= 1) return WriteVerbose(number, lookupStart, stringStart, destination, available);
+			int result;
+			if (WriteVerboseFlagImp((ulong)number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteInt64(number, destination, available);
 		}
 		public static int WriteVerboseFlag(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available)
 		{
-			if (GetFlagCount(number) <= 1) return WriteIndexed(number, lookupStart, stringStart, destination, available);
-
-			throw new NotImplementedException();
+			if (GetFlagCount(number) <= 1) return WriteVerbose(number, lookupStart, stringStart, destination, available);
+			int result;
+			if (WriteVerboseFlagImp(number, lookupStart, stringStart, destination, available, out result))
+			{
+				return result;
+			}
+			return Serializer.WriteUInt64(number, destination, available);
 		}
 		#endregion
 		#endregion
