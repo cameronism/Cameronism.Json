@@ -673,27 +673,30 @@ namespace Cameronism.Json
 			var order = GetFlagIterationOrder(lookupStart);
 			if (order == null || available < 3) return false;
 
-			int number = (int)unum; // we know it fits in a ushort since Indexed
-			var lookup = new Lookup(lookupStart, stringStart, null, LookupTypes.Indexed);
-			var ptr = destination;
-
 			available -= 2;
+			// we know it fits in a ushort because Indexed
+			int number = (int)unum;
+			bool firstValue = true;
+
+			var ptr = destination;
 			*ptr++ = (byte)'"';
 
-			bool firstValue = true;
 			foreach (var ix in order)
 			{
+				// the index is also the enum value
 				if ((ix & number) == ix)
 				{
-					number -= ix;
-					byte* str = stringStart + *(ushort*)(lookupStart + ix);
-					int length = *(ushort*)(lookupStart + ix + 2);
-					int attempt = WriteInnerString(str, length, destination, available, firstValue);
+					var offset = lookupStart + ix * 4;
+					byte* str = stringStart + *(ushort*)offset;
+					int length = *(ushort*)(offset + 2);
+					int attempt = WriteInnerString(str, length, ptr, available, firstValue);
 					if (attempt > 0)
 					{
-						firstValue = false;
 						ptr += attempt;
 						available -= attempt;
+						firstValue = false;
+						number -= ix;
+						if (number == 0) break;
 					}
 					else
 					{
@@ -703,17 +706,101 @@ namespace Cameronism.Json
 				}
 			}
 
+			if (number != 0) return false;
+
 			*ptr++ = (byte)'"';
 			result = (int)(ptr - destination);
 			return true;
 		}
-		static bool WriteSortedFlagImp(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
+		static bool WriteSortedFlagImp(ulong unum, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
 		{
-			throw new NotImplementedException();
+			result = 0;
+			var order = GetFlagIterationOrder(lookupStart);
+			if (order == null || available < 3) return false;
+
+			available -= 2;
+			// we know it fits in a uint because Sorted
+			uint number = (uint)unum;
+			bool firstValue = true;
+
+			var ptr = destination;
+			*ptr++ = (byte)'"';
+
+			foreach (var ix in order)
+			{
+				var offset = lookupStart + ix * 8;
+				var value = *(uint*)offset;
+
+				if ((value & number) == value)
+				{
+					byte* str = stringStart + *(ushort*)(offset + 4);
+					int length = *(ushort*)(offset + 6);
+					int attempt = WriteInnerString(str, length, ptr, available, firstValue);
+					if (attempt > 0)
+					{
+						ptr += attempt;
+						available -= attempt;
+						firstValue = false;
+						number -= value;
+						if (number == 0) break;
+					}
+					else
+					{
+						result = attempt - (int)(ptr - destination);
+						return false;
+					}
+				}
+			}
+
+			if (number != 0) return false;
+
+			*ptr++ = (byte)'"';
+			result = (int)(ptr - destination);
+			return true;
 		}
 		static bool WriteVerboseFlagImp(ulong number, byte* lookupStart, byte* stringStart, byte* destination, int available, out int result)
 		{
-			throw new NotImplementedException();
+			result = 0;
+			var order = GetFlagIterationOrder(lookupStart);
+			if (order == null || available < 3) return false;
+
+			available -= 2;
+			bool firstValue = true;
+			var ptr = destination;
+			*ptr++ = (byte)'"';
+
+			foreach (var ix in order)
+			{
+				VerboseEnum* entry = (VerboseEnum*)(lookupStart + ix * 16);
+				var value = entry->Value;
+
+				if ((value & number) == value)
+				{
+					byte* str;
+					int length;
+					entry->GetString(stringStart, out length, out str);
+					int attempt = length <= 0 ? 0 : WriteInnerString(str, length, ptr, available, firstValue);
+					if (attempt > 0)
+					{
+						ptr += attempt;
+						available -= attempt;
+						firstValue = false;
+						number -= value;
+						if (number == 0) break;
+					}
+					else
+					{
+						result = attempt - (int)(ptr - destination);
+						return false;
+					}
+				}
+			}
+
+			if (number != 0) return false;
+
+			*ptr++ = (byte)'"';
+			result = (int)(ptr - destination);
+			return true;
 		}
 		public static int WriteIndexedFlag(long number, byte* lookupStart, byte* stringStart, byte* destination, int available, int @sizeof)
 		{
