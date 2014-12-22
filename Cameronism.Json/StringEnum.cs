@@ -192,6 +192,48 @@ namespace Cameronism.Json
 			}
 		}
 
+		class FlagComparer : IComparer<KeyValuePair<int, ulong>>
+		{
+			ulong _Mask;
+
+			public FlagComparer(Type enumType)
+			{
+				_Mask = GetMask(Type.GetTypeCode(enumType));
+			}
+
+			// mask signed values when getting flag count
+			public static ulong GetMask(TypeCode typeCode)
+			{
+				ulong mask = 0xFFFFFFFFFFFFFFFF;
+
+				switch (typeCode)
+				{
+					case TypeCode.SByte:
+						mask = 0xFF;
+						break;
+					case TypeCode.Int16:
+						mask = 0xFFFF;
+						break;
+					case TypeCode.Int32:
+						mask = 0xFFFFFFFF;
+						break;
+				}
+
+				return mask;
+			}
+
+			public int Compare(KeyValuePair<int, ulong> x, KeyValuePair<int, ulong> y)
+			{
+				int xpop = GetFlagCount(x.Value & _Mask);
+				int ypop = GetFlagCount(y.Value & _Mask);
+
+				int result = ypop - xpop;
+				if (result != 0) return result;
+
+				return x.Value.CompareTo(y.Value);
+			}
+		}
+
 		#region cache
 		public static int PagesAllocated { get; private set; }
 		public static Lookup[] CachedLookups
@@ -209,6 +251,7 @@ namespace Cameronism.Json
 		static byte* _Page = null;
 		static int _Offset = 0;
 		static Dictionary<Type, Lookup> _Cache = new Dictionary<Type, Lookup>();
+		static Dictionary<ulong, int[]> _FlagIteration = new Dictionary<ulong, int[]>();
 
 		public static Lookup GetCachedLookup(Type type)
 		{
@@ -242,7 +285,7 @@ namespace Cameronism.Json
 			{
 				if (lookup.Type != LookupTypes.Numeric)
 				{
-					SetOffset(lookup);
+					SetOffset(lookup, values, type);
 				}
 				return lookup;
 			}
@@ -275,7 +318,7 @@ namespace Cameronism.Json
 			if (maybeLookup.HasValue)
 			{
 				lookup = maybeLookup.GetValueOrDefault();
-				SetOffset(lookup);
+				SetOffset(lookup, values, type);
 				return lookup;
 			}
 
@@ -295,8 +338,13 @@ namespace Cameronism.Json
 			_Offset = 0;
 		}
 
-		static void SetOffset(Lookup lookup)
+		static void SetOffset(Lookup lookup, KeyValuePair<ulong, string>[] values, Type enumType)
 		{
+			if (enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0)
+			{
+				SetFlagIterationOrder(lookup, values, enumType);
+			}
+
 			byte* boundary = lookup.StringStart + lookup.StringLength;
 
 			// round up to next 64 byte boundary
@@ -316,9 +364,48 @@ namespace Cameronism.Json
 			_Offset = (int)offset;
 		}
 
+		static void SetFlagIterationOrder(Lookup lookup, KeyValuePair<ulong, string>[] values, Type enumType)
+		{
+			bool isIndexed = lookup.Type == LookupTypes.Indexed;
+			var pairs = new KeyValuePair<int, ulong>[values.Length];
+			if (isIndexed)
+			{
+				int ix = 0;
+				foreach (var kvp in values)
+				{
+					pairs[ix++] = new KeyValuePair<int, ulong>((int)kvp.Key, kvp.Key);
+				}
+			}
+			else
+			{
+				int ix = 0;
+				foreach (var kvp in values)
+				{
+					pairs[ix] = new KeyValuePair<int, ulong>(ix, kvp.Key);
+					ix++;
+				}
+			}
+
+			Array.Sort(pairs, new FlagComparer(enumType));
+
+			var result = new int[pairs.Length];
+			for (int i = 0; i < pairs.Length; i++)
+			{
+				result[i] = pairs[i].Key;
+			}
+
+			_FlagIteration[(ulong)lookup.TableStart] = result;
+		}
+
 		static int[] GetFlagIterationOrder(byte* tableStart)
 		{
-			throw new NotImplementedException();
+			var key = (ulong)tableStart;
+			int[] result;
+			lock (_Cache)
+			{
+				_FlagIteration.TryGetValue(key, out result);
+			}
+			return result;
 		}
 		#endregion
 
