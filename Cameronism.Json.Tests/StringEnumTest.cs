@@ -204,5 +204,80 @@ namespace Cameronism.Json.Tests
 				}
 			}
 		}
+
+		[Fact]
+		public void TryEnumLookup()
+		{
+			var enumTypes = new[] { typeof(Skippy), typeof(Sparse), typeof(Negatives), typeof(DayOfWeek) };
+			var buffer = new byte[256];
+			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
+
+			foreach (var enumType in enumTypes)
+			{
+				var lookup = StringEnum.GetCachedLookup(enumType);
+
+				foreach (var value in new ulong[] { 0, 1, 2, 3, 9 })
+				{
+					var mine = GetStringEnum(lookup, value, buffer, enumType);
+					var newt = Newtonsoft.Json.JsonConvert.SerializeObject(Enum.ToObject(enumType, value), newtEnumConverter);
+					Assert.Equal(Encoding.UTF8.GetBytes(newt), mine);
+				}
+			}
+
+			Assert.True(StringEnum.CachedLookups.Length >= enumTypes.Length, "All tested enum types should be cached");
+		}
+
+		static IEnumerable<byte> GetStringEnum(StringEnum.Lookup lookup, ulong value, byte[] buffer, Type enumType)
+		{
+			//int @sizeof;
+			bool signed;
+			switch (Type.GetTypeCode(enumType))
+			{
+				case TypeCode.SByte:
+					//@sizeof = 1;
+					signed = true;
+					break;
+				case TypeCode.Int16:
+					//@sizeof = 2;
+					signed = true;
+					break;
+				case TypeCode.Int32:
+					//@sizeof = 4;
+					signed = true;
+					break;
+				case TypeCode.Int64:
+					//@sizeof = 8;
+					signed = true;
+					break;
+				default:
+					//@sizeof = -1;
+					signed = false;
+					break;
+			}
+
+			int result;
+			fixed (byte* destination = buffer)
+			{
+				switch (lookup.Type)
+				{
+					case StringEnum.LookupTypes.Indexed:
+						if (signed) result = StringEnum.WriteIndexed((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						else result = StringEnum.WriteIndexed(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						break;
+					case StringEnum.LookupTypes.Sorted:
+						if (signed) result = StringEnum.WriteSorted((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						else result = StringEnum.WriteSorted(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						break;
+					case StringEnum.LookupTypes.Verbose:
+						if (signed) result = StringEnum.WriteVerbose((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						else result = StringEnum.WriteVerbose(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						break;
+					default:
+						return null;
+				}
+			}
+
+			return result > 0 ? buffer.Take(result) : null;
+		}
 	}
 }
