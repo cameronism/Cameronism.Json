@@ -64,6 +64,53 @@ namespace Cameronism.Json.Tests
 			\uFF72\u3093aa = short.MinValue - 2,
 		}
 
+		#region theory
+		[Flags]
+		enum FunWithFlags0
+		{
+			Your = 1,
+			Host = 2,
+			Sheldon = 4,
+			Cooper = 8,
+
+			YourHostSheldon = 7,
+			SheldonCooper = 12,
+		}
+		[Flags]
+		enum FunWithFlags1
+		{
+			Your = 1,
+			Host = 2,
+			Sheldon = 4,
+			Cooper = 8,
+
+			YourHost = 3,
+			YourSheldon = 5,
+		}
+		[Flags]
+		enum FunWithFlags2
+		{
+			Your = 1,
+			Host = 2,
+			Sheldon = 4,
+			Cooper = 8,
+
+			YourSheldon = 5,
+			HostSheldon = 6,
+		}
+		[Flags]
+		enum FunWithFlags3
+		{
+			Your = 1,
+			Host = 2,
+			Sheldon = 4,
+			Cooper = 8,
+
+			HostCooper = 10,
+			SheldonCooper = 12,
+		}
+		#endregion
+
 		[Fact, MethodImpl(MethodImplOptions.NoInlining)]
 		public void SkippyEnum()
 		{
@@ -208,7 +255,7 @@ namespace Cameronism.Json.Tests
 		[Fact]
 		public void TryEnumLookup()
 		{
-			var enumTypes = new[] { typeof(Skippy), typeof(Sparse), typeof(Negatives), typeof(DayOfWeek) };
+			var enumTypes = new[] { typeof(Skippy), typeof(Sparse), typeof(Negatives), typeof(DayOfWeek), typeof(FunWithFlags0), typeof(FunWithFlags1), typeof(FunWithFlags2), typeof(FunWithFlags3) };
 			var buffer = new byte[256];
 			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
 
@@ -216,11 +263,11 @@ namespace Cameronism.Json.Tests
 			{
 				var lookup = StringEnum.GetCachedLookup(enumType);
 
-				foreach (var value in new ulong[] { 0, 1, 2, 3, 9 })
+				foreach (var value in new ulong[] { 0, 1, 2, 3, 9, 15, 31 })
 				{
 					var mine = GetStringEnum(lookup, value, buffer, enumType);
 					var newt = Newtonsoft.Json.JsonConvert.SerializeObject(Enum.ToObject(enumType, value), newtEnumConverter);
-					Assert.Equal(Encoding.UTF8.GetBytes(newt), mine);
+					Assert.Equal(Encoding.UTF8.GetBytes(newt), mine.ToArray());
 				}
 			}
 
@@ -229,28 +276,30 @@ namespace Cameronism.Json.Tests
 
 		static IEnumerable<byte> GetStringEnum(StringEnum.Lookup lookup, ulong value, byte[] buffer, Type enumType)
 		{
-			//int @sizeof;
+			bool isFlag = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
+
+			int @sizeof;
 			bool signed;
 			switch (Type.GetTypeCode(enumType))
 			{
 				case TypeCode.SByte:
-					//@sizeof = 1;
+					@sizeof = 1;
 					signed = true;
 					break;
 				case TypeCode.Int16:
-					//@sizeof = 2;
+					@sizeof = 2;
 					signed = true;
 					break;
 				case TypeCode.Int32:
-					//@sizeof = 4;
+					@sizeof = 4;
 					signed = true;
 					break;
 				case TypeCode.Int64:
-					//@sizeof = 8;
+					@sizeof = 8;
 					signed = true;
 					break;
 				default:
-					//@sizeof = -1;
+					@sizeof = -1;
 					signed = false;
 					break;
 			}
@@ -261,16 +310,40 @@ namespace Cameronism.Json.Tests
 				switch (lookup.Type)
 				{
 					case StringEnum.LookupTypes.Indexed:
-						if (signed) result = StringEnum.WriteIndexed((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
-						else result = StringEnum.WriteIndexed(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						if (signed)
+						{
+							if (isFlag) result = StringEnum.WriteIndexedFlag((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length, @sizeof);
+							else result = StringEnum.WriteIndexed((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
+						else
+						{
+							if (isFlag) result = StringEnum.WriteIndexedFlag(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+							else result = StringEnum.WriteIndexed(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
 						break;
 					case StringEnum.LookupTypes.Sorted:
-						if (signed) result = StringEnum.WriteSorted((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
-						else result = StringEnum.WriteSorted(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						if (signed)
+						{
+							if (isFlag) result = StringEnum.WriteSortedFlag((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length, @sizeof);
+							else result = StringEnum.WriteSorted((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
+						else
+						{
+							if (isFlag) result = StringEnum.WriteSortedFlag(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+							else result = StringEnum.WriteSorted(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
 						break;
 					case StringEnum.LookupTypes.Verbose:
-						if (signed) result = StringEnum.WriteVerbose((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
-						else result = StringEnum.WriteVerbose(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						if (signed)
+						{
+							if (isFlag) result = StringEnum.WriteVerboseFlag((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length, @sizeof);
+							else result = StringEnum.WriteVerbose((long)value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
+						else
+						{
+							if (isFlag) result = StringEnum.WriteVerboseFlag(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+							else result = StringEnum.WriteVerbose(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
+						}
 						break;
 					default:
 						return null;

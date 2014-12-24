@@ -224,10 +224,18 @@ namespace Cameronism.Json
 
 			public int Compare(KeyValuePair<int, ulong> x, KeyValuePair<int, ulong> y)
 			{
+				int result;
+
+				ulong xFirst = (x.Value & ~(x.Value - 1));
+				ulong yFirst = (y.Value & ~(y.Value - 1));
+
+				result = xFirst.CompareTo(yFirst);
+				if (result != 0) return result;
+
 				int xpop = GetFlagCount(x.Value & _Mask);
 				int ypop = GetFlagCount(y.Value & _Mask);
 
-				int result = ypop - xpop;
+				result = ypop.CompareTo(xpop);
 				if (result != 0) return result;
 
 				return x.Value.CompareTo(y.Value);
