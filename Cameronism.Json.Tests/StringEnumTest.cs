@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -74,7 +75,7 @@ namespace Cameronism.Json.Tests
 			Cooper = 8,
 
 			YourHostSheldon = 7,
-			SheldonCooper = 12,
+			//SheldonCooper = 12,
 		}
 		[Flags]
 		enum FunWithFlags1
@@ -84,7 +85,7 @@ namespace Cameronism.Json.Tests
 			Sheldon = 4,
 			Cooper = 8,
 
-			YourHost = 3,
+			//YourHost = 3,
 			YourSheldon = 5,
 		}
 		[Flags]
@@ -95,7 +96,7 @@ namespace Cameronism.Json.Tests
 			Sheldon = 4,
 			Cooper = 8,
 
-			YourSheldon = 5,
+			//YourSheldon = 5,
 			HostSheldon = 6,
 		}
 		[Flags]
@@ -106,7 +107,7 @@ namespace Cameronism.Json.Tests
 			Sheldon = 4,
 			Cooper = 8,
 
-			HostCooper = 10,
+			//HostCooper = 10,
 			SheldonCooper = 12,
 		}
 		#endregion
@@ -255,7 +256,17 @@ namespace Cameronism.Json.Tests
 		[Fact]
 		public void TryEnumLookup()
 		{
-			var enumTypes = new[] { typeof(Skippy), typeof(Sparse), typeof(Negatives), typeof(DayOfWeek), typeof(FunWithFlags0), typeof(FunWithFlags1), typeof(FunWithFlags2), typeof(FunWithFlags3) };
+			var enumTypes = new[] 
+			{
+				typeof(Skippy),
+				typeof(Sparse),
+				typeof(Negatives),
+				typeof(DayOfWeek),
+				typeof(FunWithFlags0),
+				typeof(FunWithFlags1),
+				typeof(FunWithFlags2),
+				typeof(FunWithFlags3),
+			};
 			var buffer = new byte[256];
 			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
 
@@ -265,16 +276,59 @@ namespace Cameronism.Json.Tests
 
 				foreach (var value in new ulong[] { 0, 1, 2, 3, 9, 15, 31 })
 				{
-					var mine = GetStringEnum(lookup, value, buffer, enumType);
-					var newt = Newtonsoft.Json.JsonConvert.SerializeObject(Enum.ToObject(enumType, value), newtEnumConverter);
-					Assert.Equal(Encoding.UTF8.GetBytes(newt), mine.ToArray());
+					var count = GetStringEnum(lookup, value, buffer, enumType);
+					Assert.True(count > 0, "Positive count expected");
+
+					if (buffer[0] == (byte)'"')
+					{
+						// string
+						Assert.True(count > 2, "Count > 2 expected");
+						var name = Encoding.UTF8.GetString(buffer, 1, count - 2);
+						var parsedValue = Enum.Parse(enumType, name, ignoreCase: false);
+						Assert.Equal(value, ToUInt64(enumType, parsedValue));
+					}
+					else
+					{
+						var number = Encoding.UTF8.GetString(buffer, 0, count);
+						bool signed = IsSigned(enumType);
+						ulong parsedValue = signed ?
+							(ulong)long.Parse(number, CultureInfo.InvariantCulture) :
+							ulong.Parse(number, CultureInfo.InvariantCulture);
+						Assert.Equal(value, parsedValue);
+					}
 				}
 			}
 
 			Assert.True(StringEnum.CachedLookups.Length >= enumTypes.Length, "All tested enum types should be cached");
 		}
 
-		static IEnumerable<byte> GetStringEnum(StringEnum.Lookup lookup, ulong value, byte[] buffer, Type enumType)
+		static bool IsSigned(Type enumType)
+		{
+			switch (Type.GetTypeCode(enumType))
+			{
+				case TypeCode.SByte:
+				case TypeCode.Int16:
+				case TypeCode.Int32:
+				case TypeCode.Int64:
+					return true;
+				case TypeCode.Byte:
+				case TypeCode.UInt16:
+				case TypeCode.UInt32:
+				case TypeCode.UInt64:
+					return false;
+				default:
+					throw new NotSupportedException();
+			}
+		}
+
+		static ulong ToUInt64(Type enumType, object value)
+		{
+			return IsSigned(enumType) ?
+				(ulong)Convert.ToInt64(value) :
+				Convert.ToUInt64(value);
+		}
+
+		static int GetStringEnum(StringEnum.Lookup lookup, ulong value, byte[] buffer, Type enumType)
 		{
 			bool isFlag = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
 
@@ -346,11 +400,11 @@ namespace Cameronism.Json.Tests
 						}
 						break;
 					default:
-						return null;
+						throw new NotImplementedException();
 				}
 			}
 
-			return result > 0 ? buffer.Take(result) : null;
+			return result;
 		}
 	}
 }

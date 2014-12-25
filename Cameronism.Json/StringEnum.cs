@@ -226,18 +226,21 @@ namespace Cameronism.Json
 			{
 				int result;
 
-				ulong xFirst = (x.Value & ~(x.Value - 1));
-				ulong yFirst = (y.Value & ~(y.Value - 1));
-
-				result = xFirst.CompareTo(yFirst);
-				if (result != 0) return result;
-
+				// prefer higher bit population
 				int xpop = GetFlagCount(x.Value & _Mask);
 				int ypop = GetFlagCount(y.Value & _Mask);
 
 				result = ypop.CompareTo(xpop);
 				if (result != 0) return result;
 
+				// then prefer the value with lowest order bit set
+				ulong xFirst = (x.Value & ~(x.Value - 1));
+				ulong yFirst = (y.Value & ~(y.Value - 1));
+
+				result = xFirst.CompareTo(yFirst);
+				if (result != 0) return result;
+
+				// finally prefer lower value
 				return x.Value.CompareTo(y.Value);
 			}
 		}
