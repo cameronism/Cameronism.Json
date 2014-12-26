@@ -100,15 +100,12 @@ namespace Cameronism.Json.Tests
 			HostSheldon = 6,
 		}
 		[Flags]
-		enum FunWithFlags3
+		enum FunWithFlags3 : sbyte
 		{
 			Your = 1,
 			Host = 2,
 			Sheldon = 4,
-			Cooper = 8,
-
-			//HostCooper = 10,
-			SheldonCooper = 12,
+			Cooper = -128,
 		}
 		#endregion
 

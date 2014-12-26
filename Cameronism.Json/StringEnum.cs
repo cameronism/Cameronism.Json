@@ -732,7 +732,7 @@ namespace Cameronism.Json
 		}
 		static int GetFlagCount(long number, int @sizeof)
 		{
-			// need to try a lookup version of this to avoid branches
+			// TODO try a lookup version of this to avoid branches
 			var unum = (ulong)number;
 			if (number < 0)
 			{
