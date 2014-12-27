@@ -732,27 +732,16 @@ namespace Cameronism.Json
 		}
 		static int GetFlagCount(long number, int @sizeof)
 		{
-			// TODO try a lookup version of this to avoid branches
-			var unum = (ulong)number;
-			if (number < 0)
+			ulong mask;
+			switch (@sizeof)
 			{
-				if (@sizeof == 4)
-				{
-					unum = unum & 0xffffffff;
-				}
-				else
-				{
-					if (@sizeof == 1)
-					{
-						unum = unum & 0xff;
-					}
-					else if (@sizeof == 2)
-					{
-						unum = unum & 0xffff;
-					}
-				}
+				case 1:  mask = 0x00000000000000FF; break;
+				case 2:  mask = 0x000000000000FFFF; break;
+				case 4:  mask = 0x00000000FFFFFFFF; break;
+				default: mask = 0xFFFFFFFFFFFFFFFF; break;
 			}
-			return GetFlagCount(unum);
+
+			return GetFlagCount(mask & (ulong)number);
 		}
 		static int GetFlagCount(ulong x)
 		{

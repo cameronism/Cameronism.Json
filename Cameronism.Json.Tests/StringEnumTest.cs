@@ -65,6 +65,14 @@ namespace Cameronism.Json.Tests
 			\uFF72\u3093aa = short.MinValue - 2,
 		}
 
+		enum FakeStatusCodes : uint
+		{
+			OK,
+			Bad,
+			SoSew,
+			Grrrrreat,
+		}
+
 		#region theory
 		[Flags]
 		enum FunWithFlags0
@@ -89,12 +97,12 @@ namespace Cameronism.Json.Tests
 			YourSheldon = 5,
 		}
 		[Flags]
-		enum FunWithFlags2
+		enum FunWithFlags2 : ulong
 		{
 			Your = 1,
 			Host = 2,
 			Sheldon = 4,
-			Cooper = 8,
+			Cooper = long.MaxValue,
 
 			//YourSheldon = 5,
 			HostSheldon = 6,
@@ -106,6 +114,28 @@ namespace Cameronism.Json.Tests
 			Host = 2,
 			Sheldon = 4,
 			Cooper = -128,
+		}
+		[Flags]
+		enum FunWithFlags4
+		{
+			Your = 4,
+			Host = 8,
+			Sheldon = 16,
+			Cooper = 32,
+		}
+		[Flags]
+		enum FunWithFlags5 : byte
+		{
+			Your = 4,
+			Host = 8,
+			Sheldon = 16,
+			Cooper = 32,
+		}
+		[Flags]
+		enum FunWithFlags6 : byte
+		{
+			Your = 1,
+			Host = 2,
 		}
 		#endregion
 
@@ -259,10 +289,14 @@ namespace Cameronism.Json.Tests
 				typeof(Sparse),
 				typeof(Negatives),
 				typeof(DayOfWeek),
+				typeof(FakeStatusCodes),
 				typeof(FunWithFlags0),
 				typeof(FunWithFlags1),
 				typeof(FunWithFlags2),
 				typeof(FunWithFlags3),
+				typeof(FunWithFlags4),
+				typeof(FunWithFlags5),
+				typeof(FunWithFlags6),
 			};
 			var buffer = new byte[256];
 			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
