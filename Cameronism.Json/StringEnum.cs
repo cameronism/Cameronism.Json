@@ -280,57 +280,37 @@ namespace Cameronism.Json
 
 		static Lookup GenerateLookup(Type type)
 		{
-			if (_Page == null)
+			bool allocated = false;
+			var values = SortValues(type);
+			var lookupType = GetLookupType(values);
+
+			while (!allocated)
 			{
-				ResetPage();
 				if (_Page == null)
 				{
-					return new Lookup(null, null, null, LookupTypes.Unsupported);
+					ResetPage();
+					if (_Page == null) break;
+
+					allocated = true;
 				}
-			}
 
-			KeyValuePair<ulong, string>[] values;
-			LookupTypes lookupType;
-			var lookup = GetLookup(type, _Page + _Offset, PAGE_SIZE - _Offset, out lookupType, out values);
-			if (lookup.Type != LookupTypes.Unsupported)
-			{
-				if (lookup.Type != LookupTypes.Numeric)
+				var lookup = GetLookup(_Page + _Offset, PAGE_SIZE - _Offset, lookupType, values);
+				if (lookup.Type != LookupTypes.Unsupported)
 				{
-					SetOffset(lookup, values, type);
-				}
-				return lookup;
-			}
-
-			// try again
-			Lookup? maybeLookup = null;
-			if (lookupType != LookupTypes.Unsupported && _Offset != 0)
-			{
-				ResetPage();
-				if (_Page != null)
-				{
-					byte* dst = _Page + _Offset;
-					int available = PAGE_SIZE - _Offset;
-
-					switch (lookupType)
+					if (lookup.Type != LookupTypes.Numeric)
 					{
-						case LookupTypes.Indexed:
-							maybeLookup = GenerateIndexedLookup(values, dst, available);
-							break;
-						case LookupTypes.Sorted:
-							maybeLookup = GenerateSortedLookup(values, dst, available);
-							break;
-						case LookupTypes.Verbose:
-							maybeLookup = GenerateVerboseLookup(values, dst, available);
-							break;
+						SetOffset(lookup, values, type);
 					}
+					return lookup;
 				}
-			}
+				else
+				{
+					// page is empty and we still failed
+					if (_Offset == 0) break;
 
-			if (maybeLookup.HasValue)
-			{
-				lookup = maybeLookup.GetValueOrDefault();
-				SetOffset(lookup, values, type);
-				return lookup;
+					// try again
+					_Page = null;
+				}
 			}
 
 			return new Lookup(null, null, null, LookupTypes.Unsupported);
@@ -420,12 +400,8 @@ namespace Cameronism.Json
 		}
 		#endregion
 
-		static Lookup GetLookup(Type type, byte* destination, int available, out LookupTypes lookupType, out KeyValuePair<ulong, string>[] values)
+		static Lookup GetLookup(byte* destination, int available, LookupTypes lookupType, KeyValuePair<ulong, string>[] values)
 		{
-			values = SortValues(type);
-			// this out parameter is so caller can differentiate numeric from unsupported
-			lookupType = GetLookupType(values);
-
 			Lookup? maybeLookup = null;
 			switch (lookupType)
 			{
