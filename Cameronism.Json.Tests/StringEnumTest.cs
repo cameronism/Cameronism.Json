@@ -73,6 +73,8 @@ namespace Cameronism.Json.Tests
 			Grrrrreat,
 		}
 
+		enum Empty { }
+
 		#region theory
 		[Flags]
 		enum FunWithFlags0
@@ -290,6 +292,7 @@ namespace Cameronism.Json.Tests
 				typeof(Negatives),
 				typeof(DayOfWeek),
 				typeof(FakeStatusCodes),
+				typeof(Empty),
 				typeof(FunWithFlags0),
 				typeof(FunWithFlags1),
 				typeof(FunWithFlags2),
@@ -297,15 +300,19 @@ namespace Cameronism.Json.Tests
 				typeof(FunWithFlags4),
 				typeof(FunWithFlags5),
 				typeof(FunWithFlags6),
-			};
+			}
+			.Concat(typeof(Util.CorEnums).GetNestedTypes())
+			.ToList();
+
 			var buffer = new byte[256];
 			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
+			var values = Enumerable.Range(0, 256).Select(i => (ulong)i).ToArray();
 
 			foreach (var enumType in enumTypes)
 			{
 				var lookup = StringEnum.GetCachedLookup(enumType);
 
-				foreach (var value in new ulong[] { 0, 1, 2, 3, 9, 15, 31 })
+				foreach (var value in values)
 				{
 					var count = GetStringEnum(lookup, value, buffer, enumType);
 					Assert.True(count > 0, "Positive count expected");
@@ -330,7 +337,8 @@ namespace Cameronism.Json.Tests
 				}
 			}
 
-			Assert.True(StringEnum.CachedLookups.Length >= enumTypes.Length, "All tested enum types should be cached");
+			Assert.True(StringEnum.CachedLookups.Length >= enumTypes.Count, "All tested enum types should be cached");
+			Assert.Equal(2, StringEnum.PagesAllocated);
 		}
 
 		static bool IsSigned(Type enumType)
@@ -429,6 +437,10 @@ namespace Cameronism.Json.Tests
 							if (isFlag) result = StringEnum.WriteVerboseFlag(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
 							else result = StringEnum.WriteVerbose(value, lookup.TableStart, lookup.StringStart, destination, buffer.Length);
 						}
+						break;
+					case StringEnum.LookupTypes.Numeric:
+						if (signed) result = Serializer.WriteInt64((long)value, destination, buffer.Length);
+						else result = Serializer.WriteUInt64(value, destination, buffer.Length);
 						break;
 					default:
 						throw new NotImplementedException();
