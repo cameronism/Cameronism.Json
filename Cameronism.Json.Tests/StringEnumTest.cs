@@ -283,6 +283,31 @@ namespace Cameronism.Json.Tests
 		}
 
 		[Fact]
+		public void SortEnums()
+		{
+			var rand = new Random(42);
+			var values = Enumerable.Range(0, 128).OrderBy(_ => rand.Next()).ToArray();
+			var sorted = StringEnum.SortValues(values, true);
+			Array.Sort(values);
+
+			Assert.Equal(values, sorted.Select(kvp => (int)kvp.Key));
+
+			var empty = new KeyValuePair<ulong, string>[0];
+			var buffer = new byte[256];
+			fixed (byte* ptr = buffer)
+			{
+				Assert.Null(StringEnum.GenerateIndexedLookup(empty, ptr, buffer.Length));
+				Assert.Null(StringEnum.GenerateIndexedLookup(sorted, ptr, buffer.Length));
+
+				Assert.Null(StringEnum.GenerateSortedLookup(empty, ptr, buffer.Length));
+				Assert.Null(StringEnum.GenerateSortedLookup(sorted, ptr, buffer.Length));
+
+				Assert.Null(StringEnum.GenerateVerboseLookup(empty, ptr, buffer.Length));
+				Assert.Null(StringEnum.GenerateVerboseLookup(sorted, ptr, buffer.Length));
+			}
+		}
+
+		[Fact]
 		public void TryEnumLookup()
 		{
 			var enumTypes = new[] 

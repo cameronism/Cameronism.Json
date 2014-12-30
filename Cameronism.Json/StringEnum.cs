@@ -555,7 +555,11 @@ namespace Cameronism.Json
 					signed = false;
 					break;
 			}
+			return SortValues(values, signed);
+		}
 
+		public static KeyValuePair<ulong, string>[] SortValues(Array values, bool signed)
+		{
 			var sorted = new KeyValuePair<ulong, string>[values.Length];
 
 			for (int i = 0; i < sorted.Length; i++)
