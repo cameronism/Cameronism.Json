@@ -330,6 +330,8 @@ namespace Cameronism.Json.Tests
 			.ToList();
 
 			var buffer = new byte[256];
+			var tiny2 = new byte[2];
+			var tiny4 = new byte[4];
 			var newtEnumConverter = new Newtonsoft.Json.Converters.StringEnumConverter();
 			var values = Enumerable.Range(0, 256).Select(i => (ulong)i).ToArray();
 
@@ -341,6 +343,17 @@ namespace Cameronism.Json.Tests
 				{
 					var count = GetStringEnum(lookup, value, buffer, enumType);
 					Assert.True(count > 0, "Positive count expected");
+
+					if (count > tiny2.Length)
+					{
+						// just make sure it doesn't throw
+						GetStringEnum(lookup, value, tiny2, enumType);
+					}
+					if (count > tiny4.Length)
+					{
+						// just make sure it doesn't throw
+						GetStringEnum(lookup, value, tiny4, enumType);
+					}
 
 					if (buffer[0] == (byte)'"')
 					{
