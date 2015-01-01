@@ -51,12 +51,16 @@ namespace Cameronism.Json
 
 		static string GetConstantJson<T>(Sigil.DisassembledOperations<T> ops, MethodInfo mi)
 		{
+			return GetConstantJson(ops.Select(op => new KeyValuePair<System.Reflection.Emit.OpCode, IEnumerable<object>>(op.OpCode, op.Parameters)), mi);
+		}
+		static string GetConstantJson(IEnumerable<KeyValuePair<System.Reflection.Emit.OpCode, IEnumerable<object>>> ops, MethodInfo mi)
+		{
 			string theValue = null;
 			var typeCode = (int)Type.GetTypeCode(Nullable.GetUnderlyingType(mi.ReturnType) ?? mi.ReturnType);
 			
 			foreach (var op in ops)
 			{
-				switch ((ushort)op.OpCode.Value)
+				switch ((ushort)op.Key.Value)
 				{
 					case 0x00: // Nop
 					case 0x2a: // Ret
@@ -68,7 +72,7 @@ namespace Cameronism.Json
 						continue;
 
 					case 0xfe15: // Initobj
-						theValue = GetDefaultValue(op.Parameters.FirstOrDefault() as Type);
+						theValue = GetDefaultValue(op.Value.FirstOrDefault() as Type);
 						continue;
 						
 					case 0x0a: // Stloc_0
@@ -82,7 +86,7 @@ namespace Cameronism.Json
 					case 0x72: // Ldstr
 						if (mi.ReturnType == typeof(string))
 						{
-							theValue = GetEscapedString(op.Parameters.FirstOrDefault() as string);
+							theValue = GetEscapedString(op.Value.FirstOrDefault() as string);
 							continue;
 						}
 						else
@@ -104,7 +108,7 @@ namespace Cameronism.Json
 					case 0x20: // Ldc_I4
 						if (typeCode >= MIN_INTEGRAL && typeCode <= MAX_INTEGRAL)
 						{
-							theValue = GetInt32Value(op.Parameters.FirstOrDefault(), mi.ReturnType);
+							theValue = GetInt32Value(op.Value.FirstOrDefault(), mi.ReturnType);
 							continue;
 						}
 						else
@@ -113,12 +117,12 @@ namespace Cameronism.Json
 						}
 						
 					case 0x21: // Ldc_I8
-						theValue = GetInt64Value(op.Parameters.FirstOrDefault(), mi.ReturnType);
+						theValue = GetInt64Value(op.Value.FirstOrDefault(), mi.ReturnType);
 						continue;
 
 					case 0x22: // Ldc_R4
 					case 0x23: // Ldc_R8
-						theValue = GetDoubleValue(op.Parameters.FirstOrDefault(), mi.ReturnType);
+						theValue = GetDoubleValue(op.Value.FirstOrDefault(), mi.ReturnType);
 						continue;
 					
 					// assume non constant if we encounter anything else
